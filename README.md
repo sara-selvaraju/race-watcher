@@ -3,9 +3,14 @@
 Personal race-day dashboard for the Flemington meeting on **Saturday 20 June 2026**.
 
 - Backend: FastAPI + SQLAlchemy + Alembic + Pydantic v2 (Python 3.12, uv).
-- Odds: a research adapter that calls any chat model via OpenRouter (with `:online` web search) to look up current decimal WIN odds from public web sources on demand via `POST /api/v1/admin/refresh-odds`. Model is configurable (`OPENROUTER_MODEL`). Append-only snapshots, threshold-based movement detection, dedupe. A direct-Anthropic adapter is wired alongside as an alternative.
-- Worker: separate process; re-runs heuristic predictions every 30 min so ratings stay current. No live polling.
-- Frontend: Next.js (App Router) + TypeScript + Tailwind + React Query.
+- One **Refresh card** button on the dashboard runs four LLM-backed admin endpoints in sequence (frontend orchestrates so each ~15–90s step is visible):
+  1. **Field** (`POST /api/v1/admin/expand-field`) — research the official runner list per race and backfill missing jockey/trainer/barrier.
+  2. **Odds** (`POST /api/v1/admin/refresh-odds`) — fetch current decimal WIN odds for every runner via OpenRouter with `:online` web search; append-only snapshots, threshold-based movement detection, dedupe.
+  3. **Research** (`POST /api/v1/admin/refresh-tips`) — Perplexity Sonar produces top-3 picks per race with cited reasoning; numbered citations are post-processed into inline clickable links.
+  4. **Ratings** (`POST /api/v1/admin/predict`) — recompute the heuristic win-prob for every runner.
+- Adapters: OpenRouter for odds (model configurable via `OPENROUTER_MODEL`); Perplexity Sonar via OpenRouter for research (`OPENROUTER_RESEARCH_MODEL`); seed JSON for the initial race card. A direct-Anthropic odds adapter is wired as an alternative.
+- Worker: separate process; re-runs heuristic ratings every 30 min so they stay current as odds snapshots roll in. No live polling.
+- Frontend: Next.js (App Router) + TypeScript + Tailwind + React Query. Japanese-bento light theme.
 - Database: Postgres.
 - Deploy: Railway (three services + Postgres plugin).
 
@@ -21,9 +26,9 @@ backend/                    FastAPI app (api/) + worker (worker/main.py) sharing
     db/                     SQLAlchemy models, session, base
     domain/                 ports (RaceCardSource / OddsSource / PredictionEngine), domain models
     repositories/           data access
-    services/               business logic
-    adapters/               seed.py, betfair.py, heuristic.py
-    worker/main.py          5-min poller entrypoint
+    services/               poller, predictions, expand_field, top_picks, ingest, movement
+    adapters/               seed, openrouter, claude_research, betfair, heuristic, mock_odds
+    worker/main.py          periodic heuristic re-rating
   alembic/                  migrations
   seed/flemington.json      race card seed for 2026-06-20
   tests/                    pytest
@@ -31,7 +36,7 @@ backend/                    FastAPI app (api/) + worker (worker/main.py) sharing
 frontend/                   Next.js client (API consumer only)
   src/
     app/                    App Router pages
-    components/             presentational + container split
+    components/             Header, RefreshBar, RaceNav, TopPicksBox, FieldBox, MovementFeed
     lib/api/                generated typed client (from OpenAPI)
 ```
 
