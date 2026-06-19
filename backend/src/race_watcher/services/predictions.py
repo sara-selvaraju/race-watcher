@@ -8,8 +8,7 @@ from race_watcher.domain.ports import PredictionEngine
 from race_watcher.repositories import prediction_repo
 
 
-def _to_domain_runner(r: m.Runner, seed_price: float | None = None,
-                       seed_rating: str | None = None) -> DomainRunner:
+def _to_domain_runner(r: m.Runner) -> DomainRunner:
     return DomainRunner(
         number=r.number,
         name=r.name,
@@ -31,8 +30,10 @@ def _to_domain_runner(r: m.Runner, seed_price: float | None = None,
             )
             for fl in r.form_lines
         ),
-        seed_price=seed_price,
-        seed_prediction_rating=seed_rating,
+        seed_price=r.seed_price,
+        seed_price_source=r.seed_price_source,
+        seed_prediction_rating=r.seed_prediction_rating,
+        seed_prediction_rationale=r.seed_prediction_rationale,
     )
 
 

@@ -75,6 +75,10 @@ def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
                     barrier=d_runner.barrier,
                     weight_kg=d_runner.weight_kg,
                     scratched=d_runner.scratched,
+                    seed_price=d_runner.seed_price,
+                    seed_price_source=d_runner.seed_price_source,
+                    seed_prediction_rating=d_runner.seed_prediction_rating,
+                    seed_prediction_rationale=d_runner.seed_prediction_rationale,
                 )
                 session.add(runner)
                 session.flush()
@@ -85,6 +89,10 @@ def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
                 runner.barrier = d_runner.barrier
                 runner.weight_kg = d_runner.weight_kg
                 runner.scratched = d_runner.scratched
+                runner.seed_price = d_runner.seed_price
+                runner.seed_price_source = d_runner.seed_price_source
+                runner.seed_prediction_rating = d_runner.seed_prediction_rating
+                runner.seed_prediction_rationale = d_runner.seed_prediction_rationale
 
             # Seed form summaries: store one row per runner with note=summary.
             existing_notes = {fl.note for fl in runner.form_lines if fl.note}

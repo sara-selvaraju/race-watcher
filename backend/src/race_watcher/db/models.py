@@ -73,6 +73,10 @@ class Runner(Base):
     silk: Mapped[str | None] = mapped_column(String(160), default=None)
     scratched: Mapped[bool] = mapped_column(Boolean, default=False)
     betfair_selection_id: Mapped[int | None] = mapped_column(Integer, default=None)
+    seed_price: Mapped[Decimal | None] = mapped_column(Numeric(8, 3), default=None)
+    seed_price_source: Mapped[str | None] = mapped_column(String(40), default=None)
+    seed_prediction_rating: Mapped[str | None] = mapped_column(String(40), default=None)
+    seed_prediction_rationale: Mapped[str | None] = mapped_column(String(400), default=None)
 
     race: Mapped[Race] = relationship(back_populates="runners", init=False, repr=False)
     form_lines: Mapped[list["FormLine"]] = relationship(
