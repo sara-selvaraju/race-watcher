@@ -30,3 +30,6 @@ dist/
 # Local dev DB
 *.sqlite
 *.sqlite3
+
+# allow frontend .env.production (no secrets, just public API URL)
+!frontend/.env.production
