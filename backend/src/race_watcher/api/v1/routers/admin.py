@@ -81,3 +81,29 @@ def expand_field(
 
     result = expand_all_races(session, odds)
     return {"source": odds.name, **result}
+
+
+@router.post("/cleanup-research-runners")
+def cleanup_research_runners(session: Session = SessionDep) -> dict:
+    """Delete every runner in today's meeting that originated from /admin/expand-field
+    (i.e. not in the curated seed JSON).
+
+    Use this when Sonar has stacked hallucinated or duplicate runners and you want to
+    reset the field back to the seed-only state. Top picks and predictions for the
+    deleted runners cascade away via the existing FK ondelete=CASCADE.
+    """
+    from race_watcher.db import models as m
+    from race_watcher.repositories import race_repo
+
+    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
+    if meeting is None:
+        return {"deleted": 0, "skipped": "no_meeting"}
+
+    deleted = 0
+    for race in meeting.races:
+        for runner in list(race.runners):
+            if runner.seed_price is None and runner.seed_prediction_rationale is None:
+                session.delete(runner)
+                deleted += 1
+    session.commit()
+    return {"deleted": deleted}

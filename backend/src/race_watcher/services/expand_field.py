@@ -33,11 +33,18 @@ def _to_domain_race(race: m.Race) -> DomainRace:
     )
 
 
+def _normalize_name(name: str) -> str:
+    """Lowercase + collapse whitespace so 'The Western Front' == 'the  western front'."""
+    return " ".join(name.lower().split())
+
+
 def expand_all_races(session: Session, adapter) -> dict:
     """For each race in today's meeting, research the full field and insert any missing runners.
 
-    Idempotent: existing runners (matched on race_id + saddlecloth number) are updated with
-    newly-discovered jockey/trainer/barrier but their seed-derived fields are untouched.
+    Idempotent: existing runners (matched on race_id + saddlecloth number, OR by normalized
+    name) are updated with newly-discovered jockey/trainer/barrier but seed-derived fields are
+    untouched. Name-based dedup prevents Sonar from re-inserting the same horse under a
+    different saddlecloth on a repeat refresh.
     """
     if not hasattr(adapter, "fetch_race_field"):
         return {"races": 0, "added": 0, "updated": 0, "skipped": "adapter_not_supported"}
@@ -58,6 +65,7 @@ def expand_all_races(session: Session, adapter) -> dict:
     races_done = 0
     total_added = 0
     total_updated = 0
+    total_skipped_dup = 0
     for race in meeting.races:
         domain_race = _to_domain_race(race)
         runners = adapter.fetch_race_field(domain_meeting, domain_race)
@@ -65,25 +73,40 @@ def expand_all_races(session: Session, adapter) -> dict:
             log.info("expand_field.empty", race=race.number)
             continue
         existing_by_num = {r.number: r for r in race.runners}
+        existing_by_name = {_normalize_name(r.name): r for r in race.runners}
         added = 0
         updated = 0
+        skipped_dup = 0
         for entry in runners:
             num = entry["runner_number"]
-            existing = existing_by_num.get(num)
+            name_key = _normalize_name(entry["runner_name"])
+            existing = existing_by_num.get(num) or existing_by_name.get(name_key)
             if existing is None:
-                session.add(
-                    m.Runner(
-                        race_id=race.id,
-                        number=num,
-                        name=entry["runner_name"],
-                        jockey=entry.get("jockey"),
-                        trainer=entry.get("trainer"),
-                        barrier=entry.get("barrier"),
-                        scratched=entry.get("scratched", False),
-                    )
+                new_runner = m.Runner(
+                    race_id=race.id,
+                    number=num,
+                    name=entry["runner_name"],
+                    jockey=entry.get("jockey"),
+                    trainer=entry.get("trainer"),
+                    barrier=entry.get("barrier"),
+                    scratched=entry.get("scratched", False),
                 )
+                session.add(new_runner)
+                existing_by_num[num] = new_runner
+                existing_by_name[name_key] = new_runner
                 added += 1
                 continue
+            # If the same horse is already in the field under a different saddlecloth, do not
+            # insert a duplicate row. Backfill connections instead.
+            if existing.number != num:
+                log.info(
+                    "expand_field.dup_skipped",
+                    race=race.number,
+                    name=entry["runner_name"],
+                    incoming_num=num,
+                    existing_num=existing.number,
+                )
+                skipped_dup += 1
             # Update connections only when missing on the existing row — never clobber seeded data.
             if not existing.jockey and entry.get("jockey"):
                 existing.jockey = entry["jockey"]
@@ -101,7 +124,19 @@ def expand_all_races(session: Session, adapter) -> dict:
         races_done += 1
         total_added += added
         total_updated += updated
-        log.info("expand_field.race_done", race=race.number, added=added, updated=updated)
+        total_skipped_dup += skipped_dup
+        log.info(
+            "expand_field.race_done",
+            race=race.number,
+            added=added,
+            updated=updated,
+            skipped_dup=skipped_dup,
+        )
 
     session.commit()
-    return {"races": races_done, "added": total_added, "updated": total_updated}
+    return {
+        "races": races_done,
+        "added": total_added,
+        "updated": total_updated,
+        "skipped_duplicates": total_skipped_dup,
+    }
