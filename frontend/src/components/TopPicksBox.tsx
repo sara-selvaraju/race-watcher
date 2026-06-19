@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { clsx } from "@/lib/clsx";
 import type { MeetingOut } from "@/lib/api/client";
 
@@ -22,6 +23,37 @@ function n(v: string | number | null | undefined): number | null {
   if (v == null) return null;
   const x = typeof v === "number" ? v : Number(v);
   return Number.isFinite(x) ? x : null;
+}
+
+// Parse [label](https://url) markdown links and render the rest as plain text.
+// Only http(s) URLs are linkified — anything else stays as text (prevents javascript: injection).
+const MD_LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
+function renderRationale(text: string): ReactNode {
+  const out: ReactNode[] = [];
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+  MD_LINK_RE.lastIndex = 0;
+  while ((match = MD_LINK_RE.exec(text)) !== null) {
+    if (match.index > lastIdx) {
+      out.push(text.slice(lastIdx, match.index));
+    }
+    const [, label, url] = match;
+    out.push(
+      <a
+        key={`${match.index}-${url}`}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-ink-2 underline decoration-gold/50 decoration-dotted underline-offset-2 hover:text-gold hover:decoration-gold hover:decoration-solid"
+      >
+        {label}
+      </a>,
+    );
+    lastIdx = match.index + match[0].length;
+  }
+  if (lastIdx < text.length) out.push(text.slice(lastIdx));
+  return out.length > 0 ? out : text;
 }
 
 function pickTop3(race: Race): Pick[] {
@@ -174,7 +206,7 @@ function PickCell({ pick }: { pick: Pick }) {
 
       {rationale && (
         <p className="text-[11px] leading-relaxed text-ink-3">
-          {rationale}
+          {renderRationale(rationale)}
         </p>
       )}
     </article>

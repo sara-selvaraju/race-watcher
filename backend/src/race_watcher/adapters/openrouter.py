@@ -412,8 +412,11 @@ SUBMIT_TOP_PICKS_TOOL = {
         "name": "submit_top_picks",
         "description": (
             "Submit your top 3 picks for the race. Rank 1 = most likely to win, "
-            "2 = next, 3 = third. Each rationale should be a brief, evidence-based note "
+            "2 = next, 3 = third. Each rationale is an evidence-based note "
             "(form, course/distance fit, jockey/trainer, market support, wet-track record). "
+            "Embed inline markdown links [text](https://url) for EVERY source you reference "
+            "by name (e.g. tipsters, racing.com previews, bookmaker pages) so the user can "
+            "click through. Use the actual URLs you visited during research. "
             "Call this EXACTLY ONCE."
         ),
         "parameters": {
@@ -440,7 +443,14 @@ SUBMIT_TOP_PICKS_TOOL = {
                             },
                             "rationale": {
                                 "type": "string",
-                                "description": "Brief evidence-based rationale (1-2 sentences).",
+                                "description": (
+                                    "Evidence-based rationale (2-4 sentences). Whenever you "
+                                    "cite a tipster, preview, or bookmaker page, wrap the "
+                                    "source name in an inline markdown link to its URL — "
+                                    "e.g. 'tipped by [Matt Welsh](https://www.racing.com/...) "
+                                    "and [Punters preview](https://www.punters.com.au/...)'. "
+                                    "Use only real URLs you visited."
+                                ),
                             },
                         },
                         "required": ["rank", "runner_number", "runner_name", "rationale"],
@@ -546,7 +556,13 @@ TOP_PICKS_SYSTEM = (
     "- Cross-reference at least two sources where possible.\n\n"
     "Strict rules:\n"
     "- Pick ONLY from the runners listed in the input. Use the EXACT runner_number from the list.\n"
-    "- Provide a SHORT, evidence-based rationale per pick. No prose outside the tool call.\n"
+    "- Provide an evidence-based rationale per pick (2-4 sentences). EVERY source you cite by "
+    "name MUST be wrapped in an inline markdown link to a real URL you visited — e.g. "
+    "'[Matt Welsh's tips](https://www.racing.com/news/...)', "
+    "'[Punters preview](https://www.punters.com.au/...)', "
+    "'[racing.com form](https://www.racing.com/horses/...)'. Bare source names with no link "
+    "are not acceptable. Use only URLs you actually visited; never invent URLs.\n"
+    "- No prose outside the tool call.\n"
     "- If you can't confidently identify 3 picks, you may return fewer (down to 1) — never invent.\n"
     "- This is for personal use, not betting advice."
 )
