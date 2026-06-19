@@ -129,9 +129,19 @@ function RunnerRow({ runner }: { runner: Runner }) {
           {runner.number}
         </span>
         <div className="flex-1 min-w-0">
-          <h4 className="font-display text-base text-ink truncate leading-snug">
-            {runner.name}
-          </h4>
+          <div className="flex items-center gap-2">
+            <h4 className="font-display text-base text-ink truncate leading-snug">
+              {runner.name}
+            </h4>
+            {!runner.seeded && (
+              <span
+                className="font-mono text-[8px] tracking-widest text-vermilion/80 border border-vermilion/30 px-1 py-0.5 leading-none shrink-0"
+                title="Added via LLM research — connections may be wrong, verify on racing.com"
+              >
+                RES
+              </span>
+            )}
+          </div>
           <div className="font-mono text-[10px] tracking-widest text-ink-ghost truncate mt-0.5">
             {(runner.jockey ?? "—").toUpperCase()}
             <span className="mx-1.5 opacity-50">·</span>

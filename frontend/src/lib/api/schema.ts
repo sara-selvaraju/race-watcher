@@ -168,6 +168,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/expand-field": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Expand Field
+         * @description Research the full field per race and add any missing runners.
+         *
+         *     Re-uses the OpenRouter adapter (fetch_race_field). Existing runners are not clobbered;
+         *     missing jockey/trainer/barrier/scratched on existing rows are backfilled if found.
+         */
+        post: operations["expand_field_api_v1_admin_expand_field_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -313,6 +336,8 @@ export interface components {
             silk: string | null;
             /** Scratched */
             scratched: boolean;
+            /** Seeded */
+            seeded: boolean;
             /** Form Lines */
             form_lines: components["schemas"]["FormLineOut"][];
             current_price: components["schemas"]["PriceOut"] | null;
@@ -575,6 +600,28 @@ export interface operations {
         };
     };
     refresh_tips_api_v1_admin_refresh_tips_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    expand_field_api_v1_admin_expand_field_post: {
         parameters: {
             query?: never;
             header?: never;

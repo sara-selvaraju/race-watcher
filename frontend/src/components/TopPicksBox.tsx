@@ -105,9 +105,19 @@ export function TopPicksBox({ race }: { race: Race }) {
           <span className="text-ink-3 normal-case tracking-normal font-sans">Top picks</span>
         </span>
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[9px] tracking-widest text-ink-ghost">
-            {source === "research" ? "RESEARCH" : "HEURISTIC"}
-          </span>
+          {source === "research" ? (
+            <span
+              className="font-mono text-[9px] tracking-widest"
+              title="LLM-researched picks — cross-check the cited sources before betting"
+            >
+              <span className="text-vermilion/80">RESEARCH</span>
+              <span className="text-ink-ghost"> · VERIFY</span>
+            </span>
+          ) : (
+            <span className="font-mono text-[9px] tracking-widest text-ink-ghost">
+              HEURISTIC
+            </span>
+          )}
           <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
             R{race.number} · {race.distance_m}m
           </span>
