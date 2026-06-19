@@ -1,10 +1,26 @@
 "use client";
 
+import { useMemo } from "react";
 import { useAlerts } from "@/lib/api/hooks";
 import { clsx } from "@/lib/clsx";
 
 export function MovementFeed() {
   const { data, isPending, error } = useAlerts();
+
+  // The poller writes alerts against TWO baselines (open + previous) for each
+  // significant move, and repeat refreshes can log the same effective move
+  // multiple times. Collapse to the most recent alert per runner.
+  const deduped = useMemo(() => {
+    if (!data) return null;
+    const seen = new Set<number>();
+    const out: typeof data = [];
+    for (const a of data) {
+      if (seen.has(a.runner_id)) continue;
+      seen.add(a.runner_id);
+      out.push(a);
+    }
+    return out;
+  }, [data]);
 
   return (
     <section
@@ -18,9 +34,9 @@ export function MovementFeed() {
             Movements
           </span>
         </span>
-        {data && (
+        {deduped && (
           <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
-            {data.length} EVENTS
+            {deduped.length} RUNNERS
           </span>
         )}
       </header>
@@ -32,14 +48,14 @@ export function MovementFeed() {
             FEED UNAVAILABLE
           </div>
         )}
-        {data && data.length === 0 && (
+        {deduped && deduped.length === 0 && (
           <div className="px-5 py-10 text-center text-ink-ghost">
             <div className="font-display text-3xl mb-2 text-ink-3">静</div>
             <p className="font-mono text-[10px] tracking-widest">QUIET — NO SIGNIFICANT MOVES</p>
           </div>
         )}
         <ul className="divide-y divide-hairline">
-          {data?.map((a) => {
+          {deduped?.map((a) => {
             const from = Number(a.from_price);
             const to = Number(a.to_price);
             const pct = Number(a.pct_change);

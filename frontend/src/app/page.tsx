@@ -64,14 +64,13 @@ export default function Page() {
             </div>
             <div className="text-right shrink-0">
               <div className="label-section justify-end mb-1">
-                <span className="font-display tracking-kanji">頭数</span>
+                <span className="font-display tracking-kanji">追跡</span>
                 <span className="text-ink-3 normal-case tracking-normal font-sans">
-                  Runners
+                  Tracking
                 </span>
               </div>
               <div className="font-mono text-2xl tabular-nums text-ink">
                 {activeRace.runners.filter((r) => !r.scratched).length}
-                <span className="text-ink-ghost text-base">/{activeRace.runners.length}</span>
               </div>
             </div>
           </div>
