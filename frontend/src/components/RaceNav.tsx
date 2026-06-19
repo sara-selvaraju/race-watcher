@@ -9,27 +9,65 @@ type Props = {
   onSelect: (raceId: number) => void;
 };
 
+const KANJI_NUM = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+const toKanji = (n: number) => (n >= 1 && n <= 10 ? KANJI_NUM[n] : String(n));
+
 export function RaceNav({ meeting, activeRaceId, onSelect }: Props) {
   return (
-    <nav className="overflow-x-auto -mx-4 px-4 sticky top-0 bg-zinc-950/90 backdrop-blur z-10 py-2 border-b border-zinc-800">
-      <ul className="flex gap-2 min-w-max">
-        {meeting.races.map((race) => (
-          <li key={race.id}>
-            <button
-              type="button"
-              onClick={() => onSelect(race.id)}
-              className={clsx(
-                "px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap",
-                activeRaceId === race.id
-                  ? "bg-zinc-100 text-zinc-900"
-                  : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700",
-              )}
-            >
-              R{race.number}
-              <span className="ml-2 text-xs opacity-70 font-mono">{race.start_time_local?.slice(0, 5)}</span>
-            </button>
-          </li>
-        ))}
+    <nav className="bento bento-ticks animate-bento-in">
+      <div className="px-5 py-3 flex items-center justify-between border-b border-hairline">
+        <span className="label-section">
+          <span className="font-display tracking-kanji text-paper-dim">本日のレース</span>
+          <span className="text-paper-ghost normal-case tracking-normal font-sans">Card</span>
+        </span>
+        <span className="text-[10px] tracking-widest text-paper-ghost font-mono">
+          {meeting.races.length} RACES
+        </span>
+      </div>
+      <ul className="flex overflow-x-auto divide-x divide-hairline">
+        {meeting.races.map((race) => {
+          const active = activeRaceId === race.id;
+          return (
+            <li key={race.id} className="flex-1 min-w-[68px]">
+              <button
+                type="button"
+                onClick={() => onSelect(race.id)}
+                className={clsx(
+                  "w-full h-full py-3 px-2 flex flex-col items-center gap-1 transition-all relative group",
+                  active ? "bg-washi-glow" : "hover:bg-washi-raised",
+                )}
+              >
+                {active && (
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-px bg-vermilion" />
+                )}
+                <span
+                  className={clsx(
+                    "font-display text-xl leading-none",
+                    active ? "text-paper" : "text-paper-faint group-hover:text-paper-dim",
+                  )}
+                >
+                  {toKanji(race.number)}
+                </span>
+                <span
+                  className={clsx(
+                    "font-mono text-[10px] tracking-widest",
+                    active ? "text-gold" : "text-paper-ghost",
+                  )}
+                >
+                  R{race.number}
+                </span>
+                <span
+                  className={clsx(
+                    "font-mono text-[10px] tabular-nums",
+                    active ? "text-paper-dim" : "text-paper-ghost",
+                  )}
+                >
+                  {race.start_time_local?.slice(0, 5) ?? "--:--"}
+                </span>
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

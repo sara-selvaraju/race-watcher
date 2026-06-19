@@ -3,11 +3,206 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+  /* sumi-ink palette — warm dark with paper accents */
+  --ink: #0c0a08;
+  --ink-deep: #060503;
+  --washi: #16110d;
+  --washi-raised: #1f1812;
+  --washi-glow: #2a2018;
+
+  --hairline: #2d2620;
+  --hairline-bright: #4a3f30;
+
+  --paper: #f4ebd9;
+  --paper-dim: #c9bda5;
+  --paper-faint: #8a7e6a;
+  --paper-ghost: #5d5448;
+
+  /* accents — vermilion, matcha, gold leaf, indigo */
+  --vermilion: #c4302b;
+  --vermilion-deep: #8f201c;
+  --matcha: #7a9354;
+  --matcha-deep: #4a5e35;
+  --gold: #c9a96e;
+  --gold-deep: #9a7e44;
+  --indigo: #5d6f8f;
+
+  color-scheme: dark;
 }
 
-html,
-body {
-  background: #0b0b0c;
-  color: #f4f4f5;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-sans), -apple-system, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* soft paper-grain atmosphere */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(201, 169, 110, 0.04), transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(196, 48, 43, 0.03), transparent 50%),
+      url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.92 0 0 0 0 0.85 0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: cover, cover, 200px 200px;
+  }
+
+  /* refined selection */
+  ::selection {
+    background: var(--vermilion);
+    color: var(--paper);
+  }
+
+  /* scrollbars: hairline, calm */
+  ::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--hairline-bright);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* bento box — the atomic unit */
+  .bento {
+    position: relative;
+    background: var(--washi);
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bento::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      135deg,
+      rgba(244, 235, 217, 0.02) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  }
+
+  /* corner ticks — subtle bento-box "compartment" marks */
+  .bento-ticks::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid var(--hairline-bright);
+    border-right: 1px solid var(--hairline-bright);
+    opacity: 0.6;
+  }
+
+  /* vertical kanji label — runs along left edge */
+  .label-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: var(--font-display), serif;
+    letter-spacing: 0.3em;
+    font-size: 0.65rem;
+    color: var(--paper-ghost);
+    text-transform: uppercase;
+  }
+
+  /* horizontal section label with hairline accent */
+  .label-section {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-display), serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--paper-dim);
+  }
+
+  .label-section::before {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* enso brush — a hand-painted divider circle */
+  .enso {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    background: transparent;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
+  }
+  .font-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* hairline — exactly 1 device pixel border */
+  .hairline {
+    border-color: var(--hairline);
+  }
+  .hairline-bright {
+    border-color: var(--hairline-bright);
+  }
+
+  /* staggered fade for bento entrance */
+  @keyframes bento-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-bento-in {
+    animation: bento-in 600ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  }
+
+  /* gentle pulse for refreshed data */
+  @keyframes refresh-pulse {
+    0%,
+    100% {
+      background-color: transparent;
+    }
+    50% {
+      background-color: rgba(201, 169, 110, 0.08);
+    }
+  }
+  .animate-refresh {
+    animation: refresh-pulse 1200ms ease-in-out;
+  }
 }

@@ -6,55 +6,94 @@ import { clsx } from "@/lib/clsx";
 export function MovementFeed() {
   const { data, isPending, error } = useAlerts();
 
-  if (isPending) return <Skeleton />;
-  if (error) return <p className="text-sm text-red-400">Couldn’t load movements.</p>;
-  if (!data?.length) {
-    return <p className="text-sm text-zinc-500">No significant moves yet.</p>;
-  }
-
   return (
-    <ul className="divide-y divide-zinc-800 rounded-lg bg-zinc-950/60 ring-1 ring-zinc-800">
-      {data.map((a) => {
-        const from = Number(a.from_price);
-        const to = Number(a.to_price);
-        const pct = Number(a.pct_change);
-        return (
-          <li key={a.id} className="px-3 py-2 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="font-medium truncate">
-                <span className="text-zinc-400 mr-1">R{a.race_number}</span>
-                {a.runner_name}
-              </div>
-              <div className="text-xs text-zinc-500">
-                {new Date(a.created_at).toLocaleTimeString()} · {a.baseline} baseline
-              </div>
-            </div>
-            <div className="font-mono text-sm whitespace-nowrap">
-              ${from.toFixed(2)} → ${to.toFixed(2)}{" "}
-              <span
-                className={clsx(
-                  "ml-1 rounded px-1.5 py-0.5 text-xs ring-1",
-                  a.direction === "firm"
-                    ? "bg-green-900/40 text-green-300 ring-green-700/50"
-                    : "bg-red-900/40 text-red-300 ring-red-700/50",
-                )}
+    <section
+      className="bento bento-ticks animate-bento-in"
+      style={{ animationDelay: "180ms" }}
+    >
+      <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
+        <span className="label-section">
+          <span className="font-display tracking-kanji text-paper">動向</span>
+          <span className="text-paper-faint normal-case tracking-normal font-sans">
+            Movements
+          </span>
+        </span>
+        {data && (
+          <span className="font-mono text-[10px] tracking-widest text-paper-ghost">
+            {data.length} EVENTS
+          </span>
+        )}
+      </header>
+
+      <div className="max-h-[420px] overflow-y-auto">
+        {isPending && <SkeletonRows />}
+        {error && !isPending && (
+          <div className="px-5 py-6 text-center text-vermilion font-mono text-xs tracking-widest">
+            FEED UNAVAILABLE
+          </div>
+        )}
+        {data && data.length === 0 && (
+          <div className="px-5 py-10 text-center text-paper-ghost">
+            <div className="font-display text-3xl mb-2 text-paper-faint">静</div>
+            <p className="font-mono text-[10px] tracking-widest">QUIET — NO SIGNIFICANT MOVES</p>
+          </div>
+        )}
+        <ul className="divide-y divide-hairline">
+          {data?.map((a) => {
+            const from = Number(a.from_price);
+            const to = Number(a.to_price);
+            const pct = Number(a.pct_change);
+            const isFirm = a.direction === "firm";
+            const time = new Date(a.created_at).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            return (
+              <li
+                key={a.id}
+                className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-washi-raised transition-colors"
               >
-                {pct > 0 ? "+" : ""}
-                {pct.toFixed(1)}%
-              </span>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+                <div className="min-w-0">
+                  <div className="font-display text-sm text-paper truncate flex items-baseline gap-2">
+                    <span className="font-mono text-xs text-paper-faint">
+                      R{a.race_number}
+                    </span>
+                    {a.runner_name}
+                  </div>
+                  <div className="font-mono text-[10px] tracking-widest text-paper-ghost mt-0.5">
+                    {time} · {a.baseline.toUpperCase()}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-mono text-xs tabular-nums text-paper-dim">
+                    ${from.toFixed(2)} → ${to.toFixed(2)}
+                  </div>
+                  <div
+                    className={clsx(
+                      "font-mono text-xs tabular-nums tracking-tight mt-0.5",
+                      isFirm ? "text-matcha" : "text-vermilion",
+                    )}
+                  >
+                    {isFirm ? "↓" : "↑"} {Math.abs(pct).toFixed(1)}%
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
   );
 }
 
-function Skeleton() {
+function SkeletonRows() {
   return (
-    <ul className="space-y-2">
+    <ul className="divide-y divide-hairline">
       {[0, 1, 2].map((i) => (
-        <li key={i} className="h-10 rounded bg-zinc-900 animate-pulse" />
+        <li key={i} className="px-5 py-4 h-14 animate-pulse">
+          <div className="h-3 w-1/2 bg-washi-raised mb-2" />
+          <div className="h-2 w-1/3 bg-washi-raised" />
+        </li>
       ))}
     </ul>
   );
