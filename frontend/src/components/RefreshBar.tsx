@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
 
-type StepId = "field" | "odds" | "research" | "ratings";
+type StepId = "odds" | "research" | "ratings" | "field";
 
 type Step = {
   id: StepId;
@@ -16,16 +16,10 @@ type Step = {
   summarize: (d: Record<string, unknown>) => string;
 };
 
+// Order matters: odds + research + ratings settle from the trusted seed roster
+// FIRST, then field expansion can add the rest of the runners as awareness-only
+// rows without affecting the picks or ratings already computed for the seed set.
 const STEPS: Step[] = [
-  {
-    id: "field",
-    label: "Field",
-    kanji: "馬",
-    path: "/api/v1/admin/expand-field",
-    hint: "research full runner list",
-    summarize: (d) =>
-      `+${num(d.added) ?? 0} runners · ${num(d.races) ?? 0} races`,
-  },
   {
     id: "odds",
     label: "Odds",
@@ -51,6 +45,15 @@ const STEPS: Step[] = [
     path: "/api/v1/admin/predict",
     hint: "recompute heuristic ratings",
     summarize: (d) => `${num(d.created) ?? 0} ratings`,
+  },
+  {
+    id: "field",
+    label: "Field",
+    kanji: "馬",
+    path: "/api/v1/admin/expand-field",
+    hint: "fill out runner list (racing.com only)",
+    summarize: (d) =>
+      `+${num(d.added) ?? 0} runners · ${num(d.races) ?? 0} races`,
   },
 ];
 
@@ -167,7 +170,7 @@ export function RefreshBar() {
         </div>
 
         <p className="font-mono text-[10px] tracking-widest text-ink-ghost hidden md:block">
-          FIELD → ODDS → RESEARCH → RATINGS · ~3 MIN
+          ODDS → RESEARCH → RATINGS → FIELD · ~3 MIN
         </p>
 
         <button

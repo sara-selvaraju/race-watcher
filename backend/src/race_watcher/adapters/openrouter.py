@@ -387,10 +387,21 @@ class OpenRouterAdapter:
             log.warning("openrouter.field_empty", race=race.number)
             return []
 
+        source_url = (payload.get("source_url") or "").strip().lower()
+        if "racing.com" not in source_url:
+            log.warning(
+                "openrouter.field_rejected_non_racing_com",
+                race=race.number,
+                source_url=source_url or "(empty)",
+                returned_runners=len(payload.get("runners") or []),
+            )
+            return []
+
         log.info(
             "openrouter.field_done",
             race=race.number,
             model=self.effective_research_model,
+            source_url=source_url,
         )
 
         runners: list[dict] = []
@@ -479,51 +490,61 @@ SUBMIT_FIELD_TOOL = {
     "function": {
         "name": "submit_field",
         "description": (
-            "Submit the complete runner list for the race. Include EVERY runner you can identify "
-            "from public sources, with their saddlecloth number, name, and connections if findable. "
-            "Call this EXACTLY ONCE."
+            "Submit the COMPLETE official runner list for the race as read off a single "
+            "racing.com race-card page. The source_url MUST be the racing.com URL you "
+            "read the field from. If you could not access a racing.com page for this exact "
+            "race, return source_url as an empty string and runners as an empty list — do "
+            "NOT substitute with other sites. Call this EXACTLY ONCE."
         ),
         "parameters": {
             "type": "object",
             "properties": {
+                "source_url": {
+                    "type": "string",
+                    "description": (
+                        "Exact racing.com URL (e.g. https://www.racing.com/horses/race/...) "
+                        "where you read the complete runner table for this race. "
+                        "Empty string ONLY if you could not access racing.com."
+                    ),
+                },
                 "runners": {
                     "type": "array",
-                    "minItems": 1,
+                    "minItems": 0,
                     "maxItems": 30,
                     "items": {
                         "type": "object",
                         "properties": {
                             "runner_number": {
                                 "type": "integer",
-                                "description": "Saddlecloth number, 1-30.",
+                                "description": "Saddlecloth number as printed on racing.com.",
                             },
                             "runner_name": {
                                 "type": "string",
-                                "description": "Horse name as listed in the field.",
+                                "description": "Horse name as printed on racing.com.",
                             },
                             "jockey": {
                                 "type": "string",
-                                "description": "Jockey name, if known.",
+                                "description": "Jockey name from the racing.com row, if listed.",
                             },
                             "trainer": {
                                 "type": "string",
-                                "description": "Trainer name, if known.",
+                                "description": "Trainer name from the racing.com row, if listed.",
                             },
                             "barrier": {
                                 "type": "integer",
-                                "description": "Barrier draw, if known.",
+                                "description": "Barrier draw from the racing.com row, if listed.",
                             },
                             "scratched": {
                                 "type": "boolean",
-                                "description": "True if the runner has been scratched.",
+                                "description": "True if marked scratched on racing.com.",
                             },
                         },
                         "required": ["runner_number", "runner_name"],
                         "additionalProperties": False,
                     },
-                }
+                },
             },
-            "required": ["runners"],
+            "required": ["source_url", "runners"],
             "additionalProperties": False,
         },
     },
@@ -531,31 +552,29 @@ SUBMIT_FIELD_TOOL = {
 
 FIELD_SYSTEM = (
     "You are a race-card researcher for a personal race-day dashboard.\n\n"
-    "Goal: for the SINGLE race below, return the COMPLETE runner field — every horse "
-    "in the official field, with saddlecloth number and name, plus jockey, trainer, "
-    "and barrier when (and ONLY when) you can read them off an official race-card page.\n\n"
-    "PRIMARY source — racing.com is authoritative:\n"
-    "- ALWAYS open the racing.com race card page for this race first. Search "
-    "\"racing.com Flemington race <N> <date>\" or \"site:racing.com Flemington <race-name>\".\n"
-    "- Read the complete runner table (saddlecloth, name, jockey, trainer, barrier) directly "
-    "from racing.com. It is the source of truth.\n"
-    "- Only fall back to racingvictoria.com.au, punters.com.au, or racenet.com.au to fill a "
-    "gap if racing.com is unreachable or genuinely missing a field — and cross-check the row "
-    "matches the racing.com field exactly.\n\n"
-    "Method:\n"
-    "- Australian fields typically have 8-16 runners — fewer than 6 almost certainly means "
-    "your search missed the official card; search again.\n"
-    "- Include every runner number that appears on the official card, even scratched ones.\n\n"
-    "Strict rules — accuracy beats completeness:\n"
-    "- The race details below (track, date, race name, distance) identify the SINGLE race. "
-    "Do NOT mix in runners from other races, other meetings, or earlier years.\n"
-    "- Use the EXACT saddlecloth number as printed in the official field — do not renumber.\n"
-    "- If a runner is scratched, include it with scratched: true.\n"
-    "- jockey/trainer/barrier are OPTIONAL: only fill them when you have read them off a "
-    "verified race-card row for this exact race. If you are not certain, OMIT the field. "
-    "A blank field is correct; a guessed field is a bug.\n"
-    "- Do NOT invent runners or connections. Recently-aggregated tipster blogs sometimes "
-    "carry stale trainer/jockey assignments — prefer the racing.com page over those.\n"
+    "ABSOLUTE RULE — racing.com is the ONLY acceptable source for this task.\n"
+    "- Search for the racing.com page for this exact race (e.g. "
+    "\"site:racing.com Flemington <race-name>\" or "
+    "\"racing.com Flemington race <N> <date>\").\n"
+    "- Open the racing.com race-card page and read the COMPLETE runner table "
+    "(saddlecloth, name, jockey, trainer, barrier) directly from it.\n"
+    "- Return the racing.com URL you read in the source_url field.\n"
+    "- If you cannot access a racing.com page for this exact race, return "
+    "source_url = \"\" and runners = []. Do NOT substitute with punters.com.au, "
+    "racenet.com.au, justhorseracing.com.au, sportsbet, racingvictoria.com.au, "
+    "or any aggregator. Those are out of scope for this call and have introduced "
+    "wrong / stale / invented runners in the past.\n\n"
+    "Strict rules — accuracy is the only thing that matters here:\n"
+    "- The race details below (track, date, race name, distance) identify the "
+    "SINGLE race. Do NOT mix in runners from other races, other meetings, or "
+    "earlier years.\n"
+    "- Use the EXACT saddlecloth number as printed on racing.com — do not renumber.\n"
+    "- If a runner is scratched on racing.com, include it with scratched: true.\n"
+    "- jockey / trainer / barrier are OPTIONAL: only fill them when they appear in "
+    "the racing.com row. Omit otherwise. A blank field is correct; a guessed field "
+    "is a bug.\n"
+    "- Do NOT invent runners. If a horse isn't on the racing.com card, it doesn't "
+    "exist for this race.\n"
     "- Output ONLY the tool call. No prose."
 )
 
