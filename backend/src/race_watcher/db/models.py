@@ -33,7 +33,7 @@ class Meeting(Base):
     source: Mapped[str] = mapped_column(String(200), default="seed")
 
     races: Mapped[list["Race"]] = relationship(
-        back_populates="meeting", cascade="all, delete-orphan", default_factory=list
+        back_populates="meeting", cascade="all, delete-orphan", init=False, repr=False
     )
 
     __table_args__ = (UniqueConstraint("track", "date", name="uq_meeting_track_date"),)
@@ -51,9 +51,9 @@ class Race(Base):
     start_time_local: Mapped[time | None] = mapped_column(Time, default=None)
     status: Mapped[str] = mapped_column(String(20), default="open")
 
-    meeting: Mapped[Meeting] = relationship(back_populates="races", default=None)
+    meeting: Mapped[Meeting] = relationship(back_populates="races", init=False, repr=False)
     runners: Mapped[list["Runner"]] = relationship(
-        back_populates="race", cascade="all, delete-orphan", default_factory=list
+        back_populates="race", cascade="all, delete-orphan", init=False, repr=False
     )
 
     __table_args__ = (UniqueConstraint("meeting_id", "number", name="uq_race_meeting_number"),)
@@ -74,9 +74,9 @@ class Runner(Base):
     scratched: Mapped[bool] = mapped_column(Boolean, default=False)
     betfair_selection_id: Mapped[int | None] = mapped_column(Integer, default=None)
 
-    race: Mapped[Race] = relationship(back_populates="runners", default=None)
+    race: Mapped[Race] = relationship(back_populates="runners", init=False, repr=False)
     form_lines: Mapped[list["FormLine"]] = relationship(
-        back_populates="runner", cascade="all, delete-orphan", default_factory=list
+        back_populates="runner", cascade="all, delete-orphan", init=False, repr=False
     )
 
     __table_args__ = (UniqueConstraint("race_id", "number", name="uq_runner_race_number"),)
@@ -96,7 +96,7 @@ class FormLine(Base):
     weight_kg: Mapped[Decimal | None] = mapped_column(Numeric(5, 2), default=None)
     note: Mapped[str | None] = mapped_column(String(800), default=None)
 
-    runner: Mapped[Runner] = relationship(back_populates="form_lines", default=None)
+    runner: Mapped[Runner] = relationship(back_populates="form_lines", init=False, repr=False)
 
 
 class PriceSnapshot(Base):
