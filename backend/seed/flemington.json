@@ -63,7 +63,7 @@
       "distance_m": 2540,
       "start_time": "13:00",
       "runners": [
-        { "number": 5, "name": "The Western Front", "trainer": null, "jockey": null, "weight_kg": null, "barrier": null,
+        { "number": 5, "name": "The Western Front", "trainer": "Lindsay Park (B, W & J D Hayes)", "jockey": null, "weight_kg": null, "barrier": null,
           "odds": { "source": "Ladbrokes", "price": 6.00, "as_of": "2026-06-17" },
           "form_summary": "Drops back to 2500m after a Sandown Cup (3200m) win; only needs to hold form.",
           "prediction": { "engine": "tipster-consensus", "rating": "top", "win_prob": null, "rationale": "JHR top pick; class drop-back." } },
