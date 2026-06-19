@@ -5,8 +5,6 @@
     "buildCommand": "uv sync --frozen --no-dev"
   },
   "deploy": {
-    "healthcheckPath": "/healthz",
-    "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
