@@ -1,0 +1,13 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "_comment": "Use this file as the railway.json for the WORKER service in Railway. The api service uses railway.json directly.",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "uv sync --frozen --no-dev"
+  },
+  "deploy": {
+    "startCommand": "uv run python -m race_watcher.worker.main",
+    "restartPolicyType": "ALWAYS",
+    "restartPolicyMaxRetries": 10
+  }
+}

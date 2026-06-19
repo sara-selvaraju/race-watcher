@@ -1,0 +1,13 @@
+# Railway Nixpacks config for the backend.
+# Both `api` and `worker` Railway services share this build; they differ only in start command (Procfile).
+[phases.setup]
+nixPkgs = ["python312", "uv"]
+
+[phases.install]
+cmds = ["uv sync --frozen --no-dev"]
+
+[phases.build]
+cmds = ["echo 'no build step'"]
+
+[start]
+cmd = "uv run uvicorn race_watcher.api.app:app --host 0.0.0.0 --port ${PORT:-8000}"
