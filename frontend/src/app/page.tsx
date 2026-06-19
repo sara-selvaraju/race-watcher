@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMeeting } from "@/lib/api/hooks";
 import { Header } from "@/components/Header";
+import { RefreshBar } from "@/components/RefreshBar";
 import { RaceNav } from "@/components/RaceNav";
 import { TopPicksBox } from "@/components/TopPicksBox";
 import { FieldBox } from "@/components/FieldBox";
@@ -36,6 +37,8 @@ export default function Page() {
         rail={meeting.rail}
       />
 
+      <RefreshBar />
+
       <RaceNav
         meeting={meeting}
         activeRaceId={activeRace?.id ?? null}
@@ -51,24 +54,24 @@ export default function Page() {
                 <span className="font-display text-3xl text-gold leading-none">
                   R{activeRace.number}
                 </span>
-                <span className="font-mono text-xs tracking-widest text-paper-ghost">
+                <span className="font-mono text-xs tracking-widest text-ink-ghost">
                   {activeRace.start_time_local?.slice(0, 5)} · {activeRace.distance_m}m
                 </span>
               </div>
-              <h2 className="font-display text-xl md:text-2xl text-paper mt-1.5 leading-tight">
+              <h2 className="font-display text-xl md:text-2xl text-ink mt-1.5 leading-tight">
                 {activeRace.name}
               </h2>
             </div>
             <div className="text-right shrink-0">
               <div className="label-section justify-end mb-1">
                 <span className="font-display tracking-kanji">頭数</span>
-                <span className="text-paper-faint normal-case tracking-normal font-sans">
+                <span className="text-ink-3 normal-case tracking-normal font-sans">
                   Runners
                 </span>
               </div>
-              <div className="font-mono text-2xl tabular-nums text-paper">
+              <div className="font-mono text-2xl tabular-nums text-ink">
                 {activeRace.runners.filter((r) => !r.scratched).length}
-                <span className="text-paper-ghost text-base">/{activeRace.runners.length}</span>
+                <span className="text-ink-ghost text-base">/{activeRace.runners.length}</span>
               </div>
             </div>
           </div>
@@ -97,8 +100,8 @@ function LoadingState() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-12 grid place-items-center min-h-[60vh]">
       <div className="text-center">
-        <div className="font-display text-6xl text-paper-faint animate-pulse">競</div>
-        <p className="mt-6 font-mono text-[10px] tracking-widest text-paper-ghost">
+        <div className="font-display text-6xl text-ink-3 animate-pulse">競</div>
+        <p className="mt-6 font-mono text-[10px] tracking-widest text-ink-ghost">
           LOADING THE CARD
         </p>
       </div>
@@ -111,12 +114,12 @@ function ErrorState() {
     <main className="mx-auto max-w-2xl px-6 py-12">
       <div className="bento p-8 text-center">
         <div className="font-display text-4xl text-vermilion mb-3">×</div>
-        <p className="font-mono text-xs tracking-widest text-paper-dim">
+        <p className="font-mono text-xs tracking-widest text-ink-2">
           COULDN&apos;T REACH THE API
         </p>
-        <p className="mt-3 text-sm text-paper-faint">
+        <p className="mt-3 text-sm text-ink-3">
           Confirm the api service is running and{" "}
-          <code className="font-mono text-paper-dim">NEXT_PUBLIC_API_BASE_URL</code> points at it.
+          <code className="font-mono text-ink-2">NEXT_PUBLIC_API_BASE_URL</code> points at it.
         </p>
       </div>
     </main>

@@ -13,13 +13,13 @@ export function MovementFeed() {
     >
       <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
         <span className="label-section">
-          <span className="font-display tracking-kanji text-paper">動向</span>
-          <span className="text-paper-faint normal-case tracking-normal font-sans">
+          <span className="font-display tracking-kanji text-ink">動向</span>
+          <span className="text-ink-3 normal-case tracking-normal font-sans">
             Movements
           </span>
         </span>
         {data && (
-          <span className="font-mono text-[10px] tracking-widest text-paper-ghost">
+          <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
             {data.length} EVENTS
           </span>
         )}
@@ -33,8 +33,8 @@ export function MovementFeed() {
           </div>
         )}
         {data && data.length === 0 && (
-          <div className="px-5 py-10 text-center text-paper-ghost">
-            <div className="font-display text-3xl mb-2 text-paper-faint">静</div>
+          <div className="px-5 py-10 text-center text-ink-ghost">
+            <div className="font-display text-3xl mb-2 text-ink-3">静</div>
             <p className="font-mono text-[10px] tracking-widest">QUIET — NO SIGNIFICANT MOVES</p>
           </div>
         )}
@@ -51,21 +51,21 @@ export function MovementFeed() {
             return (
               <li
                 key={a.id}
-                className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-washi-raised transition-colors"
+                className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-paper-raised transition-colors"
               >
                 <div className="min-w-0">
-                  <div className="font-display text-sm text-paper truncate flex items-baseline gap-2">
-                    <span className="font-mono text-xs text-paper-faint">
+                  <div className="font-display text-sm text-ink truncate flex items-baseline gap-2">
+                    <span className="font-mono text-xs text-ink-3">
                       R{a.race_number}
                     </span>
                     {a.runner_name}
                   </div>
-                  <div className="font-mono text-[10px] tracking-widest text-paper-ghost mt-0.5">
+                  <div className="font-mono text-[10px] tracking-widest text-ink-ghost mt-0.5">
                     {time} · {a.baseline.toUpperCase()}
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono text-xs tabular-nums text-paper-dim">
+                  <div className="font-mono text-xs tabular-nums text-ink-2">
                     ${from.toFixed(2)} → ${to.toFixed(2)}
                   </div>
                   <div
@@ -91,8 +91,8 @@ function SkeletonRows() {
     <ul className="divide-y divide-hairline">
       {[0, 1, 2].map((i) => (
         <li key={i} className="px-5 py-4 h-14 animate-pulse">
-          <div className="h-3 w-1/2 bg-washi-raised mb-2" />
-          <div className="h-2 w-1/3 bg-washi-raised" />
+          <div className="h-3 w-1/2 bg-paper-raised mb-2" />
+          <div className="h-2 w-1/3 bg-paper-raised" />
         </li>
       ))}
     </ul>

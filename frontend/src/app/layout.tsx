@@ -34,14 +34,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryProvider>
           <div className="relative z-10">{children}</div>
         </QueryProvider>
-        <footer className="relative z-10 border-t border-hairline bg-ink-deep text-xs text-paper-ghost mt-12">
+        <footer className="relative z-10 border-t border-hairline bg-bg-soft text-xs text-ink-3 mt-12">
           <div className="mx-auto max-w-6xl px-6 py-5 flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="font-display tracking-kanji">責任 · RESPONSIBLE PLAY</span>
-            <span className="opacity-50">
+            <span className="opacity-60">
               Heuristic ratings — not financial advice. Personal use only.
             </span>
             <span className="ml-auto">
-              Gambling Help <a className="text-paper-dim hover:text-gold transition-colors" href="tel:1800858858">1800 858 858</a>
+              Gambling Help{" "}
+              <a className="text-ink-2 hover:text-vermilion transition-colors" href="tel:1800858858">
+                1800 858 858
+              </a>
             </span>
           </div>
         </footer>

@@ -274,6 +274,76 @@ class OpenRouterAdapter:
             p["rank"] = i
         return picks[:3]
 
+    def fetch_race_field(self, meeting: DomainMeeting, race) -> list[dict]:
+        """Research the FULL field for one race. Returns [{runner_number, runner_name, jockey?, trainer?, barrier?, scratched?}, ...]."""
+        user_msg = (
+            f"Track: {meeting.track}\n"
+            f"Date: {meeting.date.isoformat()}\n"
+            f"Race: R{race.number} {race.name}\n"
+            f"Distance: {race.distance_m or '?'}m\n\n"
+            "Return the complete official field for this race via submit_field."
+        )
+        try:
+            resp = self._client.chat.completions.create(
+                model=self.effective_model,
+                max_tokens=4096,
+                temperature=0,
+                messages=[
+                    {"role": "system", "content": FIELD_SYSTEM},
+                    {"role": "user", "content": user_msg},
+                ],
+                tools=[SUBMIT_FIELD_TOOL],
+                tool_choice={"type": "function", "function": {"name": "submit_field"}},
+            )
+        except Exception as exc:
+            log.error("openrouter.field_failed", race=race.number, error=str(exc))
+            return []
+
+        log.info(
+            "openrouter.field_usage",
+            race=race.number,
+            model=self.effective_model,
+            finish_reason=getattr(resp.choices[0], "finish_reason", None),
+        )
+
+        message = resp.choices[0].message
+        tool_calls = getattr(message, "tool_calls", None) or []
+        call = next(
+            (tc for tc in tool_calls if getattr(tc.function, "name", None) == "submit_field"),
+            None,
+        )
+        if call is None:
+            return []
+        try:
+            payload = json.loads(call.function.arguments)
+        except json.JSONDecodeError:
+            return []
+
+        runners: list[dict] = []
+        seen: set[int] = set()
+        for entry in payload.get("runners") or []:
+            try:
+                num = int(entry["runner_number"])
+                name = str(entry["runner_name"]).strip()
+            except (KeyError, ValueError, TypeError):
+                continue
+            if not (1 <= num <= 30) or not name:
+                continue
+            if num in seen:
+                continue
+            seen.add(num)
+            runners.append(
+                {
+                    "runner_number": num,
+                    "runner_name": name,
+                    "jockey": (entry.get("jockey") or None) or None,
+                    "trainer": (entry.get("trainer") or None) or None,
+                    "barrier": int(entry["barrier"]) if entry.get("barrier") is not None else None,
+                    "scratched": bool(entry.get("scratched", False)),
+                }
+            )
+        return runners
+
 
 SUBMIT_TOP_PICKS_TOOL = {
     "type": "function",
@@ -322,6 +392,80 @@ SUBMIT_TOP_PICKS_TOOL = {
         },
     },
 }
+
+SUBMIT_FIELD_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "submit_field",
+        "description": (
+            "Submit the complete runner list for the race. Include EVERY runner you can identify "
+            "from public sources, with their saddlecloth number, name, and connections if findable. "
+            "Call this EXACTLY ONCE."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "runners": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 30,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "runner_number": {
+                                "type": "integer",
+                                "description": "Saddlecloth number, 1-30.",
+                            },
+                            "runner_name": {
+                                "type": "string",
+                                "description": "Horse name as listed in the field.",
+                            },
+                            "jockey": {
+                                "type": "string",
+                                "description": "Jockey name, if known.",
+                            },
+                            "trainer": {
+                                "type": "string",
+                                "description": "Trainer name, if known.",
+                            },
+                            "barrier": {
+                                "type": "integer",
+                                "description": "Barrier draw, if known.",
+                            },
+                            "scratched": {
+                                "type": "boolean",
+                                "description": "True if the runner has been scratched.",
+                            },
+                        },
+                        "required": ["runner_number", "runner_name"],
+                        "additionalProperties": False,
+                    },
+                }
+            },
+            "required": ["runners"],
+            "additionalProperties": False,
+        },
+    },
+}
+
+FIELD_SYSTEM = (
+    "You are a race-card researcher for a personal race-day dashboard.\n\n"
+    "Goal: for the SINGLE race below, return the COMPLETE runner field — every horse "
+    "listed in the field, with saddlecloth number and name. Include jockey, trainer, and "
+    "barrier when findable.\n\n"
+    "Method:\n"
+    "- Use web_search to look up the field list. Try racing.com, racing.victoria, "
+    "punters.com.au, racenet.com.au, official meeting race-card pages.\n"
+    "- Cross-check at least two sources where possible.\n\n"
+    "Strict rules:\n"
+    "- The race details below (track, date, name, distance) identify the SINGLE race. "
+    "Do NOT mix in other races.\n"
+    "- Use the EXACT saddlecloth number as printed in the official field — do not renumber.\n"
+    "- If a runner has been scratched, include it with scratched: true. Otherwise omit scratched.\n"
+    "- Do NOT invent runners. If you cannot confirm a runner from a source, omit it.\n"
+    "- Output ONLY the tool call. No prose."
+)
+
 
 TOP_PICKS_SYSTEM = (
     "You are a horse-racing form analyst for a personal race-day dashboard.\n\n"

@@ -69,14 +69,14 @@ export function TopPicksBox({ race }: { race: Race }) {
     <section className="bento bento-ticks animate-bento-in" style={{ animationDelay: "60ms" }}>
       <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
         <span className="label-section">
-          <span className="font-display tracking-kanji text-paper">予想</span>
-          <span className="text-paper-faint normal-case tracking-normal font-sans">Top picks</span>
+          <span className="font-display tracking-kanji text-ink">予想</span>
+          <span className="text-ink-3 normal-case tracking-normal font-sans">Top picks</span>
         </span>
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[9px] tracking-widest text-paper-ghost">
+          <span className="font-mono text-[9px] tracking-widest text-ink-ghost">
             {source === "research" ? "RESEARCH" : "HEURISTIC"}
           </span>
-          <span className="font-mono text-[10px] tracking-widest text-paper-ghost">
+          <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
             R{race.number} · {race.distance_m}m
           </span>
         </div>
@@ -84,7 +84,7 @@ export function TopPicksBox({ race }: { race: Race }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">
         {picks.length === 0 && (
-          <div className="col-span-3 px-6 py-10 text-center text-paper-ghost font-mono text-xs tracking-widest">
+          <div className="col-span-3 px-6 py-10 text-center text-ink-ghost font-mono text-xs tracking-widest">
             NO PREDICTIONS YET
           </div>
         )}
@@ -105,7 +105,7 @@ function PickCell({ pick }: { pick: Pick }) {
     <article
       className={clsx(
         "relative px-5 py-5 flex flex-col gap-3 transition-colors",
-        isLead ? "bg-washi-raised" : "hover:bg-washi-raised",
+        isLead ? "bg-paper-raised" : "hover:bg-paper-raised",
       )}
     >
       {/* rank header */}
@@ -119,35 +119,35 @@ function PickCell({ pick }: { pick: Pick }) {
           <span
             className={clsx(
               "text-3xl font-bold",
-              isLead ? "text-gold" : "text-paper-dim",
+              isLead ? "text-gold" : "text-ink-2",
             )}
           >
             {RANK_KANJI[rank]}
           </span>
-          <span className="mt-0.5 font-mono text-[9px] tracking-widest text-paper-ghost">
+          <span className="mt-0.5 font-mono text-[9px] tracking-widest text-ink-ghost">
             {RANK_LABEL[rank]}
           </span>
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span className="font-mono text-xs text-paper-faint tabular-nums">
+            <span className="font-mono text-xs text-ink-3 tabular-nums">
               #{runner.number}
             </span>
             {win_prob != null && (
               <span
                 className={clsx(
                   "ml-auto font-mono text-sm tabular-nums",
-                  isLead ? "text-gold" : "text-paper-dim",
+                  isLead ? "text-gold" : "text-ink-2",
                 )}
               >
                 {(win_prob * 100).toFixed(1)}%
               </span>
             )}
           </div>
-          <h3 className="font-display text-lg leading-snug text-paper truncate">
+          <h3 className="font-display text-lg leading-snug text-ink truncate">
             {runner.name}
           </h3>
-          <div className="font-mono text-[10px] tracking-widest text-paper-ghost truncate">
+          <div className="font-mono text-[10px] tracking-widest text-ink-ghost truncate">
             {(runner.jockey ?? "—").toUpperCase()}
             <span className="mx-1.5 opacity-50">·</span>
             {(runner.trainer ?? "—").toUpperCase()}
@@ -157,23 +157,23 @@ function PickCell({ pick }: { pick: Pick }) {
 
       {/* odds + romaji rank */}
       <div className="flex items-center justify-between pt-3 border-t border-hairline">
-        <span className="font-display italic text-[11px] tracking-widest text-paper-ghost">
+        <span className="font-display italic text-[11px] tracking-widest text-ink-ghost">
           {RANK_ROMAJI[rank]}
         </span>
         {cp != null ? (
-          <span className="font-mono text-sm tabular-nums text-paper">
-            <span className="text-paper-faint text-xs mr-0.5">$</span>
+          <span className="font-mono text-sm tabular-nums text-ink">
+            <span className="text-ink-3 text-xs mr-0.5">$</span>
             {cp.toFixed(2)}
           </span>
         ) : runner.prediction?.rating ? (
-          <span className="font-mono text-[10px] tracking-widest text-paper-faint">
+          <span className="font-mono text-[10px] tracking-widest text-ink-3">
             {runner.prediction.rating.toUpperCase()}
           </span>
         ) : null}
       </div>
 
       {rationale && (
-        <p className="text-[11px] leading-relaxed text-paper-faint line-clamp-3">
+        <p className="text-[11px] leading-relaxed text-ink-3 line-clamp-3">
           {rationale}
         </p>
       )}

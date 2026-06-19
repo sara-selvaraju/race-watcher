@@ -9,7 +9,7 @@ type Props = {
 export function OddsChip({ price, basePrice, size = "md" }: Props) {
   if (price == null) {
     return (
-      <span className="font-mono text-paper-ghost text-sm tracking-tight">—</span>
+      <span className="font-mono text-ink-ghost text-sm tracking-tight">—</span>
     );
   }
 
@@ -27,10 +27,10 @@ export function OddsChip({ price, basePrice, size = "md" }: Props) {
         size === "md" ? "text-base" : "text-sm",
         trend === "firm" && "text-matcha",
         trend === "drift" && "text-vermilion",
-        trend === "flat" && "text-paper",
+        trend === "flat" && "text-ink",
       )}
     >
-      <span className="text-paper-faint text-[0.7em] mr-0.5">$</span>
+      <span className="text-ink-3 text-[0.7em] mr-0.5">$</span>
       {price.toFixed(2)}
     </span>
   );

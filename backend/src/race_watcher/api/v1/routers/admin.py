@@ -65,3 +65,19 @@ def refresh_tips(
 
     result = refresh_all_races(session, odds)
     return {"source": odds.name, **result}
+
+
+@router.post("/expand-field")
+def expand_field(
+    session: Session = SessionDep,
+    odds: OddsSource = OddsSourceDep,
+) -> dict:
+    """Research the full field per race and add any missing runners.
+
+    Re-uses the OpenRouter adapter (fetch_race_field). Existing runners are not clobbered;
+    missing jockey/trainer/barrier/scratched on existing rows are backfilled if found.
+    """
+    from race_watcher.services.expand_field import expand_all_races
+
+    result = expand_all_races(session, odds)
+    return {"source": odds.name, **result}

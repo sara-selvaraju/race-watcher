@@ -6,10 +6,10 @@ type Props = {
 
 export function PriceSparkline({ prices, width = 72, height = 18 }: Props) {
   if (!prices.length) {
-    return <span className="text-paper-ghost text-[10px] tracking-widest font-mono">—</span>;
+    return <span className="text-ink-ghost text-[10px] tracking-widest font-mono">—</span>;
   }
   if (prices.length === 1) {
-    return <span className="text-paper-ghost text-[10px] tracking-widest font-mono">FRESH</span>;
+    return <span className="text-ink-ghost text-[10px] tracking-widest font-mono">FRESH</span>;
   }
 
   const min = Math.min(...prices);

@@ -5,20 +5,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: {
-          DEFAULT: "var(--ink)",
-          deep: "var(--ink-deep)",
-        },
-        washi: {
-          DEFAULT: "var(--washi)",
-          raised: "var(--washi-raised)",
-          glow: "var(--washi-glow)",
+        bg: {
+          DEFAULT: "var(--bg)",
+          soft: "var(--bg-soft)",
         },
         paper: {
           DEFAULT: "var(--paper)",
-          dim: "var(--paper-dim)",
-          faint: "var(--paper-faint)",
-          ghost: "var(--paper-ghost)",
+          raised: "var(--paper-raised)",
+          glow: "var(--paper-glow)",
+        },
+        ink: {
+          DEFAULT: "var(--ink)",
+          2: "var(--ink-2)",
+          3: "var(--ink-3)",
+          ghost: "var(--ink-ghost)",
         },
         vermilion: {
           DEFAULT: "var(--vermilion)",

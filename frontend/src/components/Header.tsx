@@ -24,11 +24,11 @@ export function Header({ track, date, going, rail }: Props) {
         <div className="label-section mb-3">
           <span className="font-display tracking-kanji">競馬 · TURF</span>
         </div>
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-paper leading-none tracking-tight">
+        <h1 className="font-display text-4xl md:text-5xl font-bold text-ink leading-none tracking-tight">
           {track}
         </h1>
-        <p className="mt-3 font-mono text-xs tracking-widest text-paper-faint flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="text-paper-dim">
+        <p className="mt-3 font-mono text-xs tracking-widest text-ink-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="text-ink-2">
             {yyyy}.{mm}.{dd}
           </span>
           <span className="text-gold font-display text-sm">{dayJa}</span>
@@ -51,14 +51,14 @@ export function Header({ track, date, going, rail }: Props) {
         <div className="flex items-center gap-2 justify-end font-mono text-[11px] tracking-widest">
           <span
             className={`w-1.5 h-1.5 rounded-full ${
-              status?.in_window ? "bg-matcha animate-pulse" : "bg-paper-ghost"
+              status?.in_window ? "bg-matcha animate-pulse" : "bg-ink-ghost"
             }`}
           />
-          <span className={status?.in_window ? "text-matcha" : "text-paper-faint"}>
+          <span className={status?.in_window ? "text-matcha" : "text-ink-3"}>
             {status?.in_window ? "LIVE WINDOW" : "STANDBY"}
           </span>
         </div>
-        <div className="mt-2 font-mono text-[10px] text-paper-ghost tracking-widest">
+        <div className="mt-2 font-mono text-[10px] text-ink-ghost tracking-widest">
           {status?.snapshot_count ?? 0} SNAPS · {status?.alert_count ?? 0} ALERTS
         </div>
       </div>

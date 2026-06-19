@@ -21,7 +21,7 @@ const RATING_COLOR = {
   top: "text-gold",
   danger: "text-vermilion",
   "each-way": "text-indigo-ink",
-  watch: "text-paper-dim",
+  watch: "text-ink-2",
 } as const;
 
 export function FieldBox({ race }: { race: Race }) {
@@ -54,8 +54,8 @@ export function FieldBox({ race }: { race: Race }) {
     >
       <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
         <span className="label-section">
-          <span className="font-display tracking-kanji text-paper">出走馬</span>
-          <span className="text-paper-faint normal-case tracking-normal font-sans">
+          <span className="font-display tracking-kanji text-ink">出走馬</span>
+          <span className="text-ink-3 normal-case tracking-normal font-sans">
             Full field
           </span>
         </span>
@@ -68,7 +68,7 @@ export function FieldBox({ race }: { race: Race }) {
                 "px-2 py-1 border transition-colors",
                 sort === k
                   ? "border-gold text-gold bg-gold/5"
-                  : "border-hairline text-paper-ghost hover:border-hairline-bright hover:text-paper-faint",
+                  : "border-hairline text-ink-ghost hover:border-hairline-bright hover:text-ink-3",
               )}
             >
               {k.toUpperCase()}
@@ -82,10 +82,10 @@ export function FieldBox({ race }: { race: Race }) {
           <RunnerRow key={runner.id} runner={runner} />
         ))}
         {rows.scratched.length > 0 && (
-          <li className="px-5 py-3 bg-ink-deep">
+          <li className="px-5 py-3 bg-bg-soft">
             <div className="label-section">
-              <span className="font-display tracking-kanji text-paper-faint">取消</span>
-              <span className="font-sans normal-case tracking-normal text-paper-ghost">
+              <span className="font-display tracking-kanji text-ink-3">取消</span>
+              <span className="font-sans normal-case tracking-normal text-ink-ghost">
                 Scratched
               </span>
             </div>
@@ -94,7 +94,7 @@ export function FieldBox({ race }: { race: Race }) {
         {rows.scratched.map((runner) => (
           <li
             key={runner.id}
-            className="px-5 py-3 flex items-center gap-3 text-paper-ghost"
+            className="px-5 py-3 flex items-center gap-3 text-ink-ghost"
           >
             <span className="font-mono text-xs">#{runner.number}</span>
             <span className="font-display text-sm line-through opacity-60">
@@ -117,20 +117,20 @@ function RunnerRow({ runner }: { runner: Runner }) {
   const rating = (runner.prediction?.rating ?? null) as keyof typeof RATING_COLOR | null;
 
   return (
-    <li className="px-5 py-3.5 grid grid-cols-12 gap-3 items-center transition-colors hover:bg-washi-raised group">
+    <li className="px-5 py-3.5 grid grid-cols-12 gap-3 items-center transition-colors hover:bg-paper-raised group">
       {/* number + silk slot */}
       <div className="col-span-1 flex items-center gap-2">
-        <span className="font-mono text-base tabular-nums text-paper-dim group-hover:text-paper">
+        <span className="font-mono text-base tabular-nums text-ink-2 group-hover:text-ink">
           {runner.number}
         </span>
       </div>
 
       {/* name + connections */}
       <div className="col-span-5 sm:col-span-5 min-w-0">
-        <h4 className="font-display text-base text-paper truncate leading-snug">
+        <h4 className="font-display text-base text-ink truncate leading-snug">
           {runner.name}
         </h4>
-        <div className="font-mono text-[10px] tracking-widest text-paper-ghost truncate mt-0.5">
+        <div className="font-mono text-[10px] tracking-widest text-ink-ghost truncate mt-0.5">
           {(runner.jockey ?? "—").toUpperCase()}
           <span className="mx-1.5 opacity-50">·</span>
           {(runner.trainer ?? "—").toUpperCase()}
@@ -156,14 +156,14 @@ function RunnerRow({ runner }: { runner: Runner }) {
             className="inline-flex flex-col items-end"
             title={runner.prediction?.rationale ?? undefined}
           >
-            <span className="font-mono text-sm tabular-nums text-paper">
+            <span className="font-mono text-sm tabular-nums text-ink">
               {(winProb * 100).toFixed(1)}%
             </span>
             {rating && (
               <span
                 className={clsx(
                   "font-mono text-[9px] tracking-widest mt-0.5",
-                  RATING_COLOR[rating] ?? "text-paper-faint",
+                  RATING_COLOR[rating] ?? "text-ink-3",
                 )}
               >
                 {rating.toUpperCase().replace("-", " ")}
@@ -171,7 +171,7 @@ function RunnerRow({ runner }: { runner: Runner }) {
             )}
           </div>
         ) : (
-          <span className="font-mono text-[10px] tracking-widest text-paper-ghost">—</span>
+          <span className="font-mono text-[10px] tracking-widest text-ink-ghost">—</span>
         )}
       </div>
     </li>
