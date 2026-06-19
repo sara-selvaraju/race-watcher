@@ -153,6 +153,89 @@ class OpenRouterAdapter:
             return base
         return f"{base}:online"
 
+    @staticmethod
+    def _model_supports_tools(model: str) -> bool:
+        """Perplexity Sonar models don't support OpenAI-style function calling on OpenRouter."""
+        return not model.startswith("perplexity/")
+
+    def _structured_call(
+        self,
+        *,
+        model: str,
+        system: str,
+        user: str,
+        tool: dict,
+        schema_name: str,
+        schema: dict,
+        max_tokens: int,
+    ) -> dict | None:
+        """Run a single structured call, branching on whether the model supports tools.
+
+        For tool-capable models: forced `tool_choice` returns the tool args as a dict.
+        For Sonar (no tools): `response_format=json_schema` returns the content as JSON text.
+        Returns the parsed payload dict, or None on failure.
+        """
+        if self._model_supports_tools(model):
+            try:
+                resp = self._client.chat.completions.create(
+                    model=model,
+                    max_tokens=max_tokens,
+                    temperature=0,
+                    messages=[
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user},
+                    ],
+                    tools=[tool],
+                    tool_choice={"type": "function", "function": {"name": tool["function"]["name"]}},
+                )
+            except Exception as exc:
+                log.error("openrouter.tool_call_failed", model=model, error=str(exc))
+                return None
+            message = resp.choices[0].message
+            for tc in getattr(message, "tool_calls", None) or []:
+                if getattr(tc.function, "name", None) == tool["function"]["name"]:
+                    try:
+                        return json.loads(tc.function.arguments)
+                    except json.JSONDecodeError as exc:
+                        log.error("openrouter.bad_tool_json", error=str(exc))
+                        return None
+            log.warning("openrouter.no_tool_call", model=model)
+            return None
+
+        # No-tools path: use response_format=json_schema. Sonar supports this.
+        try:
+            resp = self._client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                temperature=0,
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": schema_name,
+                        "schema": schema,
+                    },
+                },
+            )
+        except Exception as exc:
+            log.error("openrouter.json_schema_failed", model=model, error=str(exc))
+            return None
+        content = (resp.choices[0].message.content or "").strip()
+        if not content:
+            log.warning("openrouter.empty_content", model=model)
+            return None
+        # Sonar sometimes wraps JSON in code fences; strip them defensively.
+        if content.startswith("```"):
+            content = content.strip("`").lstrip("json").strip()
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as exc:
+            log.error("openrouter.bad_json_content", error=str(exc), content=content[:200])
+            return None
+
     def fetch_prices(self, meeting: DomainMeeting) -> list[DomainPrice]:
         user_msg = (
             f"Meeting: {meeting.track} on {meeting.date.isoformat()} ({meeting.timezone}).\n\n"
@@ -211,46 +294,27 @@ class OpenRouterAdapter:
         """Research one race and return up to 3 picks: [{rank, runner_number, runner_name, rationale}, ...]."""
         user_msg = (
             f"{_format_race_runners(meeting, race)}\n\n"
-            "Identify the top 3 most-likely-to-win runners. Call submit_top_picks with the results."
+            "Identify the top 3 most-likely-to-win runners. "
+            "Return JSON matching the submit_top_picks schema."
         )
-        try:
-            resp = self._client.chat.completions.create(
-                model=self.effective_research_model,
-                max_tokens=2048,
-                temperature=0,
-                messages=[
-                    {"role": "system", "content": TOP_PICKS_SYSTEM},
-                    {"role": "user", "content": user_msg},
-                ],
-                tools=[SUBMIT_TOP_PICKS_TOOL],
-                tool_choice={"type": "function", "function": {"name": "submit_top_picks"}},
-            )
-        except Exception as exc:
-            log.error("openrouter.top_picks_failed", race=race.number, error=str(exc))
+        payload = self._structured_call(
+            model=self.effective_research_model,
+            system=TOP_PICKS_SYSTEM,
+            user=user_msg,
+            tool=SUBMIT_TOP_PICKS_TOOL,
+            schema_name="submit_top_picks",
+            schema=SUBMIT_TOP_PICKS_TOOL["function"]["parameters"],
+            max_tokens=2048,
+        )
+        if payload is None:
+            log.warning("openrouter.top_picks_empty", race=race.number)
             return []
 
         log.info(
-            "openrouter.top_picks_usage",
+            "openrouter.top_picks_done",
             race=race.number,
             model=self.effective_research_model,
-            finish_reason=getattr(resp.choices[0], "finish_reason", None),
         )
-
-        message = resp.choices[0].message
-        tool_calls = getattr(message, "tool_calls", None) or []
-        call = next(
-            (tc for tc in tool_calls if getattr(tc.function, "name", None) == "submit_top_picks"),
-            None,
-        )
-        if call is None:
-            log.warning("openrouter.top_picks_no_tool_call", race=race.number)
-            return []
-
-        try:
-            payload = json.loads(call.function.arguments)
-        except json.JSONDecodeError as exc:
-            log.error("openrouter.top_picks_bad_json", race=race.number, error=str(exc))
-            return []
 
         valid_numbers = {r.number for r in race.runners if not r.scratched}
         picks: list[dict] = []
@@ -295,43 +359,26 @@ class OpenRouterAdapter:
             f"Date: {meeting.date.isoformat()}\n"
             f"Race: R{race.number} {race.name}\n"
             f"Distance: {race.distance_m or '?'}m\n\n"
-            "Return the complete official field for this race via submit_field."
+            "Return the complete official field for this race as JSON matching the submit_field schema."
         )
-        try:
-            resp = self._client.chat.completions.create(
-                model=self.effective_research_model,
-                max_tokens=4096,
-                temperature=0,
-                messages=[
-                    {"role": "system", "content": FIELD_SYSTEM},
-                    {"role": "user", "content": user_msg},
-                ],
-                tools=[SUBMIT_FIELD_TOOL],
-                tool_choice={"type": "function", "function": {"name": "submit_field"}},
-            )
-        except Exception as exc:
-            log.error("openrouter.field_failed", race=race.number, error=str(exc))
+        payload = self._structured_call(
+            model=self.effective_research_model,
+            system=FIELD_SYSTEM,
+            user=user_msg,
+            tool=SUBMIT_FIELD_TOOL,
+            schema_name="submit_field",
+            schema=SUBMIT_FIELD_TOOL["function"]["parameters"],
+            max_tokens=4096,
+        )
+        if payload is None:
+            log.warning("openrouter.field_empty", race=race.number)
             return []
 
         log.info(
-            "openrouter.field_usage",
+            "openrouter.field_done",
             race=race.number,
             model=self.effective_research_model,
-            finish_reason=getattr(resp.choices[0], "finish_reason", None),
         )
-
-        message = resp.choices[0].message
-        tool_calls = getattr(message, "tool_calls", None) or []
-        call = next(
-            (tc for tc in tool_calls if getattr(tc.function, "name", None) == "submit_field"),
-            None,
-        )
-        if call is None:
-            return []
-        try:
-            payload = json.loads(call.function.arguments)
-        except json.JSONDecodeError:
-            return []
 
         runners: list[dict] = []
         seen: set[int] = set()
