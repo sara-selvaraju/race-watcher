@@ -27,10 +27,10 @@ class Meeting(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
     track: Mapped[str] = mapped_column(String(80))
     date: Mapped[date] = mapped_column(Date)
-    going: Mapped[str | None] = mapped_column(String(40), default=None)
-    rail: Mapped[str | None] = mapped_column(String(80), default=None)
+    going: Mapped[str | None] = mapped_column(String(120), default=None)
+    rail: Mapped[str | None] = mapped_column(String(120), default=None)
     timezone: Mapped[str] = mapped_column(String(40), default="Australia/Melbourne")
-    source: Mapped[str] = mapped_column(String(40), default="seed")
+    source: Mapped[str] = mapped_column(String(200), default="seed")
 
     races: Mapped[list["Race"]] = relationship(
         back_populates="meeting", cascade="all, delete-orphan", default_factory=list
