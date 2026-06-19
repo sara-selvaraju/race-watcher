@@ -388,9 +388,13 @@ class OpenRouterAdapter:
             return []
 
         source_url = (payload.get("source_url") or "").strip().lower()
-        if "racing.com" not in source_url:
+        if "racing.com" in source_url:
+            source_host = "racing.com"
+        elif "racenet.com.au" in source_url:
+            source_host = "racenet.com.au"
+        else:
             log.warning(
-                "openrouter.field_rejected_non_racing_com",
+                "openrouter.field_rejected_off_allowlist",
                 race=race.number,
                 source_url=source_url or "(empty)",
                 returned_runners=len(payload.get("runners") or []),
@@ -401,6 +405,7 @@ class OpenRouterAdapter:
             "openrouter.field_done",
             race=race.number,
             model=self.effective_research_model,
+            source_host=source_host,
             source_url=source_url,
         )
 
@@ -490,11 +495,12 @@ SUBMIT_FIELD_TOOL = {
     "function": {
         "name": "submit_field",
         "description": (
-            "Submit the COMPLETE official runner list for the race as read off a single "
-            "racing.com race-card page. The source_url MUST be the racing.com URL you "
-            "read the field from. If you could not access a racing.com page for this exact "
-            "race, return source_url as an empty string and runners as an empty list — do "
-            "NOT substitute with other sites. Call this EXACTLY ONCE."
+            "Submit the COMPLETE official runner list for the race as read off a SINGLE "
+            "race-card page on racing.com OR racenet.com.au (prefer racing.com when both "
+            "are available). The source_url MUST be the exact URL you read from. If you "
+            "could not access either site for this race, return source_url as an empty "
+            "string and runners as an empty list — do NOT substitute with other sites "
+            "and do NOT merge runners from multiple pages. Call this EXACTLY ONCE."
         ),
         "parameters": {
             "type": "object",
@@ -502,9 +508,9 @@ SUBMIT_FIELD_TOOL = {
                 "source_url": {
                     "type": "string",
                     "description": (
-                        "Exact racing.com URL (e.g. https://www.racing.com/horses/race/...) "
-                        "where you read the complete runner table for this race. "
-                        "Empty string ONLY if you could not access racing.com."
+                        "Exact URL on racing.com OR racenet.com.au where you read the "
+                        "complete runner table for this race (single page, not a merge). "
+                        "Empty string ONLY if you could not access either site for this race."
                     ),
                 },
                 "runners": {
@@ -552,28 +558,33 @@ SUBMIT_FIELD_TOOL = {
 
 FIELD_SYSTEM = (
     "You are a race-card researcher for a personal race-day dashboard.\n\n"
-    "ABSOLUTE RULE — racing.com is the ONLY acceptable source for this task.\n"
-    "- Search for the racing.com page for this exact race (e.g. "
+    "ABSOLUTE RULE — only racing.com or racenet.com.au may be used as the source.\n"
+    "- Prefer racing.com when accessible. Search "
     "\"site:racing.com Flemington <race-name>\" or "
-    "\"racing.com Flemington race <N> <date>\").\n"
-    "- Open the racing.com race-card page and read the COMPLETE runner table "
-    "(saddlecloth, name, jockey, trainer, barrier) directly from it.\n"
-    "- Return the racing.com URL you read in the source_url field.\n"
-    "- If you cannot access a racing.com page for this exact race, return "
-    "source_url = \"\" and runners = []. Do NOT substitute with punters.com.au, "
-    "racenet.com.au, justhorseracing.com.au, sportsbet, racingvictoria.com.au, "
-    "or any aggregator. Those are out of scope for this call and have introduced "
-    "wrong / stale / invented runners in the past.\n\n"
+    "\"racing.com Flemington race <N> <date>\".\n"
+    "- If racing.com is unreachable for this race, fall back to racenet.com.au — "
+    "search \"site:racenet.com.au Flemington race <N> <date>\" and open the "
+    "official race-card / form page.\n"
+    "- Read the COMPLETE runner table (saddlecloth, name, jockey, trainer, "
+    "barrier) directly from the chosen page. Use ONE page only — never merge "
+    "runners from multiple pages or sites.\n"
+    "- Return the exact URL you read from in the source_url field. It must be on "
+    "racing.com or racenet.com.au.\n"
+    "- If you cannot access EITHER site for this race, return source_url = \"\" "
+    "and runners = []. Do NOT substitute with punters.com.au, "
+    "justhorseracing.com.au, sportsbet, racingvictoria.com.au, or any aggregator. "
+    "Those have introduced wrong / stale / invented runners in the past.\n\n"
     "Strict rules — accuracy is the only thing that matters here:\n"
     "- The race details below (track, date, race name, distance) identify the "
     "SINGLE race. Do NOT mix in runners from other races, other meetings, or "
     "earlier years.\n"
-    "- Use the EXACT saddlecloth number as printed on racing.com — do not renumber.\n"
-    "- If a runner is scratched on racing.com, include it with scratched: true.\n"
+    "- Use the EXACT saddlecloth number as printed on the source page — do not "
+    "renumber.\n"
+    "- If a runner is scratched on the source page, include it with scratched: true.\n"
     "- jockey / trainer / barrier are OPTIONAL: only fill them when they appear in "
-    "the racing.com row. Omit otherwise. A blank field is correct; a guessed field "
-    "is a bug.\n"
-    "- Do NOT invent runners. If a horse isn't on the racing.com card, it doesn't "
+    "the source-page row. Omit otherwise. A blank field is correct; a guessed "
+    "field is a bug.\n"
+    "- Do NOT invent runners. If a horse isn't on the source page, it doesn't "
     "exist for this race.\n"
     "- Output ONLY the tool call. No prose."
 )
