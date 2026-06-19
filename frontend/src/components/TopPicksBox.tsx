@@ -173,7 +173,7 @@ function PickCell({ pick }: { pick: Pick }) {
       </div>
 
       {rationale && (
-        <p className="text-[11px] leading-relaxed text-ink-3 line-clamp-3">
+        <p className="text-[11px] leading-relaxed text-ink-3">
           {rationale}
         </p>
       )}
