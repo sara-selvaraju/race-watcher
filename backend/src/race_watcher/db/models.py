@@ -107,7 +107,7 @@ class PriceSnapshot(Base):
     source: Mapped[str] = mapped_column(String(40))
     price: Mapped[Decimal] = mapped_column(Numeric(8, 3))
     taken_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
+        DateTime(timezone=True), server_default=func.now(), init=False
     )
 
     __table_args__ = (
@@ -126,7 +126,7 @@ class Prediction(Base):
     rating: Mapped[str | None] = mapped_column(String(40), default=None)
     rationale: Mapped[str | None] = mapped_column(String(800), default=None)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
+        DateTime(timezone=True), server_default=func.now(), init=False
     )
 
 
@@ -141,7 +141,7 @@ class MovementAlert(Base):
     direction: Mapped[str] = mapped_column(String(10))  # "firm" | "drift"
     baseline: Mapped[str] = mapped_column(String(20))  # "previous" | "open"
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
+        DateTime(timezone=True), server_default=func.now(), init=False
     )
 
     __table_args__ = (
