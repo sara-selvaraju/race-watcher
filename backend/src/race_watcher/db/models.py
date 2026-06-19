@@ -111,7 +111,7 @@ class PriceSnapshot(Base):
     source: Mapped[str] = mapped_column(String(40))
     price: Mapped[Decimal] = mapped_column(Numeric(8, 3))
     taken_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), init=False
+        DateTime(timezone=True), server_default=func.now()
     )
 
     __table_args__ = (
