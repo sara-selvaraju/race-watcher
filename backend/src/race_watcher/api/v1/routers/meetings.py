@@ -34,6 +34,7 @@ def _runner_to_out(session: Session, runner: m.Runner) -> RunnerOut:
         weight_kg=runner.weight_kg,
         silk=runner.silk,
         scratched=runner.scratched,
+        seeded=runner.seed_price is not None or runner.seed_prediction_rationale is not None,
         form_lines=[
             FormLineOut(
                 line_date=fl.line_date,

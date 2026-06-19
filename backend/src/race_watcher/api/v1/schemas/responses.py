@@ -46,6 +46,9 @@ class RunnerOut(_ApiBase):
     weight_kg: Decimal | None
     silk: str | None
     scratched: bool
+    # True when this runner originated from the curated seed JSON (connections trusted).
+    # False when it was added by /admin/expand-field — treat connections as research-derived.
+    seeded: bool
     form_lines: list[FormLineOut]
     current_price: PriceOut | None
     price_history: list[PriceOut]
