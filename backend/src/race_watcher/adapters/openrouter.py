@@ -657,26 +657,55 @@ def _parse_submit_payload(payload: dict, meeting: DomainMeeting) -> list[DomainP
 
 
 def _extract_citations(resp) -> list[str]:
-    """Pull citation URLs from a chat-completion response (Perplexity Sonar surfaces them
-    as a top-level `citations` array; other providers usually return nothing here)."""
-    raw = getattr(resp, "citations", None)
-    if raw is None:
-        try:
-            raw = (resp.model_dump() or {}).get("citations")
-        except Exception:
-            raw = None
-    if not raw:
-        return []
+    """Pull citation URLs from a chat-completion response. Perplexity Sonar via OpenRouter
+    can surface them in several spots — top-level `citations`, `search_results`, or under
+    `choices[0].message.annotations` — so we probe each and log what we found."""
+    try:
+        dump = resp.model_dump() if hasattr(resp, "model_dump") else None
+    except Exception as exc:
+        dump = None
+        log.warning("openrouter.dump_failed", error=str(exc))
+
+    candidates: list = []
+    # Top-level: try attribute first, then dict.
+    for key in ("citations", "search_results"):
+        v = getattr(resp, key, None)
+        if v is None and isinstance(dump, dict):
+            v = dump.get(key)
+        if v:
+            candidates.extend(v if isinstance(v, list) else [v])
+
+    # Inside the message: OpenAI-style annotations or provider-specific fields.
+    if isinstance(dump, dict):
+        msg = (dump.get("choices") or [{}])[0].get("message") or {}
+        if isinstance(msg, dict):
+            for key in ("citations", "annotations", "search_results"):
+                v = msg.get(key)
+                if v:
+                    candidates.extend(v if isinstance(v, list) else [v])
+
     urls: list[str] = []
-    for item in raw:
+    for item in candidates:
         if isinstance(item, str) and item.startswith(("http://", "https://")):
             urls.append(item)
         elif isinstance(item, dict):
+            # Common shapes: {url: ...}, {link: ...}, {href: ...},
+            # or OpenAI annotation {type: "url_citation", url_citation: {url: ...}}
+            inner = item.get("url_citation") if isinstance(item.get("url_citation"), dict) else item
             for k in ("url", "link", "href"):
-                v = item.get(k)
+                v = inner.get(k)
                 if isinstance(v, str) and v.startswith(("http://", "https://")):
                     urls.append(v)
                     break
+
+    if not urls and isinstance(dump, dict):
+        # One-shot diagnostic: log the response shape so we can see where Perplexity put them.
+        msg_keys = list((dump.get("choices") or [{}])[0].get("message", {}).keys())
+        log.info(
+            "openrouter.citations_missing",
+            top_keys=list(dump.keys()),
+            message_keys=msg_keys,
+        )
     return urls
 
 
