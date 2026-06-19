@@ -228,6 +228,30 @@
           }
         }
       }
+    },
+    "/api/v1/admin/refresh-tips": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Refresh Tips",
+        "description": "Run the LLM research agent once per race to refresh top-3 picks.\n\nRe-uses the OpenRouter odds adapter (it has a fetch_race_top_picks() method).\nIdempotent: replaces prior picks per race.",
+        "operationId": "refresh_tips_api_v1_admin_refresh_tips_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Refresh Tips Api V1 Admin Refresh Tips Post"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -627,6 +651,13 @@
             },
             "type": "array",
             "title": "Runners"
+          },
+          "top_picks": {
+            "items": {
+              "$ref": "#/components/schemas/TopPickOut"
+            },
+            "type": "array",
+            "title": "Top Picks"
           }
         },
         "type": "object",
@@ -638,7 +669,8 @@
           "klass",
           "start_time_local",
           "status",
-          "runners"
+          "runners",
+          "top_picks"
         ],
         "title": "RaceOut"
       },
@@ -825,6 +857,57 @@
           "in_window"
         ],
         "title": "StatusOut"
+      },
+      "TopPickOut": {
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "runner_id": {
+            "type": "integer",
+            "title": "Runner Id"
+          },
+          "runner_number": {
+            "type": "integer",
+            "title": "Runner Number"
+          },
+          "runner_name": {
+            "type": "string",
+            "title": "Runner Name"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rank",
+          "runner_id",
+          "runner_number",
+          "runner_name",
+          "rationale",
+          "source",
+          "created_at"
+        ],
+        "title": "TopPickOut"
       },
       "ValidationError": {
         "properties": {

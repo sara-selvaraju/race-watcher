@@ -11,10 +11,11 @@ from race_watcher.api.v1.schemas.responses import (
     PriceOut,
     RaceOut,
     RunnerOut,
+    TopPickOut,
 )
 from race_watcher.core.config import settings
 from race_watcher.db import models as m
-from race_watcher.repositories import prediction_repo, price_repo, race_repo
+from race_watcher.repositories import prediction_repo, price_repo, race_repo, top_pick_repo
 
 router = APIRouter(prefix="/meeting", tags=["meeting"])
 
@@ -70,6 +71,35 @@ def _runner_to_out(session: Session, runner: m.Runner) -> RunnerOut:
     )
 
 
+def _race_to_out(session: Session, race: m.Race) -> RaceOut:
+    pick_rows = top_pick_repo.list_for_race(session, race.id)
+    runners_by_id = {r.id: r for r in race.runners}
+    picks = [
+        TopPickOut(
+            rank=p.rank,
+            runner_id=p.runner_id,
+            runner_number=runners_by_id[p.runner_id].number if p.runner_id in runners_by_id else 0,
+            runner_name=runners_by_id[p.runner_id].name if p.runner_id in runners_by_id else "?",
+            rationale=p.rationale,
+            source=p.source,
+            created_at=p.created_at,
+        )
+        for p in pick_rows
+        if p.runner_id in runners_by_id
+    ]
+    return RaceOut(
+        id=race.id,
+        number=race.number,
+        name=race.name,
+        distance_m=race.distance_m,
+        klass=race.klass,
+        start_time_local=race.start_time_local,
+        status=race.status,
+        runners=[_runner_to_out(session, r) for r in race.runners],
+        top_picks=picks,
+    )
+
+
 @router.get("/today", response_model=MeetingOut)
 def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
     meeting = race_repo.get_meeting_by_date(session, settings.race_date)
@@ -83,16 +113,7 @@ def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
         rail=meeting.rail,
         timezone=meeting.timezone,
         races=[
-            RaceOut(
-                id=race.id,
-                number=race.number,
-                name=race.name,
-                distance_m=race.distance_m,
-                klass=race.klass,
-                start_time_local=race.start_time_local,
-                status=race.status,
-                runners=[_runner_to_out(session, r) for r in race.runners],
-            )
+            _race_to_out(session, race)
             for race in sorted(meeting.races, key=lambda r: r.number)
         ],
     )
@@ -103,13 +124,4 @@ def get_race(race_id: int, session: Session = SessionDep) -> RaceOut:
     race = race_repo.get_race(session, race_id)
     if race is None:
         raise HTTPException(status_code=404, detail="Race not found")
-    return RaceOut(
-        id=race.id,
-        number=race.number,
-        name=race.name,
-        distance_m=race.distance_m,
-        klass=race.klass,
-        start_time_local=race.start_time_local,
-        status=race.status,
-        runners=[_runner_to_out(session, r) for r in race.runners],
-    )
+    return _race_to_out(session, race)

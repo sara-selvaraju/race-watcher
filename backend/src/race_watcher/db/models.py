@@ -134,6 +134,25 @@ class Prediction(Base):
     )
 
 
+class TopPick(Base):
+    __tablename__ = "top_pick"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
+    race_id: Mapped[int] = mapped_column(ForeignKey("race.id", ondelete="CASCADE"))
+    runner_id: Mapped[int] = mapped_column(ForeignKey("runner.id", ondelete="CASCADE"))
+    rank: Mapped[int] = mapped_column(Integer)
+    rationale: Mapped[str | None] = mapped_column(String(800), default=None)
+    source: Mapped[str] = mapped_column(String(40), default="openrouter")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), init=False
+    )
+
+    __table_args__ = (
+        UniqueConstraint("race_id", "rank", name="uq_top_pick_race_rank"),
+        Index("ix_top_pick_race", "race_id"),
+    )
+
+
 class MovementAlert(Base):
     __tablename__ = "movement_alert"
 

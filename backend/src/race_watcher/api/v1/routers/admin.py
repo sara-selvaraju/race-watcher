@@ -49,3 +49,19 @@ def refresh_odds(
     """
     result = poll_once(session, odds, force=True)
     return {"source": odds.name, **result}
+
+
+@router.post("/refresh-tips")
+def refresh_tips(
+    session: Session = SessionDep,
+    odds: OddsSource = OddsSourceDep,
+) -> dict:
+    """Run the LLM research agent once per race to refresh top-3 picks.
+
+    Re-uses the OpenRouter odds adapter (it has a fetch_race_top_picks() method).
+    Idempotent: replaces prior picks per race.
+    """
+    from race_watcher.services.top_picks import refresh_all_races
+
+    result = refresh_all_races(session, odds)
+    return {"source": odds.name, **result}

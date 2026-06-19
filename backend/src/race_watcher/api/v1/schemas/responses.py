@@ -52,6 +52,16 @@ class RunnerOut(_ApiBase):
     prediction: PredictionOut | None
 
 
+class TopPickOut(_ApiBase):
+    rank: int
+    runner_id: int
+    runner_number: int
+    runner_name: str
+    rationale: str | None
+    source: str
+    created_at: datetime
+
+
 class RaceOut(_ApiBase):
     id: int
     number: int
@@ -61,6 +71,7 @@ class RaceOut(_ApiBase):
     start_time_local: time | None
     status: str
     runners: list[RunnerOut]
+    top_picks: list[TopPickOut]
 
 
 class MeetingOut(_ApiBase):

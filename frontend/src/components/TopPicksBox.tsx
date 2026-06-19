@@ -11,6 +11,7 @@ type Pick = {
   rank: 1 | 2 | 3;
   win_prob: number | null;
   rationale: string | null;
+  source: "research" | "heuristic";
 };
 
 const RANK_KANJI = { 1: "一", 2: "二", 3: "三" } as const;
@@ -23,8 +24,30 @@ function n(v: string | number | null | undefined): number | null {
   return Number.isFinite(x) ? x : null;
 }
 
-function pickTop3(runners: readonly Runner[]): Pick[] {
-  const sorted = runners
+function pickTop3(race: Race): Pick[] {
+  const byId = new Map(race.runners.map((r) => [r.id, r]));
+
+  // Research-backed picks from /admin/refresh-tips, if present.
+  const research = (race.top_picks ?? [])
+    .filter((p) => byId.has(p.runner_id))
+    .sort((a, b) => a.rank - b.rank)
+    .slice(0, 3);
+
+  if (research.length > 0) {
+    return research.map((p) => {
+      const runner = byId.get(p.runner_id)!;
+      return {
+        runner,
+        rank: p.rank as 1 | 2 | 3,
+        win_prob: n(runner.prediction?.win_prob),
+        rationale: p.rationale,
+        source: "research" as const,
+      };
+    });
+  }
+
+  // Fallback: derive from heuristic prediction win_prob.
+  const sorted = race.runners
     .filter((r) => !r.scratched)
     .map((r) => ({ r, p: n(r.prediction?.win_prob) ?? 0 }))
     .sort((a, b) => b.p - a.p)
@@ -34,11 +57,13 @@ function pickTop3(runners: readonly Runner[]): Pick[] {
     rank: (i + 1) as 1 | 2 | 3,
     win_prob: n(r.prediction?.win_prob),
     rationale: r.prediction?.rationale ?? null,
+    source: "heuristic" as const,
   }));
 }
 
 export function TopPicksBox({ race }: { race: Race }) {
-  const picks = pickTop3(race.runners);
+  const picks = pickTop3(race);
+  const source = picks[0]?.source ?? "heuristic";
 
   return (
     <section className="bento bento-ticks animate-bento-in" style={{ animationDelay: "60ms" }}>
@@ -47,9 +72,14 @@ export function TopPicksBox({ race }: { race: Race }) {
           <span className="font-display tracking-kanji text-paper">予想</span>
           <span className="text-paper-faint normal-case tracking-normal font-sans">Top picks</span>
         </span>
-        <span className="font-mono text-[10px] tracking-widest text-paper-ghost">
-          R{race.number} · {race.distance_m}m
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[9px] tracking-widest text-paper-ghost">
+            {source === "research" ? "RESEARCH" : "HEURISTIC"}
+          </span>
+          <span className="font-mono text-[10px] tracking-widest text-paper-ghost">
+            R{race.number} · {race.distance_m}m
+          </span>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">

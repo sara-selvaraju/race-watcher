@@ -193,6 +193,178 @@ class OpenRouterAdapter:
 
         return _parse_submit_payload(payload, meeting)
 
+    def fetch_race_top_picks(self, meeting: DomainMeeting, race) -> list[dict]:
+        """Research one race and return up to 3 picks: [{rank, runner_number, runner_name, rationale}, ...]."""
+        user_msg = (
+            f"{_format_race_runners(meeting, race)}\n\n"
+            "Identify the top 3 most-likely-to-win runners. Call submit_top_picks with the results."
+        )
+        try:
+            resp = self._client.chat.completions.create(
+                model=self.effective_model,
+                max_tokens=2048,
+                temperature=0,
+                messages=[
+                    {"role": "system", "content": TOP_PICKS_SYSTEM},
+                    {"role": "user", "content": user_msg},
+                ],
+                tools=[SUBMIT_TOP_PICKS_TOOL],
+                tool_choice={"type": "function", "function": {"name": "submit_top_picks"}},
+            )
+        except Exception as exc:
+            log.error("openrouter.top_picks_failed", race=race.number, error=str(exc))
+            return []
+
+        log.info(
+            "openrouter.top_picks_usage",
+            race=race.number,
+            model=self.effective_model,
+            finish_reason=getattr(resp.choices[0], "finish_reason", None),
+        )
+
+        message = resp.choices[0].message
+        tool_calls = getattr(message, "tool_calls", None) or []
+        call = next(
+            (tc for tc in tool_calls if getattr(tc.function, "name", None) == "submit_top_picks"),
+            None,
+        )
+        if call is None:
+            log.warning("openrouter.top_picks_no_tool_call", race=race.number)
+            return []
+
+        try:
+            payload = json.loads(call.function.arguments)
+        except json.JSONDecodeError as exc:
+            log.error("openrouter.top_picks_bad_json", race=race.number, error=str(exc))
+            return []
+
+        valid_numbers = {r.number for r in race.runners if not r.scratched}
+        picks: list[dict] = []
+        seen_runner_numbers: set[int] = set()
+        for entry in payload.get("picks") or []:
+            try:
+                rank = int(entry["rank"])
+                runner_number = int(entry["runner_number"])
+                rationale = str(entry.get("rationale") or "").strip() or None
+            except (KeyError, ValueError, TypeError):
+                continue
+            if rank not in (1, 2, 3):
+                continue
+            if runner_number not in valid_numbers:
+                log.warning(
+                    "openrouter.top_picks_unknown_runner",
+                    race=race.number,
+                    runner_number=runner_number,
+                )
+                continue
+            if runner_number in seen_runner_numbers:
+                continue
+            seen_runner_numbers.add(runner_number)
+            picks.append(
+                {
+                    "rank": rank,
+                    "runner_number": runner_number,
+                    "rationale": rationale,
+                }
+            )
+
+        # Re-rank if model skipped a position (rank=1 missing etc.)
+        picks.sort(key=lambda p: p["rank"])
+        for i, p in enumerate(picks, start=1):
+            p["rank"] = i
+        return picks[:3]
+
+
+SUBMIT_TOP_PICKS_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "submit_top_picks",
+        "description": (
+            "Submit your top 3 picks for the race. Rank 1 = most likely to win, "
+            "2 = next, 3 = third. Each rationale should be a brief, evidence-based note "
+            "(form, course/distance fit, jockey/trainer, market support, wet-track record). "
+            "Call this EXACTLY ONCE."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "picks": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "rank": {
+                                "type": "integer",
+                                "description": "1, 2, or 3.",
+                            },
+                            "runner_number": {
+                                "type": "integer",
+                                "description": "Saddlecloth number from the input list.",
+                            },
+                            "runner_name": {
+                                "type": "string",
+                                "description": "Horse name as it appears in the input list.",
+                            },
+                            "rationale": {
+                                "type": "string",
+                                "description": "Brief evidence-based rationale (1-2 sentences).",
+                            },
+                        },
+                        "required": ["rank", "runner_number", "runner_name", "rationale"],
+                        "additionalProperties": False,
+                    },
+                }
+            },
+            "required": ["picks"],
+            "additionalProperties": False,
+        },
+    },
+}
+
+TOP_PICKS_SYSTEM = (
+    "You are a horse-racing form analyst for a personal race-day dashboard.\n\n"
+    "Goal: for the SINGLE race below, identify the top 3 runners most likely to win, "
+    "based on current public information.\n\n"
+    "Method:\n"
+    "- Use web_search to research the race. Look for previews, tipster columns, recent form, "
+    "wet-track form (track is rated soft/heavy), market support.\n"
+    "- Prefer reputable public sources: racing.com, punters.com.au, justhorseracing, "
+    "racenet.com.au, bookmaker race previews.\n"
+    "- Cross-reference at least two sources where possible.\n\n"
+    "Strict rules:\n"
+    "- Pick ONLY from the runners listed in the input. Use the EXACT runner_number from the list.\n"
+    "- Provide a SHORT, evidence-based rationale per pick. No prose outside the tool call.\n"
+    "- If you can't confidently identify 3 picks, you may return fewer (down to 1) — never invent.\n"
+    "- This is for personal use, not betting advice."
+)
+
+
+def _format_race_runners(meeting: DomainMeeting, race) -> str:
+    lines: list[str] = [
+        f"Race: R{race.number} {race.name}",
+        f"Distance: {race.distance_m or '?'}m  Going: {meeting.going or '?'}",
+        f"Track: {meeting.track}  Date: {meeting.date.isoformat()}",
+        "",
+        "Runners:",
+    ]
+    for runner in race.runners:
+        if runner.scratched:
+            continue
+        bits = [f"  #{runner.number} {runner.name}"]
+        meta: list[str] = []
+        if runner.jockey:
+            meta.append(f"J: {runner.jockey}")
+        if runner.trainer:
+            meta.append(f"T: {runner.trainer}")
+        if meta:
+            bits.append(" — " + " · ".join(meta))
+        if runner.seed_price:
+            bits.append(f" (indic. ${runner.seed_price})")
+        lines.append("".join(bits))
+    return "\n".join(lines)
+
 
 def _format_runner_table(meeting: DomainMeeting) -> str:
     """One line per runner, deterministic, byte-identical across refreshes."""

@@ -145,6 +145,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/refresh-tips": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Tips
+         * @description Run the LLM research agent once per race to refresh top-3 picks.
+         *
+         *     Re-uses the OpenRouter odds adapter (it has a fetch_race_top_picks() method).
+         *     Idempotent: replaces prior picks per race.
+         */
+        post: operations["refresh_tips_api_v1_admin_refresh_tips_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -267,6 +290,8 @@ export interface components {
             status: string;
             /** Runners */
             runners: components["schemas"]["RunnerOut"][];
+            /** Top Picks */
+            top_picks: components["schemas"]["TopPickOut"][];
         };
         /** RunnerOut */
         RunnerOut: {
@@ -316,6 +341,26 @@ export interface components {
             alert_count: number;
             /** In Window */
             in_window: boolean;
+        };
+        /** TopPickOut */
+        TopPickOut: {
+            /** Rank */
+            rank: number;
+            /** Runner Id */
+            runner_id: number;
+            /** Runner Number */
+            runner_number: number;
+            /** Runner Name */
+            runner_name: string;
+            /** Rationale */
+            rationale: string | null;
+            /** Source */
+            source: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** ValidationError */
         ValidationError: {
@@ -508,6 +553,28 @@ export interface operations {
         };
     };
     refresh_odds_api_v1_admin_refresh_odds_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    refresh_tips_api_v1_admin_refresh_tips_post: {
         parameters: {
             query?: never;
             header?: never;
