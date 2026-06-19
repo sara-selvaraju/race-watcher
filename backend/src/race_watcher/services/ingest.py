@@ -44,7 +44,7 @@ def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
         )
         if race is None:
             race = m.Race(
-                meeting_id=meeting.id,
+                meeting=meeting,
                 number=d_race.number,
                 name=d_race.name,
                 distance_m=d_race.distance_m,
@@ -67,7 +67,7 @@ def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
             )
             if runner is None:
                 runner = m.Runner(
-                    race_id=race.id,
+                    race=race,
                     number=d_runner.number,
                     name=d_runner.name,
                     jockey=d_runner.jockey,
@@ -93,7 +93,7 @@ def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
                     continue
                 session.add(
                     m.FormLine(
-                        runner_id=runner.id,
+                        runner=runner,
                         line_date=fl.line_date,
                         track=fl.track,
                         distance_m=fl.distance_m,
