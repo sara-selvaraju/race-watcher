@@ -19,24 +19,25 @@ Add the **Postgres** plugin. Railway exposes `DATABASE_URL` to the project.
   - `TZ=Australia/Melbourne`
   - `RACE_CARD_SOURCE=seed`
   - `SEED_FILE_PATH=seed/flemington.json`
-  - `ODDS_SOURCE=betfair` (or `mock` until you wire creds)
+  - `ODDS_SOURCE=claude` (default — uses Claude + web_search)
   - `PREDICTION_ENGINE=heuristic`
-  - `BETFAIR_APP_KEY`, `BETFAIR_USERNAME`, `BETFAIR_PASSWORD` (and optional `BETFAIR_CERT_PATH`, `BETFAIR_CERT_KEY_PATH`)
-- Once deployed, hit `POST /api/v1/admin/ingest` once to load the seed → DB, then `POST /api/v1/admin/predict` to seed the heuristic predictions. The worker keeps both fresh.
+  - `ANTHROPIC_API_KEY` (required for `ODDS_SOURCE=claude`)
+  - `CLAUDE_RESEARCH_MODEL=claude-sonnet-4-6` (default)
+- On-demand odds refresh: `POST /api/v1/admin/refresh-odds`. There is no longer a 5-min poll — call this when you want fresh prices.
+- After first deploy: `POST /api/v1/admin/ingest` once to load the seed → DB, then `POST /api/v1/admin/predict` to seed heuristic predictions.
 
-## 3) `worker` service (5-min poller)
+## 3) `worker` service (background)
 
 - Repo: this repo
 - Root directory: `backend`
 - Builder: Nixpacks
 - Start command (override): `uv run python -m race_watcher.worker.main`
 - No public domain, no healthcheck.
-- Same env as `api` (it shares the DB + adapter config).
-- Tunables:
-  - `POLL_INTERVAL_SECONDS=300`
+- Same env as `api`.
+- Polling is **disabled**. The worker only re-runs heuristic predictions every 30 min so ratings stay current as snapshots roll in. Odds refresh is now on-demand via `POST /api/v1/admin/refresh-odds`.
+- Tunables (only used when `/admin/refresh-odds` is called):
   - `MOVEMENT_THRESHOLD_PCT=10`
-  - `RACE_WINDOW_OPEN_MIN_BEFORE=120`
-  - `RACE_WINDOW_CLOSE_MIN_AFTER=15`
+  - `RACE_WINDOW_OPEN_MIN_BEFORE=120`, `RACE_WINDOW_CLOSE_MIN_AFTER=15` (the refresh endpoint bypasses the window)
 
 ## 4) `web` service (Next.js)
 

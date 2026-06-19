@@ -16,6 +16,7 @@ dependencies = [
     "python-dateutil>=2.9",
     "tenacity>=9.0",
     "structlog>=24.4",
+    "anthropic>=0.92",
 ]
 
 [dependency-groups]

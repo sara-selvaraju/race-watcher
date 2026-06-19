@@ -29,7 +29,8 @@ class Settings(BaseSettings):
     race_window_close_min_after: int = Field(default=15, alias="RACE_WINDOW_CLOSE_MIN_AFTER")
 
     race_card_source: Literal["seed", "provider"] = Field(default="seed", alias="RACE_CARD_SOURCE")
-    odds_source: Literal["betfair", "mock"] = Field(default="mock", alias="ODDS_SOURCE")
+    odds_source: Literal["betfair", "mock", "claude"] = Field(default="claude", alias="ODDS_SOURCE")
+    claude_research_model: str = Field(default="claude-sonnet-4-6", alias="CLAUDE_RESEARCH_MODEL")
     prediction_engine: Literal["heuristic"] = Field(default="heuristic", alias="PREDICTION_ENGINE")
     seed_file_path: Path = Field(default=Path("seed/flemington.json"), alias="SEED_FILE_PATH")
 

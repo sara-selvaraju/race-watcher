@@ -21,6 +21,10 @@ def get_odds_source() -> OddsSource:
         from race_watcher.adapters.mock_odds import MockOddsAdapter
 
         return MockOddsAdapter()
+    if settings.odds_source == "claude":
+        from race_watcher.adapters.claude_research import ClaudeResearchAdapter
+
+        return ClaudeResearchAdapter()
     raise NotImplementedError(f"odds_source={settings.odds_source} not wired")
 
 

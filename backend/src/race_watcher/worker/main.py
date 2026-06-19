@@ -5,13 +5,12 @@ import time
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from race_watcher.adapters import get_odds_source, get_prediction_engine, get_race_card_source
+from race_watcher.adapters import get_prediction_engine, get_race_card_source
 from race_watcher.core.config import settings
 from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.db.session import SessionLocal
 from race_watcher.repositories import race_repo
 from race_watcher.services.ingest import ingest_meeting
-from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
 
 configure_logging()
@@ -38,36 +37,19 @@ def _refresh_predictions() -> None:
         session.commit()
 
 
-def _poll_job() -> None:
-    odds = get_odds_source()
-    with SessionLocal() as session:
-        try:
-            poll_once(session, odds)
-        except Exception as exc:
-            log.error("worker.poll_failed", error=str(exc))
-
-
 def main() -> None:
     log.info(
         "worker.boot",
         race_date=str(settings.race_date),
-        poll_seconds=settings.poll_interval_seconds,
-        threshold=settings.movement_threshold_pct,
         odds_source=settings.odds_source,
+        prediction_engine=settings.prediction_engine,
+        note="live polling disabled — use POST /api/v1/admin/refresh-odds on demand",
     )
 
     _ensure_meeting_loaded()
     _refresh_predictions()
 
     sched = BackgroundScheduler(timezone="UTC")
-    sched.add_job(
-        _poll_job,
-        "interval",
-        seconds=settings.poll_interval_seconds,
-        id="poll",
-        max_instances=1,
-        coalesce=True,
-    )
     sched.add_job(
         _refresh_predictions,
         "interval",

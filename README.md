@@ -3,7 +3,8 @@
 Personal race-day dashboard for the Flemington meeting on **Saturday 20 June 2026**.
 
 - Backend: FastAPI + SQLAlchemy + Alembic + Pydantic v2 (Python 3.12, uv).
-- Worker: separate process; polls Betfair every 5 min and flags significant moves.
+- Odds: a Claude-backed research adapter (Sonnet 4.6 + `web_search`) looks up current decimal WIN odds from public web sources on demand via `POST /api/v1/admin/refresh-odds`. Append-only snapshots, threshold-based movement detection, dedupe.
+- Worker: separate process; re-runs heuristic predictions every 30 min so ratings stay current. No live polling.
 - Frontend: Next.js (App Router) + TypeScript + Tailwind + React Query.
 - Database: Postgres.
 - Deploy: Railway (three services + Postgres plugin).

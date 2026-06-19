@@ -204,6 +204,30 @@
           }
         }
       }
+    },
+    "/api/v1/admin/refresh-odds": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Refresh Odds",
+        "description": "Run the configured OddsSource once (on-demand) and write price snapshots + movement alerts.\n\nBypasses the race-window gate so it works any time. Use this in place of the 5-min worker poll.",
+        "operationId": "refresh_odds_api_v1_admin_refresh_odds_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Refresh Odds Api V1 Admin Refresh Odds Post"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
