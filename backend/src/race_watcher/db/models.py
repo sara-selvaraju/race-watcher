@@ -128,7 +128,7 @@ class Prediction(Base):
     score: Mapped[Decimal | None] = mapped_column(Numeric(6, 3), default=None)
     win_prob: Mapped[Decimal | None] = mapped_column(Numeric(6, 4), default=None)
     rating: Mapped[str | None] = mapped_column(String(40), default=None)
-    rationale: Mapped[str | None] = mapped_column(String(800), default=None)
+    rationale: Mapped[str | None] = mapped_column(String(2000), default=None)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), init=False
     )
@@ -141,7 +141,7 @@ class TopPick(Base):
     race_id: Mapped[int] = mapped_column(ForeignKey("race.id", ondelete="CASCADE"))
     runner_id: Mapped[int] = mapped_column(ForeignKey("runner.id", ondelete="CASCADE"))
     rank: Mapped[int] = mapped_column(Integer)
-    rationale: Mapped[str | None] = mapped_column(String(800), default=None)
+    rationale: Mapped[str | None] = mapped_column(String(2000), default=None)
     source: Mapped[str] = mapped_column(String(40), default="openrouter")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), init=False

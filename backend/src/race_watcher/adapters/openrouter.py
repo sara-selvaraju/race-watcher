@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 
@@ -13,6 +14,12 @@ from race_watcher.domain.models import DomainMeeting, DomainPrice, DomainRunner
 log = get_logger("openrouter")
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
+# Perplexity Sonar returns citations as a top-level `citations` array and embeds
+# [1], [2] markers in the text. We post-process those markers into markdown links
+# the frontend already knows how to render.
+SUPERSCRIPT_DIGITS = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
+_NUMBERED_REF_RE = re.compile(r"\[(\d+)\]")
 
 SUBMIT_ODDS_PARAMS = {
     "type": "object",
@@ -168,12 +175,13 @@ class OpenRouterAdapter:
         schema_name: str,
         schema: dict,
         max_tokens: int,
-    ) -> dict | None:
+    ) -> tuple[dict | None, list[str]]:
         """Run a single structured call, branching on whether the model supports tools.
 
         For tool-capable models: forced `tool_choice` returns the tool args as a dict.
         For Sonar (no tools): `response_format=json_schema` returns the content as JSON text.
-        Returns the parsed payload dict, or None on failure.
+        Returns (payload, citations) where citations is the list of source URLs (Perplexity
+        provides these; empty list for other providers).
         """
         if self._model_supports_tools(model):
             try:
@@ -190,17 +198,18 @@ class OpenRouterAdapter:
                 )
             except Exception as exc:
                 log.error("openrouter.tool_call_failed", model=model, error=str(exc))
-                return None
+                return None, []
+            citations = _extract_citations(resp)
             message = resp.choices[0].message
             for tc in getattr(message, "tool_calls", None) or []:
                 if getattr(tc.function, "name", None) == tool["function"]["name"]:
                     try:
-                        return json.loads(tc.function.arguments)
+                        return json.loads(tc.function.arguments), citations
                     except json.JSONDecodeError as exc:
                         log.error("openrouter.bad_tool_json", error=str(exc))
-                        return None
+                        return None, citations
             log.warning("openrouter.no_tool_call", model=model)
-            return None
+            return None, citations
 
         # No-tools path: use response_format=json_schema. Sonar supports this.
         try:
@@ -222,19 +231,20 @@ class OpenRouterAdapter:
             )
         except Exception as exc:
             log.error("openrouter.json_schema_failed", model=model, error=str(exc))
-            return None
+            return None, []
+        citations = _extract_citations(resp)
         content = (resp.choices[0].message.content or "").strip()
         if not content:
             log.warning("openrouter.empty_content", model=model)
-            return None
+            return None, citations
         # Sonar sometimes wraps JSON in code fences; strip them defensively.
         if content.startswith("```"):
             content = content.strip("`").lstrip("json").strip()
         try:
-            return json.loads(content)
+            return json.loads(content), citations
         except json.JSONDecodeError as exc:
             log.error("openrouter.bad_json_content", error=str(exc), content=content[:200])
-            return None
+            return None, citations
 
     def fetch_prices(self, meeting: DomainMeeting) -> list[DomainPrice]:
         user_msg = (
@@ -297,7 +307,7 @@ class OpenRouterAdapter:
             "Identify the top 3 most-likely-to-win runners. "
             "Return JSON matching the submit_top_picks schema."
         )
-        payload = self._structured_call(
+        payload, citations = self._structured_call(
             model=self.effective_research_model,
             system=TOP_PICKS_SYSTEM,
             user=user_msg,
@@ -314,6 +324,7 @@ class OpenRouterAdapter:
             "openrouter.top_picks_done",
             race=race.number,
             model=self.effective_research_model,
+            citations=len(citations),
         )
 
         valid_numbers = {r.number for r in race.runners if not r.scratched}
@@ -338,6 +349,8 @@ class OpenRouterAdapter:
             if runner_number in seen_runner_numbers:
                 continue
             seen_runner_numbers.add(runner_number)
+            if rationale:
+                rationale = _linkify_citations(rationale, citations)
             picks.append(
                 {
                     "rank": rank,
@@ -361,7 +374,7 @@ class OpenRouterAdapter:
             f"Distance: {race.distance_m or '?'}m\n\n"
             "Return the complete official field for this race as JSON matching the submit_field schema."
         )
-        payload = self._structured_call(
+        payload, _citations = self._structured_call(
             model=self.effective_research_model,
             system=FIELD_SYSTEM,
             user=user_msg,
@@ -414,9 +427,8 @@ SUBMIT_TOP_PICKS_TOOL = {
             "Submit your top 3 picks for the race. Rank 1 = most likely to win, "
             "2 = next, 3 = third. Each rationale is an evidence-based note "
             "(form, course/distance fit, jockey/trainer, market support, wet-track record). "
-            "Embed inline markdown links [text](https://url) for EVERY source you reference "
-            "by name (e.g. tipsters, racing.com previews, bookmaker pages) so the user can "
-            "click through. Use the actual URLs you visited during research. "
+            "Cite sources with numbered markers like [1], [2] pointing to URLs you actually "
+            "visited — the dashboard turns these into clickable links automatically. "
             "Call this EXACTLY ONCE."
         ),
         "parameters": {
@@ -444,12 +456,10 @@ SUBMIT_TOP_PICKS_TOOL = {
                             "rationale": {
                                 "type": "string",
                                 "description": (
-                                    "Evidence-based rationale (2-4 sentences). Whenever you "
-                                    "cite a tipster, preview, or bookmaker page, wrap the "
-                                    "source name in an inline markdown link to its URL — "
-                                    "e.g. 'tipped by [Matt Welsh](https://www.racing.com/...) "
-                                    "and [Punters preview](https://www.punters.com.au/...)'. "
-                                    "Use only real URLs you visited."
+                                    "Evidence-based rationale (2-4 sentences). Cite sources "
+                                    "inline with numbered markers like [1] or [2] referencing "
+                                    "the URLs you actually visited; the dashboard will render "
+                                    "them as clickable links."
                                 ),
                             },
                         },
@@ -556,12 +566,9 @@ TOP_PICKS_SYSTEM = (
     "- Cross-reference at least two sources where possible.\n\n"
     "Strict rules:\n"
     "- Pick ONLY from the runners listed in the input. Use the EXACT runner_number from the list.\n"
-    "- Provide an evidence-based rationale per pick (2-4 sentences). EVERY source you cite by "
-    "name MUST be wrapped in an inline markdown link to a real URL you visited — e.g. "
-    "'[Matt Welsh's tips](https://www.racing.com/news/...)', "
-    "'[Punters preview](https://www.punters.com.au/...)', "
-    "'[racing.com form](https://www.racing.com/horses/...)'. Bare source names with no link "
-    "are not acceptable. Use only URLs you actually visited; never invent URLs.\n"
+    "- Provide an evidence-based rationale per pick (2-4 sentences). Cite every source you "
+    "reference by name with a numbered marker like [1], [2] — the dashboard converts these into "
+    "clickable links automatically using the URLs you actually visited.\n"
     "- No prose outside the tool call.\n"
     "- If you can't confidently identify 3 picks, you may return fewer (down to 1) — never invent.\n"
     "- This is for personal use, not betting advice."
@@ -647,3 +654,44 @@ def _parse_submit_payload(payload: dict, meeting: DomainMeeting) -> list[DomainP
             )
         )
     return out
+
+
+def _extract_citations(resp) -> list[str]:
+    """Pull citation URLs from a chat-completion response (Perplexity Sonar surfaces them
+    as a top-level `citations` array; other providers usually return nothing here)."""
+    raw = getattr(resp, "citations", None)
+    if raw is None:
+        try:
+            raw = (resp.model_dump() or {}).get("citations")
+        except Exception:
+            raw = None
+    if not raw:
+        return []
+    urls: list[str] = []
+    for item in raw:
+        if isinstance(item, str) and item.startswith(("http://", "https://")):
+            urls.append(item)
+        elif isinstance(item, dict):
+            for k in ("url", "link", "href"):
+                v = item.get(k)
+                if isinstance(v, str) and v.startswith(("http://", "https://")):
+                    urls.append(v)
+                    break
+    return urls
+
+
+def _linkify_citations(text: str, citations: list[str]) -> str:
+    """Replace [N] markers with [ⁿ](url) markdown links so the frontend renders them as
+    superscript anchors. Markers without a matching citation URL pass through unchanged."""
+    if not citations or not text:
+        return text
+
+    def repl(m: re.Match) -> str:
+        n_str = m.group(1)
+        n = int(n_str)
+        if 1 <= n <= len(citations):
+            url = citations[n - 1]
+            return f"[{n_str.translate(SUPERSCRIPT_DIGITS)}]({url})"
+        return m.group(0)
+
+    return _NUMBERED_REF_RE.sub(repl, text)
