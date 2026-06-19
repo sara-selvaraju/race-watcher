@@ -25,6 +25,10 @@ def get_odds_source() -> OddsSource:
         from race_watcher.adapters.claude_research import ClaudeResearchAdapter
 
         return ClaudeResearchAdapter()
+    if settings.odds_source == "openrouter":
+        from race_watcher.adapters.openrouter import OpenRouterAdapter
+
+        return OpenRouterAdapter()
     raise NotImplementedError(f"odds_source={settings.odds_source} not wired")
 
 

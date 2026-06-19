@@ -19,10 +19,12 @@ Add the **Postgres** plugin. Railway exposes `DATABASE_URL` to the project.
   - `TZ=Australia/Melbourne`
   - `RACE_CARD_SOURCE=seed`
   - `SEED_FILE_PATH=seed/flemington.json`
-  - `ODDS_SOURCE=claude` (default — uses Claude + web_search)
+  - `ODDS_SOURCE=openrouter` (default — uses any model via OpenRouter + web search)
   - `PREDICTION_ENGINE=heuristic`
-  - `ANTHROPIC_API_KEY` (required for `ODDS_SOURCE=claude`)
-  - `CLAUDE_RESEARCH_MODEL=claude-sonnet-4-6` (default)
+  - `OPENROUTER_API_KEY` (required for `ODDS_SOURCE=openrouter`)
+  - `OPENROUTER_MODEL=anthropic/claude-sonnet-4.5` (default — change to any OpenRouter-supported model)
+  - `OPENROUTER_WEB_SEARCH=true` (default — appends `:online` so the model can actually look up odds)
+  - For the alternative direct-Anthropic path: `ODDS_SOURCE=claude` + `ANTHROPIC_API_KEY` + `CLAUDE_RESEARCH_MODEL=claude-sonnet-4-6`
 - On-demand odds refresh: `POST /api/v1/admin/refresh-odds`. There is no longer a 5-min poll — call this when you want fresh prices.
 - After first deploy: `POST /api/v1/admin/ingest` once to load the seed → DB, then `POST /api/v1/admin/predict` to seed heuristic predictions.
 
