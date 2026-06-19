@@ -111,12 +111,14 @@ class OpenRouterAdapter:
         self,
         *,
         model: str | None = None,
+        research_model: str | None = None,
         client: OpenAI | None = None,
         use_web_search: bool | None = None,
     ):
         if client is None and not settings.openrouter_api_key:
             raise RuntimeError("OPENROUTER_API_KEY is not configured")
         self._model_base = (model or settings.openrouter_model).strip()
+        self._research_model_base = (research_model or settings.openrouter_research_model).strip()
         self._use_web_search = (
             settings.openrouter_web_search if use_web_search is None else use_web_search
         )
@@ -135,9 +137,21 @@ class OpenRouterAdapter:
 
     @property
     def effective_model(self) -> str:
-        if self._use_web_search and not self._model_base.endswith(":online"):
-            return f"{self._model_base}:online"
-        return self._model_base
+        return self._with_web(self._model_base)
+
+    @property
+    def effective_research_model(self) -> str:
+        # Perplexity Sonar models have native web search baked in — don't double up with :online.
+        return self._with_web(self._research_model_base, allow_online_suffix=False)
+
+    def _with_web(self, base: str, *, allow_online_suffix: bool = True) -> str:
+        if not self._use_web_search:
+            return base
+        if base.startswith("perplexity/") or not allow_online_suffix:
+            return base  # already web-aware natively
+        if base.endswith(":online"):
+            return base
+        return f"{base}:online"
 
     def fetch_prices(self, meeting: DomainMeeting) -> list[DomainPrice]:
         user_msg = (
@@ -201,7 +215,7 @@ class OpenRouterAdapter:
         )
         try:
             resp = self._client.chat.completions.create(
-                model=self.effective_model,
+                model=self.effective_research_model,
                 max_tokens=2048,
                 temperature=0,
                 messages=[
@@ -218,7 +232,7 @@ class OpenRouterAdapter:
         log.info(
             "openrouter.top_picks_usage",
             race=race.number,
-            model=self.effective_model,
+            model=self.effective_research_model,
             finish_reason=getattr(resp.choices[0], "finish_reason", None),
         )
 
@@ -285,7 +299,7 @@ class OpenRouterAdapter:
         )
         try:
             resp = self._client.chat.completions.create(
-                model=self.effective_model,
+                model=self.effective_research_model,
                 max_tokens=4096,
                 temperature=0,
                 messages=[
@@ -302,7 +316,7 @@ class OpenRouterAdapter:
         log.info(
             "openrouter.field_usage",
             race=race.number,
-            model=self.effective_model,
+            model=self.effective_research_model,
             finish_reason=getattr(resp.choices[0], "finish_reason", None),
         )
 
@@ -451,17 +465,23 @@ SUBMIT_FIELD_TOOL = {
 FIELD_SYSTEM = (
     "You are a race-card researcher for a personal race-day dashboard.\n\n"
     "Goal: for the SINGLE race below, return the COMPLETE runner field — every horse "
-    "listed in the field, with saddlecloth number and name. Include jockey, trainer, and "
-    "barrier when findable.\n\n"
+    "in the official field, with saddlecloth number and name. Include jockey, trainer, "
+    "and barrier when listed.\n\n"
+    "PRIMARY source: racing.com. Find the official Racing.com race-card page for this race "
+    "and read the full field from it. Cross-check against racingvictoria.com.au, "
+    "punters.com.au, or racenet.com.au if helpful.\n\n"
     "Method:\n"
-    "- Use web_search to look up the field list. Try racing.com, racing.victoria, "
-    "punters.com.au, racenet.com.au, official meeting race-card pages.\n"
-    "- Cross-check at least two sources where possible.\n\n"
+    "- Search specifically for the Racing.com page (e.g. \"racing.com Flemington <race-name>\" "
+    "or \"racing.com Flemington race <N>\").\n"
+    "- Read the COMPLETE runner table on the page. Australian fields typically have 8-16 "
+    "runners — a result of just 3-5 is almost certainly incomplete and means you should "
+    "search again.\n"
+    "- Include every runner number that appears on the official card, even scratched ones.\n\n"
     "Strict rules:\n"
-    "- The race details below (track, date, name, distance) identify the SINGLE race. "
-    "Do NOT mix in other races.\n"
+    "- The race details below (track, date, race name, distance) identify the SINGLE race. "
+    "Do NOT mix in runners from other races on the card.\n"
     "- Use the EXACT saddlecloth number as printed in the official field — do not renumber.\n"
-    "- If a runner has been scratched, include it with scratched: true. Otherwise omit scratched.\n"
+    "- If a runner is scratched, include it with scratched: true.\n"
     "- Do NOT invent runners. If you cannot confirm a runner from a source, omit it.\n"
     "- Output ONLY the tool call. No prose."
 )
