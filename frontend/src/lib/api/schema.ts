@@ -28,7 +28,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Today Meeting */
+        /**
+         * Get Today Meeting
+         * @description First meeting on the race date. Kept for older clients — prefer /meetings/today.
+         */
         get: operations["get_today_meeting_api_v1_meeting_today_get"];
         put?: never;
         post?: never;
@@ -47,6 +50,26 @@ export interface paths {
         };
         /** Get Race */
         get: operations["get_race_api_v1_meeting_races__race_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/meetings/today": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Today Meetings
+         * @description Every meeting on the race date (one per track).
+         */
+        get: operations["list_today_meetings_api_v1_meetings_today_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -191,6 +214,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/cleanup-research-runners": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cleanup Research Runners
+         * @description Delete every runner on the race date that originated from /admin/expand-field
+         *     (i.e. not in the curated seed JSON).
+         *
+         *     Use this when Sonar has stacked hallucinated or duplicate runners and you want to
+         *     reset the field back to the seed-only state. Top picks and predictions for the
+         *     deleted runners cascade away via the existing FK ondelete=CASCADE.
+         */
+        post: operations["cleanup_research_runners_api_v1_admin_cleanup_research_runners_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -247,8 +295,14 @@ export interface components {
             runner_id: number;
             /** Runner Name */
             runner_name: string;
+            /** Race Id */
+            race_id: number;
             /** Race Number */
             race_number: number;
+            /** Meeting Id */
+            meeting_id: number;
+            /** Track */
+            track: string;
             /** From Price */
             from_price: string;
             /** To Price */
@@ -482,6 +536,26 @@ export interface operations {
             };
         };
     };
+    list_today_meetings_api_v1_meetings_today_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingOut"][];
+                };
+            };
+        };
+    };
     list_alerts_api_v1_alerts_get: {
         parameters: {
             query?: {
@@ -557,7 +631,9 @@ export interface operations {
     };
     predict_api_v1_admin_predict_post: {
         parameters: {
-            query?: never;
+            query?: {
+                meeting_id?: number | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -573,13 +649,24 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
     refresh_odds_api_v1_admin_refresh_odds_post: {
         parameters: {
-            query?: never;
+            query?: {
+                meeting_id?: number | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -595,13 +682,24 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
     refresh_tips_api_v1_admin_refresh_tips_post: {
         parameters: {
-            query?: never;
+            query?: {
+                meeting_id?: number | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -619,11 +717,22 @@ export interface operations {
                     };
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     expand_field_api_v1_admin_expand_field_post: {
         parameters: {
-            query?: never;
+            query?: {
+                meeting_id?: number | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -639,6 +748,48 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cleanup_research_runners_api_v1_admin_cleanup_research_runners_post: {
+        parameters: {
+            query?: {
+                meeting_id?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

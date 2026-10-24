@@ -91,7 +91,10 @@ class MovementAlertOut(_ApiBase):
     id: int
     runner_id: int
     runner_name: str
+    race_id: int
     race_number: int
+    meeting_id: int
+    track: str
     from_price: Decimal
     to_price: Decimal
     pct_change: Decimal

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 
 from sqlalchemy import desc, select
@@ -46,10 +46,19 @@ def recent_alert_for_runner(
     return session.scalars(stmt).first()
 
 
-def list_recent_alerts(session: Session, *, limit: int = 50) -> list[m.MovementAlert]:
+def list_recent_alerts(
+    session: Session, *, limit: int = 50, on_date: date | None = None
+) -> list[m.MovementAlert]:
+    stmt = select(m.MovementAlert)
+    if on_date is not None:
+        stmt = (
+            stmt.join(m.Runner, m.MovementAlert.runner_id == m.Runner.id)
+            .join(m.Race, m.Runner.race_id == m.Race.id)
+            .join(m.Meeting, m.Race.meeting_id == m.Meeting.id)
+            .where(m.Meeting.date == on_date)
+        )
     stmt = (
-        select(m.MovementAlert)
-        .order_by(desc(m.MovementAlert.created_at))
+        stmt.order_by(desc(m.MovementAlert.created_at))
         .limit(limit)
     )
     return list(session.scalars(stmt).all())

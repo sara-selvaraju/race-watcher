@@ -38,7 +38,23 @@ def _normalize_name(name: str) -> str:
     return " ".join(name.lower().split())
 
 
-def expand_all_races(session: Session, adapter) -> dict:
+def expand_all_races(session: Session, adapter, meeting_id: int | None = None) -> dict:
+    """Run field expansion for every meeting on the race date (or just `meeting_id`)."""
+    if not hasattr(adapter, "fetch_race_field"):
+        return {"races": 0, "added": 0, "updated": 0, "skipped": "adapter_not_supported"}
+
+    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    if not meetings:
+        return {"races": 0, "added": 0, "updated": 0, "skipped": "no_meeting"}
+
+    totals = {"races": 0, "added": 0, "updated": 0, "skipped_duplicates": 0}
+    for meeting in meetings:
+        for k, v in _expand_meeting(session, adapter, meeting).items():
+            totals[k] += v
+    return totals
+
+
+def _expand_meeting(session: Session, adapter, meeting: m.Meeting) -> dict:
     """For each race in today's meeting, research the full field and insert any missing runners.
 
     Idempotent: existing runners (matched on race_id + saddlecloth number, OR by normalized
@@ -46,13 +62,6 @@ def expand_all_races(session: Session, adapter) -> dict:
     untouched. Name-based dedup prevents Sonar from re-inserting the same horse under a
     different saddlecloth on a repeat refresh.
     """
-    if not hasattr(adapter, "fetch_race_field"):
-        return {"races": 0, "added": 0, "updated": 0, "skipped": "adapter_not_supported"}
-
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
-        return {"races": 0, "added": 0, "updated": 0, "skipped": "no_meeting"}
-
     domain_meeting = DomainMeeting(
         track=meeting.track,
         date=meeting.date,

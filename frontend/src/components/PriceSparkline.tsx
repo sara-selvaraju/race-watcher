@@ -6,10 +6,10 @@ type Props = {
 
 export function PriceSparkline({ prices, width = 72, height = 18 }: Props) {
   if (!prices.length) {
-    return <span className="text-ink-ghost text-[10px] tracking-widest font-mono">—</span>;
+    return <span className="inline-block" style={{ width }} />;
   }
   if (prices.length === 1) {
-    return <span className="text-ink-ghost text-[10px] tracking-widest font-mono">FRESH</span>;
+    return <span className="inline-block text-xs text-ink-3" style={{ width }}>1 price</span>;
   }
 
   const min = Math.min(...prices);
@@ -26,8 +26,8 @@ export function PriceSparkline({ prices, width = 72, height = 18 }: Props) {
 
   const first = prices[0];
   const last = prices[prices.length - 1];
-  // firmed = price fell = matcha; drifted = price rose = vermilion
-  const stroke = last < first ? "var(--matcha)" : last > first ? "var(--vermilion)" : "var(--paper-faint)";
+  // firmed = price fell = green; drifted = price rose = red
+  const stroke = last < first ? "var(--firm)" : last > first ? "var(--drift)" : "var(--line-strong)";
   const finalX = (prices.length - 1) * step;
   const finalY = ((last - min) / range) * (height - 4) + 2;
 
@@ -36,7 +36,7 @@ export function PriceSparkline({ prices, width = 72, height = 18 }: Props) {
       <polyline
         fill="none"
         stroke={stroke}
-        strokeWidth={1.2}
+        strokeWidth={1.5}
         strokeLinejoin="round"
         strokeLinecap="round"
         points={points.join(" ")}

@@ -23,8 +23,11 @@ def status(session: Session = SessionDep) -> StatusOut:
     ).first()
     snap_count = session.scalar(select(func.count(m.PriceSnapshot.id))) or 0
     alert_count = session.scalar(select(func.count(m.MovementAlert.id))) or 0
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    in_win = bool(meeting and in_race_window(meeting, now=datetime.now(UTC)))
+    now = datetime.now(UTC)
+    in_win = any(
+        in_race_window(mt, now=now)
+        for mt in race_repo.list_meetings_by_date(session, settings.race_date)
+    )
     return StatusOut(
         race_date=settings.race_date,
         odds_source=settings.odds_source,

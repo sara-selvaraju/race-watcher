@@ -14,7 +14,7 @@ log = get_logger("api")
 app = FastAPI(
     title="race-watcher",
     version="0.1.0",
-    description="Flemington 2026-06-20 race-day dashboard API.",
+    description="Multi-meeting race-day dashboard API.",
     openapi_url="/api/v1/openapi.json",
     docs_url="/docs",
 )
@@ -43,6 +43,7 @@ def healthz() -> dict[str, str]:
 
 
 app.include_router(meetings.router, prefix="/api/v1")
+app.include_router(meetings.meetings_router, prefix="/api/v1")
 app.include_router(alerts.router, prefix="/api/v1")
 app.include_router(status.router, prefix="/api/v1")
 app.include_router(admin.router, prefix="/api/v1")

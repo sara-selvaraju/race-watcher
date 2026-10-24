@@ -2,252 +2,150 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Raceday tote: racecourse-turf structure, white rail surfaces, silk yellow for whatever is next
+   to jump. Firm = green, drift = red (with arrows, never colour alone). */
 :root {
-  /* washi-paper palette — warm cream with sumi-ink type */
-  --bg: #f4eddc; /* base washi */
-  --bg-soft: #ebe3d1; /* shadowed paper */
-  --paper: #fbf6e9; /* card surface */
-  --paper-raised: #fefbf2; /* raised card */
-  --paper-glow: #fffdf7; /* hover/active */
+  --bg: #eaefec;
+  --surface: #ffffff;
+  --surface-2: #f4f7f5;
+  --line: #d3ddd7;
+  --line-strong: #9fb3a8;
 
-  --hairline: #d4c5a2; /* warm tan */
-  --hairline-bright: #ab8e5c; /* amber */
+  --ink: #13211b;
+  --ink-2: #3c4e45;
+  --ink-3: #64766d;
 
-  --ink: #1a1612; /* sumi ink primary text */
-  --ink-2: #4a4032; /* secondary */
-  --ink-3: #786a52; /* tertiary */
-  --ink-ghost: #a99a7d; /* faded */
-
-  /* accents — vermilion, matcha, gold leaf, indigo (calibrated for light bg) */
-  --vermilion: #b8281f;
-  --vermilion-deep: #8a1c14;
-  --matcha: #4d6929;
-  --matcha-deep: #36491c;
-  --gold: #8c6b28;
-  --gold-deep: #5e4612;
-  --indigo: #3d5174;
+  --turf: #0e4d3a;
+  --turf-deep: #093428;
+  --turf-soft: #dce9e2;
+  --silk: #f2c230;
+  --firm: #17804f;
+  --drift: #c8232c;
 
   color-scheme: light;
 }
 
 @layer base {
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-  }
-
   html,
   body {
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-sans), -apple-system, sans-serif;
-    font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* paper grain — very subtle on light */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    background-image:
-      radial-gradient(circle at 22% 8%, rgba(140, 107, 40, 0.05), transparent 55%),
-      radial-gradient(circle at 80% 92%, rgba(184, 40, 31, 0.03), transparent 55%),
-      url("data:image/svg+xml;utf8,<svg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.36 0 0 0 0 0.18 0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    background-size: cover, cover, 240px 240px;
   }
 
   ::selection {
-    background: var(--vermilion);
-    color: var(--paper);
+    background: var(--silk);
+    color: var(--ink);
   }
 
-  ::-webkit-scrollbar {
-    height: 4px;
-    width: 4px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--hairline-bright);
-    border-radius: 2px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  :focus-visible {
+    outline: 2px solid var(--turf);
+    outline-offset: 2px;
   }
 }
 
 @layer components {
-  /* bento box — the atomic unit */
-  .bento {
-    position: relative;
-    background: var(--paper);
-    border: 1px solid var(--hairline);
-    border-radius: 2px;
-    overflow: hidden;
-    box-shadow:
-      0 1px 0 rgba(140, 107, 40, 0.04),
-      0 2px 6px -3px rgba(26, 22, 18, 0.04);
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
   }
 
-  .bento::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 253, 247, 0.5) 0%,
-      transparent 30%,
-      transparent 70%,
-      rgba(140, 107, 40, 0.025) 100%
-    );
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.875rem 1.125rem;
+    border-bottom: 1px solid var(--line);
   }
 
-  /* corner ticks — subtle bento-box compartment marks */
-  .bento-ticks::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
-    border-top: 1px solid var(--hairline-bright);
-    border-right: 1px solid var(--hairline-bright);
-    opacity: 0.5;
+  .panel-title {
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1;
+    letter-spacing: 0.01em;
   }
 
-  .label-vertical {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-family: var(--font-display), serif;
-    letter-spacing: 0.3em;
-    font-size: 0.65rem;
-    color: var(--ink-ghost);
-    text-transform: uppercase;
+  /* saddlecloth: the runner number as it is printed on the cloth */
+  .cloth {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.875rem;
+    height: 2.125rem;
+    padding: 0 0.25rem;
+    border-radius: 3px 3px 6px 6px;
+    background: var(--ink);
+    color: #fff;
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
 
-  .label-section {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-family: var(--font-display), serif;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink-2);
+  .num {
+    font-family: var(--font-display), sans-serif;
+    font-variant-numeric: tabular-nums;
   }
 
-  .label-section::before {
-    content: "";
-    width: 18px;
-    height: 1px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .enso {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    border: 1px solid var(--gold);
-    background: transparent;
-  }
-
-  /* primary button — calm, refined */
-  .btn-bento {
+  .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.875rem;
-    background: var(--paper);
-    border: 1px solid var(--hairline-bright);
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+    transition: background-color 150ms, color 150ms;
+  }
+  .btn-primary {
+    background: var(--silk);
     color: var(--ink);
-    font-family: var(--font-mono), monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
-    border-radius: 2px;
   }
-  .btn-bento:hover:not(:disabled) {
-    background: var(--paper-raised);
-    border-color: var(--gold);
-    color: var(--gold-deep);
+  .btn-primary:hover:not(:disabled) {
+    background: #ffd54d;
   }
-  .btn-bento:active:not(:disabled) {
-    background: var(--bg-soft);
-  }
-  .btn-bento:disabled {
-    opacity: 0.55;
+  .btn:disabled {
+    opacity: 0.6;
     cursor: wait;
   }
-  .btn-bento[data-variant="primary"] {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
+
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 2px;
+    font-size: 0.75rem;
   }
-  .btn-bento[data-variant="primary"]:hover:not(:disabled) {
-    background: var(--vermilion-deep);
-    border-color: var(--vermilion-deep);
-    color: var(--paper);
+  .seg > button {
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    color: var(--ink-3);
+  }
+  .seg > button[aria-pressed="true"] {
+    background: var(--turf);
+    color: #fff;
   }
 }
 
 @layer utilities {
-  .font-display {
-    font-family: var(--font-display), Georgia, serif;
-  }
-  .font-mono {
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hairline {
-    border-color: var(--hairline);
-  }
-  .hairline-bright {
-    border-color: var(--hairline-bright);
-  }
-
-  @keyframes bento-in {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .animate-bento-in {
-    animation: bento-in 600ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
-  }
-
-  @keyframes refresh-pulse {
-    0%,
-    100% {
-      background-color: transparent;
-    }
-    50% {
-      background-color: rgba(140, 107, 40, 0.08);
-    }
-  }
-  .animate-refresh {
-    animation: refresh-pulse 1200ms ease-in-out;
-  }
-
-  /* gentle spin for refresh icon */
   @keyframes spin-slow {
     to {
       transform: rotate(360deg);
     }
   }
   .animate-spin-slow {
-    animation: spin-slow 1500ms linear infinite;
+    animation: spin-slow 1200ms linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-spin-slow,
+    .animate-pulse {
+      animation: none;
+    }
   }
 }

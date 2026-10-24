@@ -1,66 +1,28 @@
 "use client";
 
 import { useStatus } from "@/lib/api/hooks";
+import type { MeetingOut } from "@/lib/api/client";
 
-type Props = {
-  track: string;
-  date: string;
-  going: string | null | undefined;
-  rail: string | null | undefined;
-};
-
-export function Header({ track, date, going, rail }: Props) {
+export function TopBar({ meeting }: { meeting: MeetingOut | null }) {
   const { data: status } = useStatus();
-
-  const dateObj = new Date(date);
-  const dayJa = ["日", "月", "火", "水", "木", "金", "土"][dateObj.getDay()];
-  const yyyy = dateObj.getFullYear();
-  const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const dd = String(dateObj.getDate()).padStart(2, "0");
+  const date = meeting ? new Date(`${meeting.date}T12:00:00`) : null;
 
   return (
-    <header className="flex items-end justify-between gap-6 pt-2 pb-1">
-      <div>
-        <div className="label-section mb-3">
-          <span className="font-display tracking-kanji">競馬 · TURF</span>
-        </div>
-        <h1 className="font-display text-4xl md:text-5xl font-bold text-ink leading-none tracking-tight">
-          {track}
-        </h1>
-        <p className="mt-3 font-mono text-xs tracking-widest text-ink-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="text-ink-2">
-            {yyyy}.{mm}.{dd}
+    <header className="bg-turf text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 h-14 flex items-center gap-4">
+        <span className="font-display text-2xl font-bold tracking-tight leading-none">Race Watcher</span>
+        {date && (
+          <span className="text-white/75 text-sm hidden sm:inline">
+            {date.toLocaleDateString("en-AU", { weekday: "long", day: "numeric", month: "long" })}
           </span>
-          <span className="text-gold font-display text-sm">{dayJa}</span>
-          {going && (
-            <>
-              <span className="enso" />
-              <span>{going.toUpperCase()}</span>
-            </>
-          )}
-          {rail && (
-            <>
-              <span className="enso" />
-              <span>{rail.toUpperCase()}</span>
-            </>
-          )}
-        </p>
-      </div>
-      <div className="text-right shrink-0 hidden sm:block">
-        <div className="label-section justify-end mb-2">STATUS</div>
-        <div className="flex items-center gap-2 justify-end font-mono text-[11px] tracking-widest">
+        )}
+        <span className="ml-auto flex items-center gap-2 text-sm text-white/85">
           <span
-            className={`w-1.5 h-1.5 rounded-full ${
-              status?.in_window ? "bg-matcha animate-pulse" : "bg-ink-ghost"
-            }`}
+            className={`h-2 w-2 rounded-full ${status?.in_window ? "bg-silk animate-pulse" : "bg-white/40"}`}
+            aria-hidden
           />
-          <span className={status?.in_window ? "text-matcha" : "text-ink-3"}>
-            {status?.in_window ? "LIVE WINDOW" : "STANDBY"}
-          </span>
-        </div>
-        <div className="mt-2 font-mono text-[10px] text-ink-ghost tracking-widest">
-          {status?.snapshot_count ?? 0} SNAPS · {status?.alert_count ?? 0} ALERTS
-        </div>
+          {status?.in_window ? "Racing now" : "Between meetings"}
+        </span>
       </div>
     </header>
   );

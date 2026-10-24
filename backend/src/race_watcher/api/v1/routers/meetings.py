@@ -18,6 +18,7 @@ from race_watcher.db import models as m
 from race_watcher.repositories import prediction_repo, price_repo, race_repo, top_pick_repo
 
 router = APIRouter(prefix="/meeting", tags=["meeting"])
+meetings_router = APIRouter(prefix="/meetings", tags=["meeting"])
 
 
 def _runner_to_out(session: Session, runner: m.Runner) -> RunnerOut:
@@ -34,7 +35,7 @@ def _runner_to_out(session: Session, runner: m.Runner) -> RunnerOut:
         weight_kg=runner.weight_kg,
         silk=runner.silk,
         scratched=runner.scratched,
-        seeded=runner.seed_price is not None or runner.seed_prediction_rationale is not None,
+        seeded=runner.seed_price_source is not None or runner.seed_price is not None,
         form_lines=[
             FormLineOut(
                 line_date=fl.line_date,
@@ -101,11 +102,7 @@ def _race_to_out(session: Session, race: m.Race) -> RaceOut:
     )
 
 
-@router.get("/today", response_model=MeetingOut)
-def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
-        raise HTTPException(status_code=404, detail=f"No meeting loaded for {settings.race_date}")
+def _meeting_to_out(session: Session, meeting: m.Meeting) -> MeetingOut:
     return MeetingOut(
         id=meeting.id,
         track=meeting.track,
@@ -118,6 +115,24 @@ def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
             for race in sorted(meeting.races, key=lambda r: r.number)
         ],
     )
+
+
+@router.get("/today", response_model=MeetingOut)
+def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
+    """First meeting on the race date. Kept for older clients — prefer /meetings/today."""
+    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
+    if meeting is None:
+        raise HTTPException(status_code=404, detail=f"No meeting loaded for {settings.race_date}")
+    return _meeting_to_out(session, meeting)
+
+
+@meetings_router.get("/today", response_model=list[MeetingOut])
+def list_today_meetings(session: Session = SessionDep) -> list[MeetingOut]:
+    """Every meeting on the race date (one per track)."""
+    return [
+        _meeting_to_out(session, mt)
+        for mt in race_repo.list_meetings_by_date(session, settings.race_date)
+    ]
 
 
 @router.get("/races/{race_id}", response_model=RaceOut)

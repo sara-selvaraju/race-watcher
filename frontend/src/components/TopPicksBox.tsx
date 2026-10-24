@@ -15,9 +15,7 @@ type Pick = {
   source: "research" | "heuristic";
 };
 
-const RANK_KANJI = { 1: "一", 2: "二", 3: "三" } as const;
-const RANK_ROMAJI = { 1: "ichi", 2: "ni", 3: "san" } as const;
-const RANK_LABEL = { 1: "WIN", 2: "PLACE", 3: "SHOW" } as const;
+const RANK_LABEL = { 1: "Top pick", 2: "Second", 3: "Third" } as const;
 
 function n(v: string | number | null | undefined): number | null {
   if (v == null) return null;
@@ -45,7 +43,7 @@ function renderRationale(text: string): ReactNode {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-ink-2 underline decoration-gold/50 decoration-dotted underline-offset-2 hover:text-gold hover:decoration-gold hover:decoration-solid"
+        className="text-turf underline decoration-turf/40 underline-offset-2 hover:decoration-turf"
       >
         {label}
       </a>,
@@ -98,42 +96,25 @@ export function TopPicksBox({ race }: { race: Race }) {
   const source = picks[0]?.source ?? "heuristic";
 
   return (
-    <section className="bento bento-ticks animate-bento-in" style={{ animationDelay: "60ms" }}>
-      <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
-        <span className="label-section">
-          <span className="font-display tracking-kanji text-ink">予想</span>
-          <span className="text-ink-3 normal-case tracking-normal font-sans">Top picks</span>
-        </span>
-        <div className="flex items-center gap-3">
-          {source === "research" ? (
-            <span
-              className="font-mono text-[9px] tracking-widest"
-              title="LLM-researched picks — cross-check the cited sources before betting"
-            >
-              <span className="text-vermilion/80">RESEARCH</span>
-              <span className="text-ink-ghost"> · VERIFY</span>
-            </span>
-          ) : (
-            <span className="font-mono text-[9px] tracking-widest text-ink-ghost">
-              HEURISTIC
-            </span>
-          )}
-          <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
-            R{race.number} · {race.distance_m}m
-          </span>
-        </div>
+    <section className="panel overflow-hidden">
+      <header className="panel-head">
+        <h3 className="panel-title">Top picks</h3>
+        <p className="text-sm text-ink-3" title={source === "research" ? "LLM-researched picks: check the cited sources before betting" : undefined}>
+          {source === "research" ? "From web research. Check the sources." : "From the heuristic rating"}
+        </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-hairline">
-        {picks.length === 0 && (
-          <div className="col-span-3 px-6 py-10 text-center text-ink-ghost font-mono text-xs tracking-widest">
-            NO PREDICTIONS YET
-          </div>
-        )}
-        {picks.map((pick) => (
-          <PickCell key={pick.runner.id} pick={pick} />
-        ))}
-      </div>
+      {picks.length === 0 ? (
+        <p className="px-5 py-8 text-center text-ink-3">
+          No picks yet. Refresh this track to research tips and ratings.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-line">
+          {picks.map((pick) => (
+            <PickCell key={pick.runner.id} pick={pick} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -144,81 +125,22 @@ function PickCell({ pick }: { pick: Pick }) {
   const cp = runner.current_price ? Number(runner.current_price.price) : null;
 
   return (
-    <article
-      className={clsx(
-        "relative px-5 py-5 flex flex-col gap-3 transition-colors",
-        isLead ? "bg-paper-raised" : "hover:bg-paper-raised",
-      )}
-    >
-      {/* rank header */}
+    <article className={clsx("px-5 py-4 flex flex-col gap-3", isLead && "bg-silk/15")}>
+      <p className={clsx("text-sm font-semibold", isLead ? "text-ink" : "text-ink-3")}>{RANK_LABEL[rank]}</p>
       <header className="flex items-start gap-3">
-        <div
-          className={clsx(
-            "shrink-0 w-12 h-14 border flex flex-col items-center justify-center font-display leading-none",
-            isLead ? "border-gold bg-gold/5" : "border-hairline-bright",
-          )}
-        >
-          <span
-            className={clsx(
-              "text-3xl font-bold",
-              isLead ? "text-gold" : "text-ink-2",
-            )}
-          >
-            {RANK_KANJI[rank]}
-          </span>
-          <span className="mt-0.5 font-mono text-[9px] tracking-widest text-ink-ghost">
-            {RANK_LABEL[rank]}
-          </span>
-        </div>
+        <span className={clsx("cloth", isLead && "!bg-silk !text-ink")}>{runner.number}</span>
         <div className="min-w-0 flex-1">
-          <div className="flex items-baseline gap-2">
-            <span className="font-mono text-xs text-ink-3 tabular-nums">
-              #{runner.number}
-            </span>
-            {win_prob != null && (
-              <span
-                className={clsx(
-                  "ml-auto font-mono text-sm tabular-nums",
-                  isLead ? "text-gold" : "text-ink-2",
-                )}
-              >
-                {(win_prob * 100).toFixed(1)}%
-              </span>
-            )}
-          </div>
-          <h3 className="font-display text-lg leading-snug text-ink truncate">
-            {runner.name}
-          </h3>
-          <div className="font-mono text-[10px] tracking-widest text-ink-ghost truncate">
-            {(runner.jockey ?? "—").toUpperCase()}
-            <span className="mx-1.5 opacity-50">·</span>
-            {(runner.trainer ?? "—").toUpperCase()}
-          </div>
+          <h4 className="font-display text-2xl font-bold leading-none truncate">{runner.name}</h4>
+          <p className="text-sm text-ink-3 truncate mt-1">
+            {[runner.jockey, runner.trainer].filter(Boolean).join(", ") || "Connections not listed"}
+          </p>
+        </div>
+        <div className="text-right shrink-0">
+          {cp != null && <p className="num text-2xl font-bold leading-none">${cp.toFixed(2)}</p>}
+          {win_prob != null && <p className="num text-sm text-ink-3 mt-1">{(win_prob * 100).toFixed(0)}% chance</p>}
         </div>
       </header>
-
-      {/* odds + romaji rank */}
-      <div className="flex items-center justify-between pt-3 border-t border-hairline">
-        <span className="font-display italic text-[11px] tracking-widest text-ink-ghost">
-          {RANK_ROMAJI[rank]}
-        </span>
-        {cp != null ? (
-          <span className="font-mono text-sm tabular-nums text-ink">
-            <span className="text-ink-3 text-xs mr-0.5">$</span>
-            {cp.toFixed(2)}
-          </span>
-        ) : runner.prediction?.rating ? (
-          <span className="font-mono text-[10px] tracking-widest text-ink-3">
-            {runner.prediction.rating.toUpperCase()}
-          </span>
-        ) : null}
-      </div>
-
-      {rationale && (
-        <p className="text-[11px] leading-relaxed text-ink-3">
-          {renderRationale(rationale)}
-        </p>
-      )}
+      {rationale && <p className="text-sm leading-relaxed text-ink-2">{renderRationale(rationale)}</p>}
     </article>
   );
 }

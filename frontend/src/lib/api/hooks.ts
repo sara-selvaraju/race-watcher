@@ -1,14 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { api, type AlertsOut, type MeetingOut, type StatusOut } from "./client";
+import { api, type AlertsOut, type MeetingsOut, type StatusOut } from "./client";
 
-export function useMeeting() {
-  return useQuery<MeetingOut>({
+export function useMeetings() {
+  return useQuery<MeetingsOut>({
     queryKey: ["meeting", "today"],
     queryFn: async () => {
-      const { data, error } = await api.GET("/api/v1/meeting/today");
-      if (error || !data) throw new Error("Failed to load meeting");
+      const { data, error } = await api.GET("/api/v1/meetings/today");
+      if (error || !data) throw new Error("Failed to load meetings");
       return data;
     },
   });

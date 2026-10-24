@@ -19,6 +19,8 @@ class RaceCardSource(Protocol):
 
     def load_meeting(self) -> DomainMeeting: ...
 
+    def load_meetings(self) -> list[DomainMeeting]: ...
+
 
 @runtime_checkable
 class OddsSource(Protocol):

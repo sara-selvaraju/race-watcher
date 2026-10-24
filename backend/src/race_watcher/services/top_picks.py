@@ -49,15 +49,25 @@ def _to_domain_race(race: m.Race) -> DomainRace:
     )
 
 
-def refresh_all_races(session: Session, adapter) -> dict:
-    """Research top picks for every race in today's meeting. Idempotent: replaces prior picks."""
+def refresh_all_races(session: Session, adapter, meeting_id: int | None = None) -> dict:
+    """Research top picks for every race on the race date. Idempotent: replaces prior picks."""
     if not hasattr(adapter, "fetch_race_top_picks"):
         log.warning("top_picks.adapter_not_supported", adapter=adapter.name)
         return {"races": 0, "picks": 0, "skipped": "adapter_not_supported"}
 
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
+    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    if not meetings:
         return {"races": 0, "picks": 0, "skipped": "no_meeting"}
+
+    races = picks = 0
+    for meeting in meetings:
+        result = _refresh_meeting(session, adapter, meeting)
+        races += result["races"]
+        picks += result["picks"]
+    return {"races": races, "picks": picks}
+
+
+def _refresh_meeting(session: Session, adapter, meeting: m.Meeting) -> dict:
 
     domain_meeting = DomainMeeting(
         track=meeting.track,

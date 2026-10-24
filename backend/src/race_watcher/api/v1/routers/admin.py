@@ -7,11 +7,14 @@ from race_watcher.api.deps import CardSourceDep, EngineDep, OddsSourceDep, Sessi
 from race_watcher.core.config import settings
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
 from race_watcher.repositories import race_repo
-from race_watcher.services.ingest import ingest_meeting
+from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+# Every LLM-backed action below accepts an optional `meeting_id` so the frontend can refresh one
+# track at a time; omitted, it runs across every meeting on RACE_DATE.
 
 
 @router.post("/ingest")
@@ -19,21 +22,27 @@ def ingest(
     session: Session = SessionDep,
     source: RaceCardSource = CardSourceDep,
 ) -> dict:
-    meeting = ingest_meeting(session, source)
-    return {"meeting_id": meeting.id, "track": meeting.track, "date": str(meeting.date)}
+    meetings = ingest_meetings(session, source)
+    return {
+        "meetings": [
+            {"meeting_id": mt.id, "track": mt.track, "date": str(mt.date)} for mt in meetings
+        ]
+    }
 
 
 @router.post("/predict")
 def predict(
     session: Session = SessionDep,
     engine: PredictionEngine = EngineDep,
+    meeting_id: int | None = None,
 ) -> dict:
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
+    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    if not meetings:
         return {"created": 0, "skipped": "no_meeting"}
     created = 0
-    for race in meeting.races:
-        created += len(run_predictions_for_race(session, race, engine))
+    for meeting in meetings:
+        for race in meeting.races:
+            created += len(run_predictions_for_race(session, race, engine))
     session.commit()
     return {"created": created}
 
@@ -42,12 +51,13 @@ def predict(
 def refresh_odds(
     session: Session = SessionDep,
     odds: OddsSource = OddsSourceDep,
+    meeting_id: int | None = None,
 ) -> dict:
     """Run the configured OddsSource once (on-demand) and write price snapshots + movement alerts.
 
     Bypasses the race-window gate so it works any time. Use this in place of the 5-min worker poll.
     """
-    result = poll_once(session, odds, force=True)
+    result = poll_once(session, odds, meeting_id=meeting_id, force=True)
     return {"source": odds.name, **result}
 
 
@@ -55,6 +65,7 @@ def refresh_odds(
 def refresh_tips(
     session: Session = SessionDep,
     odds: OddsSource = OddsSourceDep,
+    meeting_id: int | None = None,
 ) -> dict:
     """Run the LLM research agent once per race to refresh top-3 picks.
 
@@ -63,7 +74,7 @@ def refresh_tips(
     """
     from race_watcher.services.top_picks import refresh_all_races
 
-    result = refresh_all_races(session, odds)
+    result = refresh_all_races(session, odds, meeting_id)
     return {"source": odds.name, **result}
 
 
@@ -71,6 +82,7 @@ def refresh_tips(
 def expand_field(
     session: Session = SessionDep,
     odds: OddsSource = OddsSourceDep,
+    meeting_id: int | None = None,
 ) -> dict:
     """Research the full field per race and add any missing runners.
 
@@ -79,31 +91,31 @@ def expand_field(
     """
     from race_watcher.services.expand_field import expand_all_races
 
-    result = expand_all_races(session, odds)
+    result = expand_all_races(session, odds, meeting_id)
     return {"source": odds.name, **result}
 
 
 @router.post("/cleanup-research-runners")
-def cleanup_research_runners(session: Session = SessionDep) -> dict:
-    """Delete every runner in today's meeting that originated from /admin/expand-field
+def cleanup_research_runners(
+    session: Session = SessionDep, meeting_id: int | None = None
+) -> dict:
+    """Delete every runner on the race date that originated from /admin/expand-field
     (i.e. not in the curated seed JSON).
 
     Use this when Sonar has stacked hallucinated or duplicate runners and you want to
     reset the field back to the seed-only state. Top picks and predictions for the
     deleted runners cascade away via the existing FK ondelete=CASCADE.
     """
-    from race_watcher.db import models as m
-    from race_watcher.repositories import race_repo
-
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
+    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    if not meetings:
         return {"deleted": 0, "skipped": "no_meeting"}
 
     deleted = 0
-    for race in meeting.races:
-        for runner in list(race.runners):
-            if runner.seed_price is None and runner.seed_prediction_rationale is None:
-                session.delete(runner)
-                deleted += 1
+    for meeting in meetings:
+        for race in meeting.races:
+            for runner in list(race.runners):
+                if runner.seed_price_source is None and runner.seed_price is None:
+                    session.delete(runner)
+                    deleted += 1
     session.commit()
     return {"deleted": deleted}

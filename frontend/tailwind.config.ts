@@ -5,50 +5,32 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: {
-          DEFAULT: "var(--bg)",
-          soft: "var(--bg-soft)",
+        bg: "var(--bg)",
+        surface: {
+          DEFAULT: "var(--surface)",
+          2: "var(--surface-2)",
         },
-        paper: {
-          DEFAULT: "var(--paper)",
-          raised: "var(--paper-raised)",
-          glow: "var(--paper-glow)",
+        line: {
+          DEFAULT: "var(--line)",
+          strong: "var(--line-strong)",
         },
         ink: {
           DEFAULT: "var(--ink)",
           2: "var(--ink-2)",
           3: "var(--ink-3)",
-          ghost: "var(--ink-ghost)",
         },
-        vermilion: {
-          DEFAULT: "var(--vermilion)",
-          deep: "var(--vermilion-deep)",
+        turf: {
+          DEFAULT: "var(--turf)",
+          deep: "var(--turf-deep)",
+          soft: "var(--turf-soft)",
         },
-        matcha: {
-          DEFAULT: "var(--matcha)",
-          deep: "var(--matcha-deep)",
-        },
-        gold: {
-          DEFAULT: "var(--gold)",
-          deep: "var(--gold-deep)",
-        },
-        indigo: { ink: "var(--indigo)" },
-        hairline: {
-          DEFAULT: "var(--hairline)",
-          bright: "var(--hairline-bright)",
-        },
+        silk: "var(--silk)",
+        firm: "var(--firm)",
+        drift: "var(--drift)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "Georgia", "serif"],
+        display: ["var(--font-display)", "Arial Narrow", "sans-serif"],
         sans: ["var(--font-sans)", "-apple-system", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
-      },
-      letterSpacing: {
-        kanji: "0.3em",
-        section: "0.25em",
-      },
-      borderRadius: {
-        bento: "2px",
       },
     },
   },

@@ -38,7 +38,16 @@ class SeedFileAdapter:
         self.path = Path(path)
 
     def load_meeting(self) -> DomainMeeting:
+        return self.load_meetings()[0]
+
+    def load_meetings(self) -> list[DomainMeeting]:
+        """Accepts either `{meeting, races}` (one track) or `{meetings: [{meeting, races}, ...]}`."""
         data = json.loads(self.path.read_text())
+        blocks = data["meetings"] if "meetings" in data else [data]
+        return [self._parse_meeting(b) for b in blocks]
+
+    @staticmethod
+    def _parse_meeting(data: dict) -> DomainMeeting:
         m = data["meeting"]
         races: list[DomainRace] = []
         for r in data["races"]:
@@ -61,7 +70,7 @@ class SeedFileAdapter:
                         scratched=bool(rn.get("scratched", False)),
                         form_lines=form_lines,
                         seed_price=_to_decimal(odds.get("price")),
-                        seed_price_source=odds.get("source"),
+                        seed_price_source=odds.get("source") or "seed",
                         seed_prediction_rating=pred.get("rating"),
                         seed_prediction_rationale=pred.get("rationale"),
                     )

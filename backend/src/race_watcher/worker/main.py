@@ -10,7 +10,7 @@ from race_watcher.core.config import settings
 from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.db.session import SessionLocal
 from race_watcher.repositories import race_repo
-from race_watcher.services.ingest import ingest_meeting
+from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.predictions import run_predictions_for_race
 
 configure_logging()
@@ -19,21 +19,18 @@ log = get_logger("worker")
 
 def _ensure_meeting_loaded() -> None:
     with SessionLocal() as session:
-        meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-        if meeting is not None:
+        if race_repo.list_meetings_by_date(session, settings.race_date):
             return
         log.info("worker.ingesting_seed", race_date=str(settings.race_date))
-        ingest_meeting(session, get_race_card_source())
+        ingest_meetings(session, get_race_card_source())
 
 
 def _refresh_predictions() -> None:
     engine = get_prediction_engine()
     with SessionLocal() as session:
-        meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-        if meeting is None:
-            return
-        for race in meeting.races:
-            run_predictions_for_race(session, race, engine)
+        for meeting in race_repo.list_meetings_by_date(session, settings.race_date):
+            for race in meeting.races:
+                run_predictions_for_race(session, race, engine)
         session.commit()
 
 

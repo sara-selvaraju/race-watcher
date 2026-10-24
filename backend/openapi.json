@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "race-watcher",
-    "description": "Flemington 2026-06-20 race-day dashboard API.",
+    "description": "Multi-meeting race-day dashboard API.",
     "version": "0.1.0"
   },
   "paths": {
@@ -34,6 +34,7 @@
           "meeting"
         ],
         "summary": "Get Today Meeting",
+        "description": "First meeting on the race date. Kept for older clients \u2014 prefer /meetings/today.",
         "operationId": "get_today_meeting_api_v1_meeting_today_get",
         "responses": {
           "200": {
@@ -84,6 +85,32 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meetings/today": {
+      "get": {
+        "tags": [
+          "meeting"
+        ],
+        "summary": "List Today Meetings",
+        "description": "Every meeting on the race date (one per track).",
+        "operationId": "list_today_meetings_api_v1_meetings_today_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MeetingOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Today Meetings Api V1 Meetings Today Get"
                 }
               }
             }
@@ -189,15 +216,43 @@
         ],
         "summary": "Predict",
         "operationId": "predict_api_v1_admin_predict_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Predict Api V1 Admin Predict Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -213,15 +268,43 @@
         "summary": "Refresh Odds",
         "description": "Run the configured OddsSource once (on-demand) and write price snapshots + movement alerts.\n\nBypasses the race-window gate so it works any time. Use this in place of the 5-min worker poll.",
         "operationId": "refresh_odds_api_v1_admin_refresh_odds_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Refresh Odds Api V1 Admin Refresh Odds Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -237,15 +320,147 @@
         "summary": "Refresh Tips",
         "description": "Run the LLM research agent once per race to refresh top-3 picks.\n\nRe-uses the OpenRouter odds adapter (it has a fetch_race_top_picks() method).\nIdempotent: replaces prior picks per race.",
         "operationId": "refresh_tips_api_v1_admin_refresh_tips_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Refresh Tips Api V1 Admin Refresh Tips Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/expand-field": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Expand Field",
+        "description": "Research the full field per race and add any missing runners.\n\nRe-uses the OpenRouter adapter (fetch_race_field). Existing runners are not clobbered;\nmissing jockey/trainer/barrier/scratched on existing rows are backfilled if found.",
+        "operationId": "expand_field_api_v1_admin_expand_field_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Expand Field Api V1 Admin Expand Field Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/cleanup-research-runners": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Cleanup Research Runners",
+        "description": "Delete every runner on the race date that originated from /admin/expand-field\n(i.e. not in the curated seed JSON).\n\nUse this when Sonar has stacked hallucinated or duplicate runners and you want to\nreset the field back to the seed-only state. Top picks and predictions for the\ndeleted runners cascade away via the existing FK ondelete=CASCADE.",
+        "operationId": "cleanup_research_runners_api_v1_admin_cleanup_research_runners_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Cleanup Research Runners Api V1 Admin Cleanup Research Runners Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -451,9 +666,21 @@
             "type": "string",
             "title": "Runner Name"
           },
+          "race_id": {
+            "type": "integer",
+            "title": "Race Id"
+          },
           "race_number": {
             "type": "integer",
             "title": "Race Number"
+          },
+          "meeting_id": {
+            "type": "integer",
+            "title": "Meeting Id"
+          },
+          "track": {
+            "type": "string",
+            "title": "Track"
           },
           "from_price": {
             "type": "string",
@@ -489,7 +716,10 @@
           "id",
           "runner_id",
           "runner_name",
+          "race_id",
           "race_number",
+          "meeting_id",
+          "track",
           "from_price",
           "to_price",
           "pct_change",
@@ -748,6 +978,10 @@
             "type": "boolean",
             "title": "Scratched"
           },
+          "seeded": {
+            "type": "boolean",
+            "title": "Seeded"
+          },
           "form_lines": {
             "items": {
               "$ref": "#/components/schemas/FormLineOut"
@@ -794,6 +1028,7 @@
           "weight_kg",
           "silk",
           "scratched",
+          "seeded",
           "form_lines",
           "current_price",
           "price_history",

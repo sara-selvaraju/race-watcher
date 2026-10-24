@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useAlerts } from "@/lib/api/hooks";
 import { clsx } from "@/lib/clsx";
 
-export function MovementFeed() {
+export function MovementFeed({ onSelect }: { onSelect: (raceId: number) => void }) {
   const { data, isPending, error } = useAlerts();
 
   // The poller writes alerts against TWO baselines (open + previous) for each
@@ -23,94 +23,56 @@ export function MovementFeed() {
   }, [data]);
 
   return (
-    <section
-      className="bento bento-ticks animate-bento-in"
-      style={{ animationDelay: "180ms" }}
-    >
-      <header className="px-5 py-4 flex items-center justify-between border-b border-hairline">
-        <span className="label-section">
-          <span className="font-display tracking-kanji text-ink">動向</span>
-          <span className="text-ink-3 normal-case tracking-normal font-sans">
-            Movements
-          </span>
-        </span>
-        {deduped && (
-          <span className="font-mono text-[10px] tracking-widest text-ink-ghost">
-            {deduped.length} RUNNERS
-          </span>
-        )}
+    <section className="panel overflow-hidden">
+      <header className="panel-head">
+        <h3 className="panel-title">Market moves</h3>
+        <p className="text-sm text-ink-3">All tracks</p>
       </header>
 
-      <div className="max-h-[420px] overflow-y-auto">
-        {isPending && <SkeletonRows />}
+      <div className="max-h-[480px] overflow-y-auto">
+        {isPending && <p className="px-5 py-6 text-ink-3 animate-pulse">Loading moves…</p>}
         {error && !isPending && (
-          <div className="px-5 py-6 text-center text-vermilion font-mono text-xs tracking-widest">
-            FEED UNAVAILABLE
-          </div>
+          <p className="px-5 py-6 text-drift">Couldn&apos;t load market moves. They&apos;ll retry in 30 seconds.</p>
         )}
         {deduped && deduped.length === 0 && (
-          <div className="px-5 py-10 text-center text-ink-ghost">
-            <div className="font-display text-3xl mb-2 text-ink-3">静</div>
-            <p className="font-mono text-[10px] tracking-widest">QUIET — NO SIGNIFICANT MOVES</p>
-          </div>
+          <p className="px-5 py-8 text-ink-3">
+            No big moves yet. A runner shows here when its price shifts by 10% or more between refreshes.
+          </p>
         )}
-        <ul className="divide-y divide-hairline">
+        <ul className="divide-y divide-line">
           {deduped?.map((a) => {
             const from = Number(a.from_price);
             const to = Number(a.to_price);
             const pct = Number(a.pct_change);
             const isFirm = a.direction === "firm";
-            const time = new Date(a.created_at).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+            const time = new Date(a.created_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
             return (
-              <li
-                key={a.id}
-                className="px-5 py-3 flex items-center justify-between gap-3 hover:bg-paper-raised transition-colors"
-              >
-                <div className="min-w-0">
-                  <div className="font-display text-sm text-ink truncate flex items-baseline gap-2">
-                    <span className="font-mono text-xs text-ink-3">
-                      R{a.race_number}
-                    </span>
-                    {a.runner_name}
+              <li key={a.id}>
+                <button
+                  type="button"
+                  onClick={() => onSelect(a.race_id)}
+                  className="w-full px-5 py-3 flex items-center justify-between gap-3 text-left hover:bg-surface-2"
+                >
+                  <div className="min-w-0">
+                    <p className="font-display text-lg font-bold leading-tight truncate">{a.runner_name}</p>
+                    <p className="text-sm text-ink-3">
+                      {a.track} R{a.race_number}, {time}
+                    </p>
                   </div>
-                  <div className="font-mono text-[10px] tracking-widest text-ink-ghost mt-0.5">
-                    {time} · {a.baseline.toUpperCase()}
+                  <div className="text-right shrink-0">
+                    <p className="num text-sm text-ink-2">
+                      ${from.toFixed(2)} to ${to.toFixed(2)}
+                    </p>
+                    <p className={clsx("num font-bold", isFirm ? "text-firm" : "text-drift")}>
+                      {isFirm ? "▼ firmed" : "▲ drifted"} {Math.abs(pct).toFixed(0)}%
+                    </p>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-mono text-xs tabular-nums text-ink-2">
-                    ${from.toFixed(2)} → ${to.toFixed(2)}
-                  </div>
-                  <div
-                    className={clsx(
-                      "font-mono text-xs tabular-nums tracking-tight mt-0.5",
-                      isFirm ? "text-matcha" : "text-vermilion",
-                    )}
-                  >
-                    {isFirm ? "↓" : "↑"} {Math.abs(pct).toFixed(1)}%
-                  </div>
-                </div>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
     </section>
-  );
-}
-
-function SkeletonRows() {
-  return (
-    <ul className="divide-y divide-hairline">
-      {[0, 1, 2].map((i) => (
-        <li key={i} className="px-5 py-4 h-14 animate-pulse">
-          <div className="h-3 w-1/2 bg-paper-raised mb-2" />
-          <div className="h-2 w-1/3 bg-paper-raised" />
-        </li>
-      ))}
-    </ul>
   );
 }

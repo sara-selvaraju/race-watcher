@@ -7,12 +7,20 @@ from race_watcher.domain.models import DomainMeeting
 from race_watcher.domain.ports import RaceCardSource
 
 
+def ingest_meetings(session: Session, source: RaceCardSource) -> list[m.Meeting]:
+    """Upsert every meeting the card source provides."""
+    return [_upsert_meeting(session, d) for d in source.load_meetings()]
+
+
 def ingest_meeting(session: Session, source: RaceCardSource) -> m.Meeting:
+    return _upsert_meeting(session, source.load_meeting())
+
+
+def _upsert_meeting(session: Session, domain: DomainMeeting) -> m.Meeting:
     """Upsert the meeting + races + runners + form lines from a card source.
 
     Idempotent on (track, date) and (race.meeting_id, race.number) and (runner.race_id, runner.number).
     """
-    domain: DomainMeeting = source.load_meeting()
 
     meeting = (
         session.query(m.Meeting)

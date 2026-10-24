@@ -10,9 +10,7 @@ type StepId = "odds" | "research" | "ratings" | "field";
 type Step = {
   id: StepId;
   label: string;
-  kanji: string;
   path: string;
-  hint: string;
   summarize: (d: Record<string, unknown>) => string;
 };
 
@@ -23,37 +21,26 @@ const STEPS: Step[] = [
   {
     id: "odds",
     label: "Odds",
-    kanji: "値",
     path: "/api/v1/admin/refresh-odds",
-    hint: "fetch current prices",
-    summarize: (d) =>
-      `${num(d.snapshots) ?? 0} prices · ${num(d.alerts) ?? 0} movements`,
+    summarize: (d) => `${num(d.snapshots) ?? 0} prices, ${num(d.alerts) ?? 0} moves`,
   },
   {
     id: "research",
-    label: "Research",
-    kanji: "予",
+    label: "Tips",
     path: "/api/v1/admin/refresh-tips",
-    hint: "web search per race for tips",
-    summarize: (d) =>
-      `${num(d.picks) ?? 0} picks · ${num(d.races) ?? 0} races`,
+    summarize: (d) => `${num(d.picks) ?? 0} picks in ${num(d.races) ?? 0} races`,
   },
   {
     id: "ratings",
     label: "Ratings",
-    kanji: "算",
     path: "/api/v1/admin/predict",
-    hint: "recompute heuristic ratings",
-    summarize: (d) => `${num(d.created) ?? 0} ratings`,
+    summarize: (d) => `${num(d.created) ?? 0} rated`,
   },
   {
     id: "field",
     label: "Field",
-    kanji: "馬",
     path: "/api/v1/admin/expand-field",
-    hint: "fill out runner list (racing.com only)",
-    summarize: (d) =>
-      `+${num(d.added) ?? 0} runners · ${num(d.races) ?? 0} races`,
+    summarize: (d) => `${num(d.added) ?? 0} runners added`,
   },
 ];
 
@@ -62,222 +49,92 @@ function num(v: unknown): number | null {
 }
 
 type StepStatus = "pending" | "running" | "done" | "error";
-type StepState = {
-  id: StepId;
-  status: StepStatus;
-  summary?: string;
-  error?: string;
-};
+type StepState = { status: StepStatus; summary?: string; error?: string };
 
-type State = {
-  running: boolean;
-  steps: StepState[];
-  startedAt?: number;
-  finishedAt?: number;
-};
+type Props = { meetingId: number; track: string };
 
-const INITIAL_STEPS: StepState[] = STEPS.map((s) => ({
-  id: s.id,
-  status: "pending",
-}));
-
-export function RefreshBar() {
+export function RefreshBar({ meetingId, track }: Props) {
   const qc = useQueryClient();
-  const [state, setState] = useState<State>({
-    running: false,
-    steps: INITIAL_STEPS,
-  });
+  const [runningFor, setRunningFor] = useState<number | null>(null);
+  const [steps, setSteps] = useState<StepState[] | null>(null);
+  const [stepsFor, setStepsFor] = useState<number | null>(null);
+  const running = runningFor != null;
 
   async function runAll() {
-    if (state.running) return;
-    setState({
-      running: true,
-      steps: STEPS.map((s) => ({ id: s.id, status: "pending" })),
-      startedAt: Date.now(),
-    });
+    if (running) return;
+    setRunningFor(meetingId);
+    setStepsFor(meetingId);
+    setSteps(STEPS.map(() => ({ status: "pending" })));
+    const update = (i: number, s: StepState) =>
+      setSteps((prev) => prev && prev.map((x, idx) => (idx === i ? s : x)));
 
     for (let i = 0; i < STEPS.length; i++) {
-      const step = STEPS[i];
-      setState((s) => ({
-        ...s,
-        steps: s.steps.map((x, idx) =>
-          idx === i ? { ...x, status: "running" } : x,
-        ),
-      }));
+      update(i, { status: "running" });
       try {
         // openapi-fetch typing for arbitrary admin paths is loose; cast through unknown.
         const { data, error } = await (
           api.POST as unknown as (
             path: string,
+            init: { params: { query: { meeting_id: number } } },
           ) => Promise<{ data?: unknown; error?: unknown }>
-        )(step.path);
+        )(STEPS[i].path, { params: { query: { meeting_id: meetingId } } });
         if (error || !data) {
-          throw new Error(
-            typeof error === "string"
-              ? error
-              : JSON.stringify(error ?? "no data"),
-          );
+          throw new Error(typeof error === "string" ? error : JSON.stringify(error ?? "no data"));
         }
-        const summary = step.summarize(data as Record<string, unknown>);
-        setState((s) => ({
-          ...s,
-          steps: s.steps.map((x, idx) =>
-            idx === i ? { ...x, status: "done", summary } : x,
-          ),
-        }));
+        update(i, { status: "done", summary: STEPS[i].summarize(data as Record<string, unknown>) });
         // Invalidate after each step so the UI updates progressively as data lands.
-        await invalidate();
+        await Promise.all(
+          ["meeting", "alerts", "status"].map((k) => qc.invalidateQueries({ queryKey: [k] })),
+        );
       } catch (err) {
-        const msg = err instanceof Error ? err.message.slice(0, 120) : "failed";
-        setState((s) => ({
-          ...s,
-          running: false,
-          steps: s.steps.map((x, idx) =>
-            idx === i ? { ...x, status: "error", error: msg } : x,
-          ),
-          finishedAt: Date.now(),
-        }));
-        return;
+        update(i, { status: "error", error: err instanceof Error ? err.message.slice(0, 120) : "failed" });
+        break;
       }
     }
-
-    setState((s) => ({ ...s, running: false, finishedAt: Date.now() }));
+    setRunningFor(null);
   }
 
-  async function invalidate() {
-    await qc.invalidateQueries({ queryKey: ["meeting"] });
-    await qc.invalidateQueries({ queryKey: ["alerts"] });
-    await qc.invalidateQueries({ queryKey: ["status"] });
-  }
-
-  const errorIdx = state.steps.findIndex((s) => s.status === "error");
-  const elapsed =
-    state.finishedAt && state.startedAt
-      ? Math.max(1, Math.round((state.finishedAt - state.startedAt) / 1000))
-      : null;
-  const idle = !state.running && state.finishedAt == null;
+  const shown = stepsFor === meetingId ? steps : null;
+  const otherRunning = running && runningFor !== meetingId;
 
   return (
-    <section className="bento bento-ticks animate-bento-in px-4 sm:px-5 py-3.5 flex flex-col gap-3">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2.5 shrink-0">
-          <span className="font-display text-base text-ink leading-none">
-            更新
-          </span>
-          <span className="font-mono text-[10px] tracking-widest text-ink-3">
-            REFRESH
-          </span>
-        </div>
+    <div className="border-t border-line bg-surface-2 px-5 py-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <button
+        type="button"
+        className="btn btn-primary"
+        disabled={running}
+        onClick={runAll}
+        title="Fetch odds, research tips, recompute ratings, then fill out the field. Takes a few minutes."
+      >
+        <span className={clsx(running && "animate-spin-slow")} aria-hidden>
+          ↻
+        </span>
+        {otherRunning ? "Another track is refreshing" : running ? `Refreshing ${track}…` : `Refresh ${track}`}
+      </button>
 
-        <p className="font-mono text-[10px] tracking-widest text-ink-ghost hidden md:block">
-          ODDS → RESEARCH → RATINGS → FIELD · ~3 MIN
-        </p>
-
-        <button
-          type="button"
-          data-variant="primary"
-          className={clsx("btn-bento ml-auto", state.running && "animate-pulse")}
-          disabled={state.running}
-          onClick={runAll}
-          title="Run the full refresh sequence: field, odds, research, ratings"
-        >
-          <span
-            className={clsx(
-              "font-display text-sm leading-none",
-              state.running && "animate-spin-slow",
-            )}
-          >
-            {state.running ? "⟳" : "↻"}
-          </span>
-          <span>
-            {state.running
-              ? "Refreshing…"
-              : state.finishedAt
-                ? "Refresh again"
-                : "Refresh card"}
-          </span>
-        </button>
-      </div>
-
-      {!idle && (
-        <ol className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {state.steps.map((step, idx) => {
-            const meta = STEPS[idx];
-            const icon =
-              step.status === "done"
-                ? "✓"
-                : step.status === "error"
-                  ? "×"
-                  : step.status === "running"
-                    ? "⟳"
-                    : `${idx + 1}`;
-            const tone =
-              step.status === "done"
-                ? "text-matcha border-matcha/40"
-                : step.status === "error"
-                  ? "text-vermilion border-vermilion/60 bg-vermilion/5"
-                  : step.status === "running"
-                    ? "text-gold border-gold/70 bg-gold/5"
-                    : "text-ink-ghost border-hairline";
-            return (
-              <li
-                key={step.id}
-                className={clsx(
-                  "border px-3 py-2 flex flex-col gap-1 transition-colors",
-                  tone,
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className={clsx(
-                      "font-mono text-sm leading-none w-4 text-center",
-                      step.status === "running" && "animate-spin-slow",
-                    )}
-                  >
-                    {icon}
-                  </span>
-                  <span className="font-display text-sm text-ink leading-none">
-                    {meta.kanji}
-                  </span>
-                  <span className="font-mono text-[10px] tracking-widest uppercase">
-                    {meta.label}
-                  </span>
-                </div>
-                <span
-                  className="font-mono text-[10px] text-ink-3 leading-snug truncate"
-                  title={
-                    step.status === "error"
-                      ? step.error
-                      : step.status === "done"
-                        ? step.summary
-                        : meta.hint
-                  }
-                >
-                  {step.status === "done" && step.summary}
-                  {step.status === "error" && (step.error ?? "failed")}
-                  {step.status === "running" && "working…"}
-                  {step.status === "pending" && "queued"}
-                </span>
-              </li>
-            );
-          })}
+      {shown ? (
+        <ol className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          {shown.map((s, i) => (
+            <li
+              key={STEPS[i].id}
+              className={clsx(
+                s.status === "done" && "text-firm",
+                s.status === "error" && "text-drift",
+                s.status === "running" && "text-ink font-semibold",
+                s.status === "pending" && "text-ink-3",
+              )}
+              title={s.error}
+            >
+              {s.status === "done" ? "✓" : s.status === "error" ? "✕" : s.status === "running" ? "…" : "○"}{" "}
+              {STEPS[i].label}
+              {s.summary && <span className="text-ink-3"> ({s.summary})</span>}
+              {s.status === "error" && <span> failed</span>}
+            </li>
+          ))}
         </ol>
+      ) : (
+        <p className="text-sm text-ink-3">Odds, tips, ratings and field for every {track} race.</p>
       )}
-
-      {!state.running && state.finishedAt && (
-        <p className="font-mono text-[10px] tracking-widest">
-          {errorIdx >= 0 ? (
-            <span className="text-vermilion">
-              × Stopped at {STEPS[errorIdx].label.toUpperCase()}
-            </span>
-          ) : (
-            <span className="text-matcha">✓ Card refreshed</span>
-          )}
-          {elapsed != null && (
-            <span className="text-ink-ghost"> · {elapsed}s</span>
-          )}
-        </p>
-      )}
-    </section>
+    </div>
   );
 }

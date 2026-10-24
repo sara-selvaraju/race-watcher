@@ -1,68 +1,78 @@
 "use client";
 
 import { clsx } from "@/lib/clsx";
-import type { MeetingOut } from "@/lib/api/client";
+import type { MeetingsOut } from "@/lib/api/client";
+import { hasJumped, trackColour, type ScheduledRace } from "@/lib/tracks";
 
 type Props = {
-  meeting: MeetingOut;
+  meetings: MeetingsOut;
+  timeline: ScheduledRace[];
+  now: number;
   activeRaceId: number | null;
   onSelect: (raceId: number) => void;
 };
 
-const KANJI_NUM = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
-const toKanji = (n: number) => (n >= 1 && n <= 10 ? KANJI_NUM[n] : String(n));
+export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: Props) {
+  const activeMeeting = timeline.find((s) => s.race.id === activeRaceId)?.meeting ?? meetings[0];
+  const races = timeline.filter((s) => s.meeting.id === activeMeeting.id).sort((a, b) => a.race.number - b.race.number);
 
-export function RaceNav({ meeting, activeRaceId, onSelect }: Props) {
+  function openMeeting(meetingId: number) {
+    const own = timeline.filter((s) => s.meeting.id === meetingId);
+    const pick = own.find((s) => !hasJumped(s.startMs, now)) ?? own[own.length - 1];
+    if (pick) onSelect(pick.race.id);
+  }
+
   return (
-    <nav className="bento bento-ticks animate-bento-in">
-      <div className="px-5 py-3 flex items-center justify-between border-b border-hairline">
-        <span className="label-section">
-          <span className="font-display tracking-kanji text-ink-2">本日のレース</span>
-          <span className="text-ink-ghost normal-case tracking-normal font-sans">Card</span>
-        </span>
-        <span className="text-[10px] tracking-widest text-ink-ghost font-mono">
-          {meeting.races.length} RACES
-        </span>
-      </div>
-      <ul className="flex overflow-x-auto divide-x divide-hairline">
-        {meeting.races.map((race) => {
-          const active = activeRaceId === race.id;
+    <nav className="panel overflow-hidden" aria-label="Meetings and races">
+      <div role="tablist" className="flex border-b border-line overflow-x-auto">
+        {meetings.map((m, i) => {
+          const selected = m.id === activeMeeting.id;
+          const left = timeline.filter((s) => s.meeting.id === m.id && !hasJumped(s.startMs, now)).length;
           return (
-            <li key={race.id} className="flex-1 min-w-[68px]">
+            <button
+              key={m.id}
+              role="tab"
+              aria-selected={selected}
+              onClick={() => openMeeting(m.id)}
+              className={clsx(
+                "relative flex-1 min-w-[8.5rem] px-4 py-3 text-left",
+                selected ? "bg-surface" : "bg-surface-2 text-ink-3 hover:text-ink-2",
+              )}
+            >
+              <span
+                className="absolute left-0 right-0 bottom-0 h-[3px]"
+                style={{ background: selected ? trackColour(m.track, i) : "transparent" }}
+              />
+              <span className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: trackColour(m.track, i) }} />
+                <span className={clsx("font-display text-xl font-bold leading-none", selected && "text-ink")}>
+                  {m.track}
+                </span>
+              </span>
+              <span className="block text-sm mt-1">{left > 0 ? `${left} to run` : "Finished"}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <ul className="flex overflow-x-auto p-2 gap-1.5">
+        {races.map((s) => {
+          const active = s.race.id === activeRaceId;
+          const done = hasJumped(s.startMs, now);
+          return (
+            <li key={s.race.id} className="shrink-0">
               <button
                 type="button"
-                onClick={() => onSelect(race.id)}
+                onClick={() => onSelect(s.race.id)}
+                aria-current={active ? "true" : undefined}
                 className={clsx(
-                  "w-full h-full py-3 px-2 flex flex-col items-center gap-1 transition-all relative group",
-                  active ? "bg-paper-glow" : "hover:bg-paper-raised",
+                  "rounded-lg px-3 py-2 text-left min-w-[4.5rem]",
+                  active ? "bg-turf text-white" : done ? "text-ink-3 hover:bg-surface-2" : "hover:bg-surface-2",
                 )}
               >
-                {active && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-px bg-vermilion" />
-                )}
-                <span
-                  className={clsx(
-                    "font-display text-xl leading-none",
-                    active ? "text-ink" : "text-ink-3 group-hover:text-ink-2",
-                  )}
-                >
-                  {toKanji(race.number)}
-                </span>
-                <span
-                  className={clsx(
-                    "font-mono text-[10px] tracking-widest",
-                    active ? "text-gold" : "text-ink-ghost",
-                  )}
-                >
-                  R{race.number}
-                </span>
-                <span
-                  className={clsx(
-                    "font-mono text-[10px] tabular-nums",
-                    active ? "text-ink-2" : "text-ink-ghost",
-                  )}
-                >
-                  {race.start_time_local?.slice(0, 5) ?? "--:--"}
+                <span className="block font-display text-lg font-bold leading-none">R{s.race.number}</span>
+                <span className={clsx("num block text-sm mt-0.5", active ? "text-white/80" : "text-ink-3")}>
+                  {done ? "Run" : (s.race.start_time_local?.slice(0, 5) ?? "--:--")}
                 </span>
               </button>
             </li>
