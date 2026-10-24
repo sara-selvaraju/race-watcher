@@ -73,3 +73,13 @@ def test_races_that_have_run_are_skipped(session: Session) -> None:
     fake = _FakeSummarizer()
     assert summarize_all(session, fake, now=AFTER_RACE)["written"] == 0
     assert fake.calls == []
+
+
+def test_form_figures_are_read_most_recent_first() -> None:
+    from race_watcher.services.race_summary import describe_form
+
+    assert describe_form("Last-10 figures 211x331x44") == (
+        "most recent first: 4th, 4th, spell, 1st, 3rd, 3rd"
+    )
+    assert describe_form("Last 10: 6x50") == "most recent first: 10th or worse, 5th, spell, 6th"
+    assert describe_form("Strong wet-track form.") == "Strong wet-track form."

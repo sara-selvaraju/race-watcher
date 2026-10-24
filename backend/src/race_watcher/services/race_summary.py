@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -29,6 +30,34 @@ def _has_jumped(meeting: m.Meeting, race: m.Race, now: datetime) -> bool:
         return False
     start = datetime.combine(meeting.date, race.start_time_local, tzinfo=ZoneInfo(meeting.timezone))
     return now > start.astimezone(UTC) + _JUMPED_GRACE
+
+
+_FIGURES_RE = re.compile(r"([0-9x]{2,})\s*$", re.IGNORECASE)
+_PLACE = {"1": "1st", "2": "2nd", "3": "3rd"}
+
+
+def describe_form(note: str | None, runs: int = 6) -> str | None:
+    """Turn a last-10 figures string (most recent on the RIGHT) into most-recent-first words.
+
+    Models reliably misread "211x331x44" left-to-right, so spell it out: "4th, 4th, spell, 1st…".
+    Digit 0 means 10th or worse. Non-figure notes pass through unchanged.
+    """
+    if not note:
+        return None
+    m = _FIGURES_RE.search(note.strip())
+    if not m:
+        return note
+    out: list[str] = []
+    for ch in reversed(m.group(1).lower()):
+        if len(out) == runs:
+            break
+        if ch == "x":
+            out.append("spell")
+        elif ch == "0":
+            out.append("10th or worse")
+        else:
+            out.append(_PLACE.get(ch, f"{ch}th"))
+    return "most recent first: " + ", ".join(out)
 
 
 def _fmt_price(p: Decimal | None) -> str:
@@ -67,7 +96,7 @@ def build_facts(session: Session, meeting: m.Meeting, race: m.Race) -> str:
         current = price_repo.latest_price(session, runner.id)
         opening = price_repo.open_baseline_price(session, runner.id)
         pred = prediction_repo.latest_prediction_for_runner(session, runner.id)
-        form = next((fl.note for fl in runner.form_lines if fl.note), None)
+        form = describe_form(next((fl.note for fl in runner.form_lines if fl.note), None))
         lines += [
             f"Pick {rank}: {runner.name} ({runner.number})",
             f"  jockey {runner.jockey or '?'}, trainer {runner.trainer or '?'}, barrier {runner.barrier or '?'}",
@@ -80,13 +109,18 @@ def build_facts(session: Session, meeting: m.Meeting, race: m.Race) -> str:
             f"  form: {form or 'none recorded'}",
         ]
         if pred and pred.win_prob is not None:
-            lines.append(f"  heuristic win chance {Decimal(pred.win_prob) * 100:.0f}% ({pred.rationale})")
+            lines.append(f"  heuristic share {Decimal(pred.win_prob) * 100:.0f}%")
         if rationale:
             lines.append(f"  research: {rationale}")
 
     others = [r for r in race.runners if not r.scratched]
     priced = sum(1 for r in others if price_repo.latest_price(session, r.id))
-    lines += ["", f"Field: {len(others)} runners, {priced} with a current price."]
+    lines += [
+        "",
+        f"Field: {len(others)} runners, {priced} with a current price.",
+        "Note: the heuristic share is derived from prices and tipster ratings and normalised over "
+        "the field; it is not an independent assessment, so it says nothing about value.",
+    ]
     scratched = [f"{r.name} ({r.number})" for r in race.runners if r.scratched]
     if scratched:
         lines.append(f"Scratched: {', '.join(scratched)}")

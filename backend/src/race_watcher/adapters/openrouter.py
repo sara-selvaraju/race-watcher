@@ -624,7 +624,11 @@ SUMMARY_SYSTEM = (
     "Rules:\n"
     "- Use ONLY the facts given. Never add form, history, or opinions that aren't in them.\n"
     "- Refer to runners as name plus saddlecloth number, e.g. Pingers (4).\n"
-    "- In form figures the most recent run is on the right and x marks a spell.\n"
+    "- Form is already listed most recent first. Quote it in that order.\n"
+    "- Form figures are finishing positions only. Never infer the grade, track, distance or "
+    "date of a past run from them.\n"
+    "- Never claim a runner is under- or over-valued, or that the market is wrong. The "
+    "heuristic share comes from the prices themselves.\n"
     "- If the facts are thin (few prices, no research), say so plainly in one sentence.\n"
     "- No markdown, headings, bullet points, or betting advice. Plain prose only."
 )
