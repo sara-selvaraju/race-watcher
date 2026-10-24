@@ -13,6 +13,7 @@ from race_watcher.db.session import SessionLocal
 from race_watcher.repositories import race_repo
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.predictions import run_predictions_for_race
+from race_watcher.services.race_summary import has_jumped, summarize_all
 
 configure_logging()
 log = get_logger("worker")
@@ -26,20 +27,28 @@ def _ensure_meeting_loaded() -> None:
         ingest_meetings(session, get_race_card_source())
 
 
-def _refresh_predictions() -> None:
+def _refresh_predictions() -> int:
+    """Re-rate runners in races still to run; returns how many races were re-rated."""
     engine = get_prediction_engine()
+    now = datetime.now(UTC)
+    rated = 0
     with SessionLocal() as session:
         for meeting in race_repo.list_meetings_by_date(session, settings.race_date):
             for race in meeting.races:
+                if has_jumped(meeting, race, now):
+                    continue
                 run_predictions_for_race(session, race, engine)
+                rated += 1
         session.commit()
+    return rated
 
 
 def _refresh_summaries() -> None:
-    """Re-rate, then rewrite notes for any upcoming race whose picks, prices or field changed."""
-    from race_watcher.services.race_summary import summarize_all
-
-    _refresh_predictions()
+    """Re-rate, then rewrite notes for any upcoming race whose picks, prices or field changed.
+    Idle once every race on the card has jumped."""
+    if not _refresh_predictions():
+        log.info("worker.idle", reason="no races left to run", race_date=str(settings.race_date))
+        return
     try:
         adapter = get_odds_source()
     except Exception as exc:  # missing API key etc. — keep the worker alive

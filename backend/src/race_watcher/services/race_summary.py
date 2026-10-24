@@ -25,7 +25,7 @@ log = get_logger("race_summary")
 _JUMPED_GRACE = timedelta(minutes=2)
 
 
-def _has_jumped(meeting: m.Meeting, race: m.Race, now: datetime) -> bool:
+def has_jumped(meeting: m.Meeting, race: m.Race, now: datetime) -> bool:
     if race.start_time_local is None:
         return False
     start = datetime.combine(meeting.date, race.start_time_local, tzinfo=ZoneInfo(meeting.timezone))
@@ -143,7 +143,7 @@ def summarize_all(
     written = unchanged = failed = 0
     for meeting in race_repo.list_meetings_by_date(session, settings.race_date, meeting_id):
         for race in meeting.races:
-            if _has_jumped(meeting, race, now):
+            if has_jumped(meeting, race, now):
                 continue
             facts = build_facts(session, meeting, race)
             digest = hashlib.sha256(facts.encode()).hexdigest()
