@@ -75,6 +75,13 @@ class RaceOut(_ApiBase):
     status: str
     runners: list[RunnerOut]
     top_picks: list[TopPickOut]
+    summary: RaceSummaryOut | None = None
+
+
+class RaceSummaryOut(_ApiBase):
+    text: str
+    model: str
+    updated_at: datetime
 
 
 class MeetingOut(_ApiBase):

@@ -467,6 +467,68 @@
           }
         }
       }
+    },
+    "/api/v1/admin/summarize": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Summarize",
+        "description": "Write plain-English notes on each upcoming race's picks from data already stored.\n\nRaces whose facts haven't changed since the last summary are skipped unless `force`.",
+        "operationId": "summarize_api_v1_admin_summarize_post",
+        "parameters": [
+          {
+            "name": "meeting_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meeting Id"
+            }
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Force"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Summarize Api V1 Admin Summarize Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -888,6 +950,16 @@
             },
             "type": "array",
             "title": "Top Picks"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RaceSummaryOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -903,6 +975,30 @@
           "top_picks"
         ],
         "title": "RaceOut"
+      },
+      "RaceSummaryOut": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "model",
+          "updated_at"
+        ],
+        "title": "RaceSummaryOut"
       },
       "RunnerOut": {
         "properties": {

@@ -119,3 +119,19 @@ def cleanup_research_runners(
                     deleted += 1
     session.commit()
     return {"deleted": deleted}
+
+
+@router.post("/summarize")
+def summarize(
+    session: Session = SessionDep,
+    odds: OddsSource = OddsSourceDep,
+    meeting_id: int | None = None,
+    force: bool = False,
+) -> dict:
+    """Write plain-English notes on each upcoming race's picks from data already stored.
+
+    Races whose facts haven't changed since the last summary are skipped unless `force`.
+    """
+    from race_watcher.services.race_summary import summarize_all
+
+    return {"source": odds.name, **summarize_all(session, odds, meeting_id, force=force)}

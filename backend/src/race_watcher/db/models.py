@@ -170,3 +170,21 @@ class MovementAlert(Base):
     __table_args__ = (
         Index("ix_movement_alert_runner_created", "runner_id", "created_at"),
     )
+
+
+class RaceSummary(Base):
+    """Plain-English notes on a race's picks, written by an LLM from data already in the DB."""
+
+    __tablename__ = "race_summary"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
+    race_id: Mapped[int] = mapped_column(ForeignKey("race.id", ondelete="CASCADE"))
+    summary: Mapped[str] = mapped_column(String(3000))
+    # sha256 of the facts the summary was written from — unchanged facts skip the LLM call.
+    inputs_hash: Mapped[str] = mapped_column(String(64))
+    model: Mapped[str] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), init=False
+    )
+
+    __table_args__ = (UniqueConstraint("race_id", name="uq_race_summary_race"),)

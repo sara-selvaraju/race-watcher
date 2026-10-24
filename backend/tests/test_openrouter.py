@@ -158,3 +158,12 @@ def test_returns_empty_when_no_tool_call(tiny_seed: Path) -> None:
         use_web_search=False,
     )
     assert adapter.fetch_prices(meeting) == []
+
+
+def test_summarize_race_uses_plain_model_without_web_search() -> None:
+    stub = _StubOpenAI([_ChatResponse(choices=[_Choice(message=_Message(content="  Alpha (1) leads.  "))])])
+    adapter = OpenRouterAdapter(model="openai/gpt-4o-mini", client=stub, use_web_search=True)  # type: ignore[arg-type]
+    assert adapter.summarize_race("facts") == "Alpha (1) leads."
+    call = stub.chat.completions.calls[0]
+    assert call["model"] == "openai/gpt-4o-mini"
+    assert "tools" not in call

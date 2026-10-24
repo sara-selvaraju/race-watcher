@@ -365,6 +365,30 @@ class OpenRouterAdapter:
             p["rank"] = i
         return picks[:3]
 
+    @property
+    def summary_model(self) -> str:
+        # No `:online` — the summary only restates facts we pass in, so web search would just
+        # add cost and a route for unsourced claims.
+        return self._model_base
+
+    def summarize_race(self, facts: str) -> str | None:
+        """Write a short plain-English note on why the picks are the picks, from `facts` only."""
+        try:
+            resp = self._client.chat.completions.create(
+                model=self.summary_model,
+                max_tokens=600,
+                temperature=0.2,
+                messages=[
+                    {"role": "system", "content": SUMMARY_SYSTEM},
+                    {"role": "user", "content": facts},
+                ],
+            )
+        except Exception as exc:
+            log.error("openrouter.summary_failed", model=self.summary_model, error=str(exc))
+            return None
+        text = (resp.choices[0].message.content or "").strip()
+        return text or None
+
     def fetch_race_field(self, meeting: DomainMeeting, race) -> list[dict]:
         """Research the FULL field for one race. Returns [{runner_number, runner_name, jockey?, trainer?, barrier?, scratched?}, ...]."""
         user_msg = (
@@ -587,6 +611,22 @@ FIELD_SYSTEM = (
     "- Do NOT invent runners. If a horse isn't on the source page, it doesn't "
     "exist for this race.\n"
     "- Output ONLY the tool call. No prose."
+)
+
+
+SUMMARY_SYSTEM = (
+    "You write race notes for a personal race-day dashboard.\n\n"
+    "You are given the facts for ONE race: the top 3 picks in order, their prices (current and "
+    "opening), form figures, connections, heuristic ratings, and any research rationale.\n\n"
+    "Write 3-5 short sentences of plain English explaining why these are the picks: what each "
+    "pick has going for it, what the market says (shortening or drifting), and the main risk or "
+    "where the picks disagree.\n\n"
+    "Rules:\n"
+    "- Use ONLY the facts given. Never add form, history, or opinions that aren't in them.\n"
+    "- Refer to runners as name plus saddlecloth number, e.g. Pingers (4).\n"
+    "- In form figures the most recent run is on the right and x marks a spell.\n"
+    "- If the facts are thin (few prices, no research), say so plainly in one sentence.\n"
+    "- No markdown, headings, bullet points, or betting advice. Plain prose only."
 )
 
 

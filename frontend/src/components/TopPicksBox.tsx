@@ -104,6 +104,17 @@ export function TopPicksBox({ race }: { race: Race }) {
         </p>
       </header>
 
+      {race.summary && (
+        <div className="px-5 py-4 border-b border-line bg-surface-2">
+          <p className="text-[15px] leading-relaxed text-ink max-w-[75ch]">{race.summary.text}</p>
+          <p className="text-xs text-ink-3 mt-2">
+            Notes written{" "}
+            {new Date(race.summary.updated_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })} from
+            the picks, prices and form below. Not betting advice.
+          </p>
+        </div>
+      )}
+
       {picks.length === 0 ? (
         <p className="px-5 py-8 text-center text-ink-3">
           No picks yet. Refresh this track to research tips and ratings.

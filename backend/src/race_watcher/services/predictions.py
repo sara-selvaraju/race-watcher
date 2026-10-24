@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from sqlalchemy.orm import Session
 
 from race_watcher.db import models as m
 from race_watcher.domain.models import DomainFormLine, DomainRunner
 from race_watcher.domain.ports import PredictionEngine
-from race_watcher.repositories import prediction_repo
+from race_watcher.repositories import prediction_repo, price_repo
 
 
-def _to_domain_runner(r: m.Runner) -> DomainRunner:
+def _to_domain_runner(r: m.Runner, live_price: Decimal | None = None) -> DomainRunner:
+    """`live_price` (latest snapshot) takes precedence over the seed's indicative quote so the
+    heuristic's market signal tracks the current market once odds have been refreshed."""
     return DomainRunner(
         number=r.number,
         name=r.name,
@@ -30,7 +34,7 @@ def _to_domain_runner(r: m.Runner) -> DomainRunner:
             )
             for fl in r.form_lines
         ),
-        seed_price=r.seed_price,
+        seed_price=live_price if live_price is not None else r.seed_price,
         seed_price_source=r.seed_price_source,
         seed_prediction_rating=r.seed_prediction_rating,
         seed_prediction_rationale=r.seed_prediction_rationale,
@@ -41,7 +45,12 @@ def run_predictions_for_race(
     session: Session, race: m.Race, engine: PredictionEngine
 ) -> list[m.Prediction]:
     """Run the prediction engine against the race's runners and persist results."""
-    domain_runners = [_to_domain_runner(r) for r in race.runners if not r.scratched]
+    domain_runners = []
+    for r in race.runners:
+        if r.scratched:
+            continue
+        latest = price_repo.latest_price(session, r.id)
+        domain_runners.append(_to_domain_runner(r, Decimal(latest.price) if latest else None))
     if not domain_runners:
         return []
     results = engine.predict(domain_runners)

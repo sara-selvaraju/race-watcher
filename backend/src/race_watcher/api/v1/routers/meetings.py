@@ -7,6 +7,7 @@ from race_watcher.api.deps import SessionDep
 from race_watcher.api.v1.schemas.responses import (
     FormLineOut,
     MeetingOut,
+    RaceSummaryOut,
     PredictionOut,
     PriceOut,
     RaceOut,
@@ -15,7 +16,13 @@ from race_watcher.api.v1.schemas.responses import (
 )
 from race_watcher.core.config import settings
 from race_watcher.db import models as m
-from race_watcher.repositories import prediction_repo, price_repo, race_repo, top_pick_repo
+from race_watcher.repositories import (
+    prediction_repo,
+    price_repo,
+    race_repo,
+    summary_repo,
+    top_pick_repo,
+)
 
 router = APIRouter(prefix="/meeting", tags=["meeting"])
 meetings_router = APIRouter(prefix="/meetings", tags=["meeting"])
@@ -99,6 +106,9 @@ def _race_to_out(session: Session, race: m.Race) -> RaceOut:
         status=race.status,
         runners=[_runner_to_out(session, r) for r in race.runners],
         top_picks=picks,
+        summary=RaceSummaryOut(text=s.summary, model=s.model, updated_at=s.created_at)
+        if (s := summary_repo.get_for_race(session, race.id))
+        else None,
     )
 
 

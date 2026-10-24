@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
 
-type StepId = "odds" | "research" | "ratings" | "field";
+type StepId = "odds" | "research" | "ratings" | "field" | "summary";
 
 type Step = {
   id: StepId;
@@ -41,6 +41,12 @@ const STEPS: Step[] = [
     label: "Field",
     path: "/api/v1/admin/expand-field",
     summarize: (d) => `${num(d.added) ?? 0} runners added`,
+  },
+  {
+    id: "summary",
+    label: "Notes",
+    path: "/api/v1/admin/summarize",
+    summarize: (d) => `${num(d.written) ?? 0} races written`,
   },
 ];
 
@@ -104,7 +110,7 @@ export function RefreshBar({ meetingId, track }: Props) {
         className="btn btn-primary"
         disabled={running}
         onClick={runAll}
-        title="Fetch odds, research tips, recompute ratings, then fill out the field. Takes a few minutes."
+        title="Fetch odds, research tips, recompute ratings, fill out the field, then write race notes. Takes a few minutes."
       >
         <span className={clsx(running && "animate-spin-slow")} aria-hidden>
           ↻
@@ -133,7 +139,7 @@ export function RefreshBar({ meetingId, track }: Props) {
           ))}
         </ol>
       ) : (
-        <p className="text-sm text-ink-3">Odds, tips, ratings and field for every {track} race.</p>
+        <p className="text-sm text-ink-3">Odds, tips, ratings, field and notes for every {track} race.</p>
       )}
     </div>
   );

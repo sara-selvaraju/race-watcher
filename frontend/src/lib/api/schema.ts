@@ -239,6 +239,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/summarize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Summarize
+         * @description Write plain-English notes on each upcoming race's picks from data already stored.
+         *
+         *     Races whose facts haven't changed since the last summary are skipped unless `force`.
+         */
+        post: operations["summarize_api_v1_admin_summarize_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -369,6 +391,19 @@ export interface components {
             runners: components["schemas"]["RunnerOut"][];
             /** Top Picks */
             top_picks: components["schemas"]["TopPickOut"][];
+            summary?: components["schemas"]["RaceSummaryOut"] | null;
+        };
+        /** RaceSummaryOut */
+        RaceSummaryOut: {
+            /** Text */
+            text: string;
+            /** Model */
+            model: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
         };
         /** RunnerOut */
         RunnerOut: {
@@ -765,6 +800,40 @@ export interface operations {
         parameters: {
             query?: {
                 meeting_id?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    summarize_api_v1_admin_summarize_post: {
+        parameters: {
+            query?: {
+                meeting_id?: number | null;
+                force?: boolean;
             };
             header?: never;
             path?: never;
