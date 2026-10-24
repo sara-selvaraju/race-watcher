@@ -2342,6 +2342,680 @@
      ]
     }
    ]
+  },
+  {
+   "meeting": {
+    "track": "Morphettville",
+    "date": "2026-10-24",
+    "going": "Soft 5",
+    "rail": "True",
+    "timezone": "Australia/Adelaide",
+    "source": "racingaustralia.horse FreeFields 2026-10-24"
+   },
+   "races": [
+    {
+     "number": 7,
+     "name": "Kirin Ichiban Handicap",
+     "distance_m": 2000,
+     "class": "BenchMark 80, Handicap",
+     "start_time": "16:54",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Williamsburg",
+       "trainer": "Garret Lynch",
+       "jockey": "Ms Jordyn Weatherley",
+       "weight_kg": 65.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x084973773"
+      },
+      {
+       "number": 2,
+       "name": "Tippa",
+       "trainer": "Shayne & Chelsea Cahill",
+       "jockey": "Jake Toeroek",
+       "weight_kg": 62.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 11x52x0008"
+      },
+      {
+       "number": 3,
+       "name": "I Catchem Fox",
+       "trainer": "Darryl Dodson",
+       "jockey": "Ms Alysha Warren",
+       "weight_kg": 61.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x661217x68"
+      },
+      {
+       "number": 4,
+       "name": "Darknconfidential",
+       "trainer": "Stuart Gower",
+       "jockey": "Todd Pannell",
+       "weight_kg": 58.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 2x37577x50"
+      },
+      {
+       "number": 5,
+       "name": "Giggenbach (NZ)",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Ms Caitlin Tootell",
+       "weight_kg": 57.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x96x342311"
+      },
+      {
+       "number": 6,
+       "name": "Placo (IRE)",
+       "trainer": "Luke O'Connor",
+       "jockey": "Ms Teagan Voorham",
+       "weight_kg": 57.5,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 1x34341290"
+      },
+      {
+       "number": 7,
+       "name": "Crimson Vine (NZ)",
+       "trainer": "Sarah Rutten",
+       "jockey": "Ms Caitlin Jones",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 1234x95090"
+      },
+      {
+       "number": 8,
+       "name": "Kirkliston Blu",
+       "trainer": "Roslyn Day",
+       "jockey": "Andrew Stead",
+       "weight_kg": 57.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 64429x0609"
+      },
+      {
+       "number": 9,
+       "name": "Tyusix",
+       "trainer": "Ron Daniel & Trish Stanbury",
+       "jockey": "Ms Shayleigh Ingelse",
+       "weight_kg": 54.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 344x521234"
+      },
+      {
+       "number": 10,
+       "name": "Talisay",
+       "trainer": "Will Clarken & Charlotte Sorby",
+       "jockey": "Ms Rochelle Milnes",
+       "weight_kg": 54.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x3078x2512"
+      },
+      {
+       "number": 11,
+       "name": "Savatoff (NZ)",
+       "trainer": "Paula Trenwith",
+       "jockey": "Harry Grace",
+       "weight_kg": 54.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 7105358x79"
+      },
+      {
+       "number": 12,
+       "name": "Contrary",
+       "trainer": "Dan Clarken & Oopy MacGillivray",
+       "jockey": "Ms Tala Hutchinson",
+       "weight_kg": 54.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 49341157"
+      }
+     ]
+    },
+    {
+     "number": 8,
+     "name": "Sportsbet Green Tick Handicap",
+     "distance_m": 1200,
+     "class": "BenchMark 84, Handicap",
+     "start_time": "17:41",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Power Beau",
+       "trainer": "Wayne Brown",
+       "jockey": "Ms Brooke King",
+       "weight_kg": 63.5,
+       "barrier": 12,
+       "scratched": true,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 1x814280x0"
+      },
+      {
+       "number": 2,
+       "name": "Early Crow",
+       "trainer": "Dick Leech",
+       "jockey": "Campbell Rawiller",
+       "weight_kg": 63.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 341x648210"
+      },
+      {
+       "number": 3,
+       "name": "The Stalker",
+       "trainer": "Gordon Richards & Damien Moyle",
+       "jockey": "Isaac Sit",
+       "weight_kg": 62.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 17x6581261"
+      },
+      {
+       "number": 4,
+       "name": "Eventually",
+       "trainer": "Sarah Rutten",
+       "jockey": "Ms Alysha Warren",
+       "weight_kg": 60.5,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 79411x018x"
+      },
+      {
+       "number": 5,
+       "name": "Holy Racket (NZ)",
+       "trainer": "Raharna McDonald",
+       "jockey": "Ms Shayleigh Ingelse",
+       "weight_kg": 60.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 5538x87012"
+      },
+      {
+       "number": 6,
+       "name": "Like A Drifter",
+       "trainer": "Dan Clarken & Oopy MacGillivray",
+       "jockey": "Ms Tala Hutchinson",
+       "weight_kg": 58.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 43x111117x"
+      },
+      {
+       "number": 7,
+       "name": "Cicala",
+       "trainer": "Will Clarken & Charlotte Sorby",
+       "jockey": "Ms Rochelle Milnes",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": true,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 51x7425470"
+      },
+      {
+       "number": 8,
+       "name": "From The Block",
+       "trainer": "Sarah Rutten",
+       "jockey": "Connor Murtagh",
+       "weight_kg": 56.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 3434071414"
+      },
+      {
+       "number": 9,
+       "name": "Light The Night",
+       "trainer": "Andrew Gluyas",
+       "jockey": "Jason Holder",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": true,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 42143x1225"
+      },
+      {
+       "number": 10,
+       "name": "Surprise Coming",
+       "trainer": "Hazel Fertier",
+       "jockey": "Harry Grace",
+       "weight_kg": 54.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 413x2200x9"
+      },
+      {
+       "number": 11,
+       "name": "Star Sirius",
+       "trainer": "Richard & Chantelle Jolly",
+       "jockey": "Ms Teagan Voorham",
+       "weight_kg": 54.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x04214955x"
+      },
+      {
+       "number": 12,
+       "name": "One More Song",
+       "trainer": "Aaron Bain & Ned Taylor",
+       "jockey": "Ms Taylor Johnstone",
+       "weight_kg": 54.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 7x11x01x"
+      }
+     ]
+    },
+    {
+     "number": 9,
+     "name": "Schweppes Handicap",
+     "distance_m": 1600,
+     "class": "0 - 62, Handicap",
+     "start_time": "18:11",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Bargain Boy",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Ms Caitlin Jones",
+       "weight_kg": 60.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 1753167x23"
+      },
+      {
+       "number": 2,
+       "name": "Showrunner",
+       "trainer": "Travis Doudle",
+       "jockey": "Ben Price",
+       "weight_kg": 60.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 1x87x008x5"
+      },
+      {
+       "number": 3,
+       "name": "Darci Lane (NZ)",
+       "trainer": "Michael Hickmott",
+       "jockey": "Jacob Opperman",
+       "weight_kg": 59.5,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 16591"
+      },
+      {
+       "number": 4,
+       "name": "Flossing (NZ)",
+       "trainer": "Garret Lynch",
+       "jockey": "Ms Tala Hutchinson",
+       "weight_kg": 59.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 470x869435"
+      },
+      {
+       "number": 5,
+       "name": "Mister Martini",
+       "trainer": "Michael, John & Wayne Hawkes",
+       "jockey": "Todd Pannell",
+       "weight_kg": 59.5,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 0x3150x72"
+      },
+      {
+       "number": 6,
+       "name": "Akitu",
+       "trainer": "Danny Penna",
+       "jockey": "Shuichi Terachi",
+       "weight_kg": 58.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 688560x581"
+      },
+      {
+       "number": 7,
+       "name": "Taupo Tiger",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Jason Holder",
+       "weight_kg": 58.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 7257173312"
+      },
+      {
+       "number": 8,
+       "name": "Yarrawizardharry",
+       "trainer": "Dan Shepherd",
+       "jockey": "Ms Teagan Voorham",
+       "weight_kg": 58.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x5631x0573"
+      },
+      {
+       "number": 9,
+       "name": "I Am Ralph",
+       "trainer": "Sarah Rutten",
+       "jockey": "Ms Brooke King",
+       "weight_kg": 57.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 4335750912"
+      },
+      {
+       "number": 10,
+       "name": "Cork Harbour",
+       "trainer": "Dean Saxon",
+       "jockey": "Ms Alysha Warren",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 9240370400"
+      },
+      {
+       "number": 11,
+       "name": "Zarkana",
+       "trainer": "Wayne Francis & Glen Kent",
+       "jockey": "Connor Murtagh",
+       "weight_kg": 56.5,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 3556866x34"
+      },
+      {
+       "number": 12,
+       "name": "Miss Trombari",
+       "trainer": "Raharna McDonald",
+       "jockey": "Ms Shayleigh Ingelse",
+       "weight_kg": 54.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 005x153826"
+      },
+      {
+       "number": 13,
+       "name": "Shalhavmusik",
+       "trainer": "Grant Young",
+       "jockey": "Will Price",
+       "weight_kg": 54.0,
+       "barrier": 12,
+       "scratched": true,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 6x97675421"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "meeting": {
+    "track": "Eagle Farm",
+    "date": "2026-10-24",
+    "going": "Heavy 9",
+    "rail": "+1m Entire",
+    "timezone": "Australia/Brisbane",
+    "source": "racingaustralia.horse FreeFields 2026-10-24"
+   },
+   "races": [
+    {
+     "number": 8,
+     "name": "Ladbrokes Romantic Warrior 2023 Handicap",
+     "distance_m": 1000,
+     "class": "Class 6 Hcp (C,G&E)",
+     "start_time": "15:56",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Fleetwood",
+       "trainer": "Tony Gollan",
+       "jockey": "Ms Jade Hampson (a3/52kg)",
+       "weight_kg": 61.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 09334x4232"
+      },
+      {
+       "number": 2,
+       "name": "Millane",
+       "trainer": "Tony Gollan",
+       "jockey": "Daniel Moor",
+       "weight_kg": 59.5,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 79955x0186"
+      },
+      {
+       "number": 3,
+       "name": "Street Chase",
+       "trainer": "Jack Bruce",
+       "jockey": "Taylor Marshall",
+       "weight_kg": 57.5,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 0x5167x0x3"
+      },
+      {
+       "number": 4,
+       "name": "Lead Me On",
+       "trainer": "Chris & Corey Munce",
+       "jockey": "Ben Thompson",
+       "weight_kg": 57.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 2x56x3511x"
+      },
+      {
+       "number": 5,
+       "name": "Royal Commodore",
+       "trainer": "Matthew Dunn",
+       "jockey": "Ms Jett Newman (a3/49kg)",
+       "weight_kg": 57.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 89x12117x0"
+      },
+      {
+       "number": 6,
+       "name": "Moonhaven",
+       "trainer": "Kristie Clark-Peoples",
+       "jockey": "Jace McMurray (a1.5/54kg)",
+       "weight_kg": 56.5,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 8x51130x68"
+      },
+      {
+       "number": 7,
+       "name": "Thelwell",
+       "trainer": "Sharryn Livingstone",
+       "jockey": "Ms Bella Youngberry (a2/53kg)",
+       "weight_kg": 56.5,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 3494281240"
+      },
+      {
+       "number": 8,
+       "name": "Bonded Affair",
+       "trainer": "Stuart & Bayley Kendrick",
+       "jockey": "Ms Cejay Graham",
+       "weight_kg": 55.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures 18x0357135"
+      },
+      {
+       "number": 9,
+       "name": "Poseidon's Son",
+       "trainer": "Matthew Dunn",
+       "jockey": "Robbie Dolan",
+       "weight_kg": 54.5,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": null
+       },
+       "form_summary": "Last-10 figures x611114x67"
+      }
+     ]
+    },
+    {
+     "number": 9,
+     "name": "Ladbrokes Via Sistina 2024/2025 Handicap",
+     "distance_m": 1000,
+     "class": "Class 6 Hcp (F&M)",
+     "start_time": "16:39",
+     "runners": []
+    },
+    {
+     "number": 10,
+     "name": "Ladbrokes Spring Racing Carnival Open Handicap",
+     "distance_m": 1600,
+     "class": "Open Handicap",
+     "start_time": "17:20",
+     "runners": []
+    }
+   ]
   }
  ]
 }

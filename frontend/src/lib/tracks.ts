@@ -9,8 +9,10 @@ const TRACK_COLOURS: Record<string, string> = {
   flemington: "#b3245b",
   randwick: "#1f5fa8",
   ascot: "#b57a00",
+  morphettville: "#6a3fa0",
+  "eagle farm": "#0f7c86",
 };
-const FALLBACK = ["#6a3fa0", "#0f7c86", "#8a5a2b"];
+const FALLBACK = ["#8a5a2b", "#4d6b1f", "#a33f2f"];
 
 export function trackColour(track: string, index = 0): string {
   return TRACK_COLOURS[track.toLowerCase()] ?? FALLBACK[index % FALLBACK.length];
