@@ -2,7 +2,7 @@
 
 import { clsx } from "@/lib/clsx";
 import type { MeetingsOut } from "@/lib/api/client";
-import { hasJumped, trackColour, type ScheduledRace } from "@/lib/tracks";
+import { hasJumped, trackColour, visibleRaces, type ScheduledRace } from "@/lib/tracks";
 
 type Props = {
   meetings: MeetingsOut;
@@ -14,7 +14,10 @@ type Props = {
 
 export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: Props) {
   const activeMeeting = timeline.find((s) => s.race.id === activeRaceId)?.meeting ?? meetings[0];
-  const races = timeline.filter((s) => s.meeting.id === activeMeeting.id).sort((a, b) => a.race.number - b.race.number);
+  const races = visibleRaces(
+    timeline.filter((s) => s.meeting.id === activeMeeting.id).sort((a, b) => a.race.number - b.race.number),
+    now,
+  );
 
   function openMeeting(meetingId: number) {
     const own = timeline.filter((s) => s.meeting.id === meetingId);
