@@ -137,7 +137,7 @@ function PickCell({ pick }: { pick: Pick }) {
         </div>
         <div className="text-right shrink-0">
           {cp != null && <p className="num text-2xl font-bold leading-none">${cp.toFixed(2)}</p>}
-          {win_prob != null && <p className="num text-sm text-ink-3 mt-1">{(win_prob * 100).toFixed(0)}% chance</p>}
+          {win_prob != null && win_prob > 0 && <p className="num text-sm text-ink-3 mt-1">{(win_prob * 100).toFixed(0)}% chance</p>}
         </div>
       </header>
       {rationale && <p className="text-sm leading-relaxed text-ink-2">{renderRationale(rationale)}</p>}

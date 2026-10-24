@@ -128,7 +128,7 @@ function RunnerRow({ runner }: { runner: Runner }) {
         </span>
         <div className="text-right w-20">
           <OddsChip price={current} basePrice={baseline} />
-          {winProb != null && (
+          {winProb != null && winProb > 0 && (
             <p className="text-xs text-ink-3 mt-1" title={runner.prediction?.rationale ?? undefined}>
               {(winProb * 100).toFixed(0)}%{rating && RATING_LABEL[rating] ? `, ${RATING_LABEL[rating]}` : ""}
             </p>

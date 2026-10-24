@@ -30,7 +30,7 @@
         "price": 13.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 16x5103x70 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 16x5103x70"
       },
       {
        "number": 2,
@@ -44,7 +44,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x4299x3190 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x4299x3190"
       },
       {
        "number": 3,
@@ -58,7 +58,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 431x121x89 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 431x121x89"
       },
       {
        "number": 4,
@@ -72,7 +72,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 11189x2613 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 11189x2613"
       },
       {
        "number": 5,
@@ -86,7 +86,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x11171x665 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x11171x665"
       },
       {
        "number": 6,
@@ -101,7 +101,7 @@
         "price": 4.6,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 320x25x550 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 320x25x550"
       },
       {
        "number": 7,
@@ -115,7 +115,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 60x940x935 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 60x940x935"
       },
       {
        "number": 8,
@@ -129,7 +129,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 80x272x550 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 80x272x550"
       },
       {
        "number": 9,
@@ -143,7 +143,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 311234x545 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 311234x545"
       },
       {
        "number": 10,
@@ -157,7 +157,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 4x32396x36 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 4x32396x36"
       },
       {
        "number": 11,
@@ -171,7 +171,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 764x35x815 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 764x35x815"
       },
       {
        "number": 12,
@@ -185,7 +185,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 115x251x41 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 115x251x41"
       },
       {
        "number": 13,
@@ -199,7 +199,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 3x35099x34 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 3x35099x34"
       },
       {
        "number": 14,
@@ -214,7 +214,7 @@
         "price": 23.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 820x1124x6 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 820x1124x6"
       }
      ]
     },
@@ -237,7 +237,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 12417x4130 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 12417x4130"
       },
       {
        "number": 2,
@@ -252,7 +252,7 @@
         "price": 6.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x93339x321 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x93339x321"
       },
       {
        "number": 3,
@@ -267,7 +267,7 @@
         "price": 5.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x09412x311 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x09412x311"
       },
       {
        "number": 4,
@@ -281,7 +281,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x808215x06 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x808215x06"
       },
       {
        "number": 5,
@@ -295,7 +295,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 0x8670x003 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 0x8670x003"
       },
       {
        "number": 6,
@@ -309,7 +309,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 1743242111 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 1743242111"
       },
       {
        "number": 7,
@@ -323,7 +323,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 1x5110x401 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 1x5110x401"
       },
       {
        "number": 8,
@@ -337,7 +337,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 14x436x324 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 14x436x324"
       },
       {
        "number": 9,
@@ -351,7 +351,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 9191x08795 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 9191x08795"
       },
       {
        "number": 10,
@@ -365,7 +365,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 0768x5x388 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 0768x5x388"
       },
       {
        "number": 11,
@@ -380,7 +380,7 @@
         "price": 6.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 22x72211x4 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 22x72211x4"
       },
       {
        "number": 12,
@@ -395,7 +395,7 @@
         "price": 4.8,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 2x1511112 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 2x1511112"
       },
       {
        "number": 13,
@@ -409,7 +409,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 07093x0675 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 07093x0675"
       },
       {
        "number": 14,
@@ -423,7 +423,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 204612x464 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 204612x464"
       },
       {
        "number": 15,
@@ -437,7 +437,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 2141x1 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 2141x1"
       },
       {
        "number": 16,
@@ -451,7 +451,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 21x5802x00 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 21x5802x00"
       }
      ]
     },
@@ -475,7 +475,7 @@
         "price": 7.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 1x66x52322 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 1x66x52322"
       },
       {
        "number": 2,
@@ -489,7 +489,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 2x1415x482 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 2x1415x482"
       },
       {
        "number": 3,
@@ -504,7 +504,7 @@
         "price": 4.6,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 211x331x44 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 211x331x44"
       },
       {
        "number": 4,
@@ -518,7 +518,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 46x80x9031 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 46x80x9031"
       },
       {
        "number": 5,
@@ -532,7 +532,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 112x113214 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 112x113214"
       },
       {
        "number": 6,
@@ -547,7 +547,7 @@
         "price": 13.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 411521x613 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 411521x613"
       },
       {
        "number": 7,
@@ -561,7 +561,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 0x0729x001 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 0x0729x001"
       },
       {
        "number": 8,
@@ -575,7 +575,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 3x891x8789 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 3x891x8789"
       },
       {
        "number": 9,
@@ -589,7 +589,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 114x411202 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 114x411202"
       },
       {
        "number": 10,
@@ -604,7 +604,7 @@
         "price": 4.6,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 6x2211x023 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 6x2211x023"
       },
       {
        "number": 11,
@@ -618,7 +618,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 11416x5111 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 11416x5111"
       },
       {
        "number": 12,
@@ -632,7 +632,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 119x112 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 119x112"
       }
      ]
     },
@@ -655,7 +655,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x75011x238 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x75011x238"
       },
       {
        "number": 2,
@@ -669,7 +669,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 1x65712x60 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 1x65712x60"
       },
       {
        "number": 3,
@@ -683,7 +683,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 71x3486416 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 71x3486416"
       },
       {
        "number": 4,
@@ -697,7 +697,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x0700x8023 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x0700x8023"
       },
       {
        "number": 5,
@@ -711,7 +711,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 133x6230x8 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 133x6230x8"
       },
       {
        "number": 6,
@@ -725,7 +725,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 6503248895 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 6503248895"
       },
       {
        "number": 7,
@@ -740,7 +740,7 @@
         "price": 23.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 60Lx901x47 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 60Lx901x47"
       },
       {
        "number": 8,
@@ -755,7 +755,7 @@
         "price": 26.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 7322636x08 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 7322636x08"
       },
       {
        "number": 9,
@@ -770,7 +770,7 @@
         "price": 9.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 0x121211x3 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 0x121211x3"
       },
       {
        "number": 10,
@@ -784,7 +784,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures x61247x098 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures x61247x098"
       },
       {
        "number": 11,
@@ -798,7 +798,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 2112200x92 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 2112200x92"
       },
       {
        "number": 12,
@@ -812,7 +812,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 6x79x11121 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 6x79x11121"
       },
       {
        "number": 13,
@@ -826,7 +826,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 1242565x73 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 1242565x73"
       },
       {
        "number": 14,
@@ -840,7 +840,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 44x2544x15 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 44x2544x15"
       },
       {
        "number": 15,
@@ -854,7 +854,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 2134126x88 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 2134126x88"
       },
       {
        "number": 16,
@@ -868,7 +868,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 436x60x659 (most recent at right; x = spell)"
+       "form_summary": "Last-10 figures 436x60x659"
       },
       {
        "number": 17,
@@ -882,297 +882,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last-10 figures 51661x0094 (most recent at right; x = spell)"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "meeting": {
-    "track": "Randwick",
-    "date": "2026-10-24",
-    "going": null,
-    "rail": null,
-    "timezone": "Australia/Sydney",
-    "source": "research 2026-10-24 (PARTIAL: Racing NSW preview only)"
-   },
-   "races": [
-    {
-     "number": 7,
-     "name": "Mo\u00ebt & Chandon Spring Champion Stakes",
-     "distance_m": 2000,
-     "class": "Group 1",
-     "start_time": "16:00",
-     "runners": [
-      {
-       "number": 8,
-       "name": "Global Goal",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": "TAB Fixed Odds (Racing NSW preview)",
-        "price": 3.0,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 9,
-       "name": "Proxima Dea",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 1,
-       "name": "Diameter",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 3,
-       "name": "Scarole",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 7,
-       "name": "Mindgames",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      }
-     ]
-    },
-    {
-     "number": 8,
-     "name": "The Invitation",
-     "distance_m": 1400,
-     "class": null,
-     "start_time": "16:45",
-     "runners": [
-      {
-       "number": 3,
-       "name": "Verona Rose",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": "TAB Fixed Odds (Racing NSW preview)",
-        "price": 7.0,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 1,
-       "name": "Lazzura",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 9,
-       "name": "Gerringong",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 10,
-       "name": "Perfumist",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      }
-     ]
-    },
-    {
-     "number": 9,
-     "name": "Five Diamonds Prelude",
-     "distance_m": 1500,
-     "class": null,
-     "start_time": "17:30",
-     "runners": [
-      {
-       "number": 1,
-       "name": "Linebacker",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": "TAB Fixed Odds (Racing NSW preview)",
-        "price": 3.7,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 12,
-       "name": "Declichy Boulevard",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 7,
-       "name": "Welcometotheshow",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 2,
-       "name": "Evaporate",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      }
-     ]
-    },
-    {
-     "number": 10,
-     "name": "Robrick Lodge Filante Handicap",
-     "distance_m": 1600,
-     "class": null,
-     "start_time": "18:05",
-     "runners": [
-      {
-       "number": 1,
-       "name": "Estadio Mestalla",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": "TAB Fixed Odds (Racing NSW preview)",
-        "price": 2.5,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 2,
-       "name": "Robusto",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 9,
-       "name": "Anthracite",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
-      },
-      {
-       "number": 11,
-       "name": "Thrice",
-       "trainer": null,
-       "jockey": null,
-       "weight_kg": null,
-       "barrier": null,
-       "scratched": false,
-       "odds": {
-        "source": null,
-        "as_of": "2026-10-24"
-       },
-       "form_summary": null
+       "form_summary": "Last-10 figures 51661x0094"
       }
      ]
     }
@@ -1207,7 +917,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 77453665x7 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 77453665x7"
       },
       {
        "number": 2,
@@ -1221,7 +931,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x114535311 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x114535311"
       },
       {
        "number": 3,
@@ -1235,7 +945,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 72145x1352 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 72145x1352"
       },
       {
        "number": 4,
@@ -1250,7 +960,7 @@
         "price": 4.2,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 15118x6417 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 15118x6417"
       },
       {
        "number": 5,
@@ -1264,7 +974,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 100x380x5x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 100x380x5x"
       },
       {
        "number": 6,
@@ -1278,7 +988,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 512314x456 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 512314x456"
       },
       {
        "number": 7,
@@ -1292,7 +1002,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x7126x2175 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x7126x2175"
       },
       {
        "number": 8,
@@ -1306,7 +1016,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x3351x4485 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x3351x4485"
       },
       {
        "number": 9,
@@ -1320,7 +1030,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 6x5004000x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 6x5004000x"
       }
      ]
     },
@@ -1344,7 +1054,7 @@
         "price": 7.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 458247x831 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 458247x831"
       },
       {
        "number": 2,
@@ -1359,7 +1069,7 @@
         "price": 2.2,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 19x08x131 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 19x08x131"
       },
       {
        "number": 3,
@@ -1373,7 +1083,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 7511759x59 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 7511759x59"
       },
       {
        "number": 4,
@@ -1388,7 +1098,7 @@
         "price": 5.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 73x2113453 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 73x2113453"
       },
       {
        "number": 5,
@@ -1402,7 +1112,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5645333036 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5645333036"
       },
       {
        "number": 6,
@@ -1417,7 +1127,7 @@
         "price": 3.8,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 162x290604 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 162x290604"
       },
       {
        "number": 7,
@@ -1431,7 +1141,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x506901023 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x506901023"
       },
       {
        "number": 8,
@@ -1445,7 +1155,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0408253507 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0408253507"
       },
       {
        "number": 9,
@@ -1459,7 +1169,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 009x0664 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 009x0664"
       },
       {
        "number": 10,
@@ -1473,7 +1183,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 271x870016 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 271x870016"
       }
      ]
     },
@@ -1497,7 +1207,7 @@
         "price": 7.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 464230x613 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 464230x613"
       },
       {
        "number": 2,
@@ -1512,7 +1222,7 @@
         "price": 14.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 3273x31445 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 3273x31445"
       },
       {
        "number": 3,
@@ -1527,7 +1237,7 @@
         "price": 7.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 6124x54711 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 6124x54711"
       },
       {
        "number": 4,
@@ -1541,7 +1251,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 4x4314x124 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 4x4314x124"
       },
       {
        "number": 5,
@@ -1555,7 +1265,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 75x1220x0 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 75x1220x0"
       },
       {
        "number": 6,
@@ -1569,7 +1279,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 74x88565x7 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 74x88565x7"
       },
       {
        "number": 7,
@@ -1583,7 +1293,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 8x58x00333 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 8x58x00333"
       },
       {
        "number": 8,
@@ -1597,7 +1307,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0410764628 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0410764628"
       },
       {
        "number": 9,
@@ -1611,7 +1321,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 12229x4064 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 12229x4064"
       },
       {
        "number": 10,
@@ -1625,7 +1335,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 81422319x4 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 81422319x4"
       },
       {
        "number": 11,
@@ -1639,7 +1349,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 50x8916750 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 50x8916750"
       },
       {
        "number": 12,
@@ -1653,7 +1363,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 620x770x94 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 620x770x94"
       },
       {
        "number": 13,
@@ -1667,7 +1377,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0x816x0 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0x816x0"
       },
       {
        "number": 14,
@@ -1681,7 +1391,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x000008045 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x000008045"
       },
       {
        "number": 15,
@@ -1696,7 +1406,7 @@
         "price": 2.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 3x3233 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 3x3233"
       }
      ]
     },
@@ -1720,7 +1430,7 @@
         "price": 8.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1x8730x174 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1x8730x174"
       },
       {
        "number": 2,
@@ -1734,7 +1444,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 561x678527 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 561x678527"
       },
       {
        "number": 3,
@@ -1749,7 +1459,7 @@
         "price": 16.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 8x04441514 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 8x04441514"
       },
       {
        "number": 4,
@@ -1764,7 +1474,7 @@
         "price": 3.3,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 3x63x54321 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 3x63x54321"
       },
       {
        "number": 5,
@@ -1778,7 +1488,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0523514042 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0523514042"
       },
       {
        "number": 6,
@@ -1792,7 +1502,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x70716435 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x70716435"
       },
       {
        "number": 7,
@@ -1807,7 +1517,7 @@
         "price": 3.4,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 57x3132512 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 57x3132512"
       },
       {
        "number": 8,
@@ -1821,7 +1531,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x97541531 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x97541531"
       },
       {
        "number": 9,
@@ -1835,7 +1545,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 3550774523 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 3550774523"
       },
       {
        "number": 10,
@@ -1849,7 +1559,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 4542x97071 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 4542x97071"
       },
       {
        "number": 11,
@@ -1863,7 +1573,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 9811x37934 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 9811x37934"
       }
      ]
     },
@@ -1886,7 +1596,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 09x6941227 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 09x6941227"
       },
       {
        "number": 2,
@@ -1900,7 +1610,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 12612116x6 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 12612116x6"
       },
       {
        "number": 3,
@@ -1914,7 +1624,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 317x2612x5 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 317x2612x5"
       },
       {
        "number": 4,
@@ -1929,7 +1639,7 @@
         "price": 20.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 18x2x5x863 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 18x2x5x863"
       },
       {
        "number": 5,
@@ -1943,7 +1653,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0x1681117x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0x1681117x"
       },
       {
        "number": 6,
@@ -1957,7 +1667,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x450x7420x (most recent at right; x = spell)"
+       "form_summary": "Last 10: x450x7420x"
       },
       {
        "number": 7,
@@ -1971,7 +1681,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x0x16111x4 (most recent at right; x = spell)"
+       "form_summary": "Last 10: x0x16111x4"
       },
       {
        "number": 8,
@@ -1985,7 +1695,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 277x1126x8 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 277x1126x8"
       },
       {
        "number": 9,
@@ -2000,7 +1710,7 @@
         "price": 1.38,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 532x111x1 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 532x111x1"
       },
       {
        "number": 10,
@@ -2015,7 +1725,7 @@
         "price": 11.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 248x11111x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 248x11111x"
       },
       {
        "number": 11,
@@ -2030,7 +1740,7 @@
         "price": 16.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 7x9211215x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 7x9211215x"
       }
      ]
     },
@@ -2053,7 +1763,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1438292213 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1438292213"
       },
       {
        "number": 2,
@@ -2067,7 +1777,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 652301x345 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 652301x345"
       },
       {
        "number": 3,
@@ -2081,7 +1791,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 6x19x8131x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 6x19x8131x"
       },
       {
        "number": 4,
@@ -2096,7 +1806,7 @@
         "price": 4.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 4x221183x4 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 4x221183x4"
       },
       {
        "number": 5,
@@ -2110,7 +1820,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 511x126x42 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 511x126x42"
       },
       {
        "number": 6,
@@ -2124,7 +1834,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: x110x1835x (most recent at right; x = spell)"
+       "form_summary": "Last 10: x110x1835x"
       },
       {
        "number": 7,
@@ -2139,7 +1849,7 @@
         "price": 4.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 11328x520x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 11328x520x"
       },
       {
        "number": 8,
@@ -2153,7 +1863,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0x32116x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0x32116x"
       },
       {
        "number": 9,
@@ -2167,7 +1877,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 9x3512265x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 9x3512265x"
       },
       {
        "number": 10,
@@ -2181,7 +1891,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1x22x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1x22x"
       },
       {
        "number": 11,
@@ -2195,7 +1905,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 11115x3626 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 11115x3626"
       },
       {
        "number": 12,
@@ -2209,7 +1919,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 10x2 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 10x2"
       }
      ]
     },
@@ -2233,7 +1943,7 @@
         "price": 3.1,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 11x121x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 11x121x"
       },
       {
        "number": 2,
@@ -2247,7 +1957,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1x3261x4 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1x3261x4"
       },
       {
        "number": 3,
@@ -2261,7 +1971,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 11 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 11"
       },
       {
        "number": 4,
@@ -2275,7 +1985,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 12x48x143 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 12x48x143"
       },
       {
        "number": 5,
@@ -2290,7 +2000,7 @@
         "price": 7.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 21x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 21x"
       },
       {
        "number": 6,
@@ -2304,7 +2014,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x3307x215 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x3307x215"
       },
       {
        "number": 7,
@@ -2318,7 +2028,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 12 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 12"
       },
       {
        "number": 8,
@@ -2332,7 +2042,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x1 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x1"
       },
       {
        "number": 9,
@@ -2346,7 +2056,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 700x978425 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 700x978425"
       },
       {
        "number": 10,
@@ -2360,7 +2070,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x"
       },
       {
        "number": 11,
@@ -2375,7 +2085,7 @@
         "price": 7.5,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 46x11x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 46x11x"
       },
       {
        "number": 12,
@@ -2389,7 +2099,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 11x0 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 11x0"
       },
       {
        "number": 13,
@@ -2403,7 +2113,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 0x616x9 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 0x616x9"
       },
       {
        "number": 14,
@@ -2417,7 +2127,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1x0 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1x0"
       }
      ]
     },
@@ -2440,7 +2150,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 17x024297x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 17x024297x"
       },
       {
        "number": 2,
@@ -2454,7 +2164,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 551610x780 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 551610x780"
       },
       {
        "number": 3,
@@ -2468,7 +2178,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 24D214634x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 24D214634x"
       },
       {
        "number": 4,
@@ -2483,7 +2193,7 @@
         "price": 4.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 1x3114712x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 1x3114712x"
       },
       {
        "number": 5,
@@ -2498,7 +2208,7 @@
         "price": 13.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 2140477x32 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 2140477x32"
       },
       {
        "number": 6,
@@ -2512,7 +2222,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 48x311213x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 48x311213x"
       },
       {
        "number": 7,
@@ -2526,7 +2236,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 117845x543 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 117845x543"
       },
       {
        "number": 8,
@@ -2541,7 +2251,7 @@
         "price": 26.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 6436115x66 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 6436115x66"
       },
       {
        "number": 9,
@@ -2555,7 +2265,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 6x542270x0 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 6x542270x0"
       },
       {
        "number": 10,
@@ -2570,7 +2280,7 @@
         "price": 13.0,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 316x32143x (most recent at right; x = spell)"
+       "form_summary": "Last 10: 316x32143x"
       },
       {
        "number": 11,
@@ -2584,7 +2294,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5365902781 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5365902781"
       },
       {
        "number": 12,
@@ -2598,7 +2308,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 526333x9x7 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 526333x9x7"
       },
       {
        "number": 13,
@@ -2612,7 +2322,7 @@
         "source": null,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 4x224x4751 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 4x224x4751"
       },
       {
        "number": 14,
@@ -2627,7 +2337,7 @@
         "price": 2.3,
         "as_of": "2026-10-24"
        },
-       "form_summary": "Last 10: 5x1121 (most recent at right; x = spell)"
+       "form_summary": "Last 10: 5x1121"
       }
      ]
     }
