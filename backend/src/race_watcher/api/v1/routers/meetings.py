@@ -59,6 +59,7 @@ def _runner_to_out(session: Session, runner: m.Runner) -> RunnerOut:
         current_price=PriceOut(price=current.price, source=current.source, taken_at=current.taken_at)
         if current
         else None,
+        preview_price=runner.seed_price,
         price_history=list(
             reversed(
                 [

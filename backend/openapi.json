@@ -1121,6 +1121,18 @@
               }
             ]
           },
+          "preview_price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview Price"
+          },
           "price_history": {
             "items": {
               "$ref": "#/components/schemas/PriceOut"
@@ -1153,6 +1165,7 @@
           "seeded",
           "form_lines",
           "current_price",
+          "preview_price",
           "price_history",
           "prediction"
         ],

@@ -40,8 +40,8 @@ export function FieldBox({ race }: { race: Race }) {
       sorted.sort((a, b) => a.number - b.number);
     } else if (sort === "price") {
       sorted.sort((a, b) => {
-        const pa = n(a.current_price?.price) ?? Infinity;
-        const pb = n(b.current_price?.price) ?? Infinity;
+        const pa = n(a.current_price?.price) ?? n(a.preview_price) ?? Infinity;
+        const pb = n(b.current_price?.price) ?? n(b.preview_price) ?? Infinity;
         return pa - pb;
       });
     } else {
@@ -127,7 +127,7 @@ function RunnerRow({ runner }: { runner: Runner }) {
           <PriceSparkline prices={prices} />
         </span>
         <div className="text-right w-20">
-          <OddsChip price={current} basePrice={baseline} />
+          <OddsChip price={current} basePrice={baseline} previewPrice={n(runner.preview_price)} />
           {winProb != null && winProb > 0 && (
             <p className="text-xs text-ink-3 mt-1" title={runner.prediction?.rationale ?? undefined}>
               {(winProb * 100).toFixed(0)}%{rating && RATING_LABEL[rating] ? `, ${RATING_LABEL[rating]}` : ""}

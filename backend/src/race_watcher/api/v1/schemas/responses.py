@@ -51,6 +51,8 @@ class RunnerOut(_ApiBase):
     seeded: bool
     form_lines: list[FormLineOut]
     current_price: PriceOut | None
+    # Indicative price from the race card (a preview quote), shown until a live price arrives.
+    preview_price: Decimal | None
     price_history: list[PriceOut]
     prediction: PredictionOut | None
 

@@ -133,7 +133,9 @@ export function TopPicksBox({ race }: { race: Race }) {
 function PickCell({ pick }: { pick: Pick }) {
   const { runner, rank, win_prob, rationale } = pick;
   const isLead = rank === 1;
-  const cp = runner.current_price ? Number(runner.current_price.price) : null;
+  const live = runner.current_price ? Number(runner.current_price.price) : null;
+  const preview = live == null && runner.preview_price != null ? Number(runner.preview_price) : null;
+  const cp = live ?? preview;
 
   return (
     <article className={clsx("px-5 py-4 flex flex-col gap-3", isLead && "bg-silk/15")}>
@@ -147,8 +149,20 @@ function PickCell({ pick }: { pick: Pick }) {
           </p>
         </div>
         <div className="text-right shrink-0">
-          {cp != null && <p className="num text-2xl font-bold leading-none">${cp.toFixed(2)}</p>}
-          {win_prob != null && win_prob > 0 && <p className="num text-sm text-ink-3 mt-1">{(win_prob * 100).toFixed(0)}% chance</p>}
+          {cp != null ? (
+            <p
+              className={clsx("num text-2xl font-bold leading-none", preview != null && "text-ink-3")}
+              title={preview != null ? "Preview price from the race card, before live odds" : undefined}
+            >
+              ${cp.toFixed(2)}
+            </p>
+          ) : (
+            <p className="num text-2xl leading-none text-ink-3">—</p>
+          )}
+          <p className="num text-sm text-ink-3 mt-1">
+            {preview != null && "Preview, "}
+            {win_prob != null && win_prob > 0 ? `${(win_prob * 100).toFixed(0)}% chance` : "no rating"}
+          </p>
         </div>
       </header>
       {rationale && <p className="text-sm leading-relaxed text-ink-2">{renderRationale(rationale)}</p>}

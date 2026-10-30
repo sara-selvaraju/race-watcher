@@ -450,6 +450,8 @@ export interface components {
             /** Form Lines */
             form_lines: components["schemas"]["FormLineOut"][];
             current_price: components["schemas"]["PriceOut"] | null;
+            /** Preview Price */
+            preview_price: string | null;
             /** Price History */
             price_history: components["schemas"]["PriceOut"][];
             prediction: components["schemas"]["PredictionOut"] | null;
