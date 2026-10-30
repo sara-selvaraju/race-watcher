@@ -1,11 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useAlerts } from "@/lib/api/hooks";
 import { clsx } from "@/lib/clsx";
 
-export function MovementFeed({ onSelect }: { onSelect: (raceId: number) => void }) {
+type Props = {
+  raceId: number;
+  raceNumber: number;
+  onSelect: (raceId: number) => void;
+};
+
+export function MovementFeed({ raceId, raceNumber, onSelect }: Props) {
   const { data, isPending, error } = useAlerts();
+  // Default to the race on screen; "All races" shows moves anywhere, newest first.
+  const [scope, setScope] = useState<"race" | "all">("race");
 
   // The poller writes alerts against TWO baselines (open + previous) for each
   // significant move, and repeat refreshes can log the same effective move
@@ -15,18 +23,26 @@ export function MovementFeed({ onSelect }: { onSelect: (raceId: number) => void 
     const seen = new Set<number>();
     const out: typeof data = [];
     for (const a of data) {
+      if (scope === "race" && a.race_id !== raceId) continue;
       if (seen.has(a.runner_id)) continue;
       seen.add(a.runner_id);
       out.push(a);
     }
     return out;
-  }, [data]);
+  }, [data, scope, raceId]);
 
   return (
     <section className="panel overflow-hidden">
-      <header className="panel-head">
+      <header className="panel-head items-center">
         <h3 className="panel-title">Market moves</h3>
-        <p className="text-sm text-ink-3">All tracks</p>
+        <div className="seg" role="group" aria-label="Which moves to show">
+          <button type="button" aria-pressed={scope === "race"} onClick={() => setScope("race")}>
+            R{raceNumber}
+          </button>
+          <button type="button" aria-pressed={scope === "all"} onClick={() => setScope("all")}>
+            All races
+          </button>
+        </div>
       </header>
 
       <div className="max-h-[480px] overflow-y-auto">
@@ -36,7 +52,9 @@ export function MovementFeed({ onSelect }: { onSelect: (raceId: number) => void 
         )}
         {deduped && deduped.length === 0 && (
           <p className="px-5 py-8 text-ink-3">
-            No big moves yet. A runner shows here when its price shifts by 10% or more between refreshes.
+            {scope === "race" ? `No big moves in R${raceNumber} yet.` : "No big moves yet."} A runner shows
+            here when its price shifts by 10% or more. Prices are checked every 15 minutes in the 2 hours
+            before each race.
           </p>
         )}
         <ul className="divide-y divide-line">

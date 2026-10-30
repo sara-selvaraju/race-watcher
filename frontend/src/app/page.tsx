@@ -58,7 +58,7 @@ export default function Page() {
               <FieldBox race={active.race} />
             </div>
             <div className="lg:col-span-1">
-              <MovementFeed onSelect={setActiveRaceId} />
+              <MovementFeed raceId={active.race.id} raceNumber={active.race.number} onSelect={setActiveRaceId} />
             </div>
           </div>
         )}
