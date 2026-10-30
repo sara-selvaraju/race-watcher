@@ -9,22 +9,33 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from race_watcher.adapters import get_odds_source, get_prediction_engine, get_race_card_source
 from race_watcher.core.config import settings
 from race_watcher.core.logging import configure_logging, get_logger
+from race_watcher.core.watchlist import watchlist
 from race_watcher.db.session import SessionLocal
-from race_watcher.repositories import race_repo
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
 from race_watcher.services.race_summary import has_jumped, summarize_all
+from race_watcher.services.watched import watched_meetings, watched_races
 
 configure_logging()
 log = get_logger("worker")
 
 
+def _watching() -> str:
+    wl = watchlist()
+    if wl.entries is None:
+        return f"all races {wl.start}..{wl.end}"
+    return ", ".join(
+        f"{e.track} {e.date}" + (f" R{','.join(map(str, sorted(e.races)))}" if e.races else "")
+        for e in wl.entries
+    )
+
+
 def _ensure_meeting_loaded() -> None:
     with SessionLocal() as session:
-        if race_repo.list_meetings_between(session, *settings.race_days):
+        if watched_meetings(session):
             return
-        log.info("worker.ingesting_seed", race_days=f"{settings.race_days[0]}..{settings.race_days[1]}")
+        log.info("worker.ingesting_seed", watching=_watching())
         ingest_meetings(session, get_race_card_source())
 
 
@@ -34,8 +45,8 @@ def _refresh_predictions() -> int:
     now = datetime.now(UTC)
     rated = 0
     with SessionLocal() as session:
-        for meeting in race_repo.list_meetings_between(session, *settings.race_days):
-            for race in meeting.races:
+        for meeting in watched_meetings(session):
+            for race in watched_races(meeting):
                 if has_jumped(meeting, race, now):
                     continue
                 run_predictions_for_race(session, race, engine)
@@ -48,7 +59,7 @@ def _refresh_summaries() -> None:
     """Re-rate, then rewrite notes for any upcoming race whose picks, prices or field changed.
     Idle once every race on the card has jumped."""
     if not _refresh_predictions():
-        log.info("worker.idle", reason="no races left to run", race_days=f"{settings.race_days[0]}..{settings.race_days[1]}")
+        log.info("worker.idle", reason="no races left to run", watching=_watching())
         return
     try:
         adapter = get_odds_source()
@@ -80,7 +91,7 @@ def _poll_odds() -> None:
 def main() -> None:
     log.info(
         "worker.boot",
-        race_days=f"{settings.race_days[0]}..{settings.race_days[1]}",
+        watching=_watching(),
         odds_source=settings.odds_source,
         prediction_engine=settings.prediction_engine,
         poll_every_min=settings.poll_interval_seconds // 60,

@@ -7,14 +7,13 @@ from race_watcher.api.deps import SessionDep
 from race_watcher.api.v1.schemas.responses import (
     FormLineOut,
     MeetingOut,
-    RaceSummaryOut,
     PredictionOut,
     PriceOut,
     RaceOut,
+    RaceSummaryOut,
     RunnerOut,
     TopPickOut,
 )
-from race_watcher.core.config import settings
 from race_watcher.db import models as m
 from race_watcher.repositories import (
     prediction_repo,
@@ -23,6 +22,7 @@ from race_watcher.repositories import (
     summary_repo,
     top_pick_repo,
 )
+from race_watcher.services.watched import watched_meetings, watched_races
 
 router = APIRouter(prefix="/meeting", tags=["meeting"])
 meetings_router = APIRouter(prefix="/meetings", tags=["meeting"])
@@ -123,26 +123,27 @@ def _meeting_to_out(session: Session, meeting: m.Meeting) -> MeetingOut:
         timezone=meeting.timezone,
         races=[
             _race_to_out(session, race)
-            for race in sorted(meeting.races, key=lambda r: r.number)
+            for race in watched_races(meeting)
         ],
     )
 
 
 @router.get("/today", response_model=MeetingOut)
 def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
-    """First meeting on the first race day. Kept for older clients — prefer /meetings."""
-    meeting = race_repo.get_meeting_by_date(session, settings.race_date)
-    if meeting is None:
-        raise HTTPException(status_code=404, detail=f"No meeting loaded for {settings.race_date}")
+    """First watched meeting. Kept for older clients — prefer /meetings."""
+    meetings = watched_meetings(session)
+    if not meetings:
+        raise HTTPException(status_code=404, detail="No watched meeting loaded")
+    meeting = meetings[0]
     return _meeting_to_out(session, meeting)
 
 
 @meetings_router.get("", response_model=list[MeetingOut])
 def list_meetings(session: Session = SessionDep) -> list[MeetingOut]:
-    """Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date."""
+    """Every watched meeting (see watch.json), ordered by date, with only its watched races."""
     return [
         _meeting_to_out(session, mt)
-        for mt in race_repo.list_meetings_between(session, *settings.race_days)
+        for mt in watched_meetings(session)
     ]
 
 

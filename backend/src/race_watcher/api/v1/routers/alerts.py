@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from race_watcher.api.deps import SessionDep
 from race_watcher.api.v1.schemas.responses import MovementAlertOut
-from race_watcher.core.config import settings
+from race_watcher.core.watchlist import watchlist
 from race_watcher.db import models as m
 from race_watcher.repositories import alert_repo
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/alerts", tags=["alerts"])
 @router.get("", response_model=list[MovementAlertOut])
 def list_alerts(session: Session = SessionDep, limit: int = 50) -> list[MovementAlertOut]:
     out: list[MovementAlertOut] = []
-    for a in alert_repo.list_recent_alerts(session, limit=limit, between=settings.race_days):
+    for a in alert_repo.list_recent_alerts(session, limit=limit, between=(watchlist().start, watchlist().end)):
         runner = session.get(m.Runner, a.runner_id)
         race = session.get(m.Race, runner.race_id) if runner else None
         meeting = session.get(m.Meeting, race.meeting_id) if race else None

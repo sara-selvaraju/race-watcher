@@ -7,8 +7,9 @@ from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSour
 def get_race_card_source() -> RaceCardSource:
     if settings.race_card_source == "seed":
         from race_watcher.adapters.seed import SeedFileAdapter
+        from race_watcher.core.watchlist import watchlist
 
-        return SeedFileAdapter(path=settings.seed_file_path)
+        return SeedFileAdapter(path=watchlist().card or settings.seed_file_path)
     raise NotImplementedError(f"race_card_source={settings.race_card_source} not wired")
 
 

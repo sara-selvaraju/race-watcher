@@ -52,6 +52,9 @@ class Settings(BaseSettings):
     openrouter_app_name: str | None = Field(default="race-watcher", alias="OPENROUTER_APP_NAME")
     prediction_engine: Literal["heuristic"] = Field(default="heuristic", alias="PREDICTION_ENGINE")
     seed_file_path: Path = Field(default=Path("seed/flemington.json"), alias="SEED_FILE_PATH")
+    # Which meetings/races to watch, and their card. See core/watchlist.py. If the file doesn't
+    # exist, RACE_DATE..RACE_DATE_END and SEED_FILE_PATH are used instead.
+    watch_file_path: Path = Field(default=Path("watch.json"), alias="WATCH_FILE_PATH")
 
     betfair_app_key: str | None = Field(default=None, alias="BETFAIR_APP_KEY")
     betfair_username: str | None = Field(default=None, alias="BETFAIR_USERNAME")
@@ -77,7 +80,7 @@ class Settings(BaseSettings):
             url = "postgresql+psycopg://" + url[len("postgresql://"):]
         return url
 
-    @field_validator("seed_file_path", mode="before")
+    @field_validator("seed_file_path", "watch_file_path", mode="before")
     @classmethod
     def _resolve_seed_path(cls, v: str | Path) -> Path:
         p = Path(v)

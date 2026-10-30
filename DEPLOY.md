@@ -22,12 +22,10 @@ the `api` and `worker` services.
 | `DATABASE_URL` | reference to Postgres |
 | `ADMIN_TOKEN` | a long random string, e.g. from `openssl rand -hex 24` |
 | `OPENROUTER_API_KEY` | your OpenRouter key |
-| `RACE_DATE` | `2026-10-31` |
-| `RACE_DATE_END` | `2026-11-07` (leave out for a single day) |
-| `SEED_FILE_PATH` | `seed/flemington-carnival-2026.json` |
 | `TZ` | `Australia/Melbourne` |
 
-  Everything else has a sensible default; see `.env.example`.
+  Which races to watch, and their card, come from `backend/watch.json` in the repo, not from
+  variables. Everything else has a sensible default; see `.env.example`.
 
 ## 3. `worker` service
 
@@ -74,7 +72,7 @@ railway up frontend --path-as-root -s web    --detach
 
 ## Loading a new race card
 
-1. Update the JSON in `backend/seed/` and, if the dates change, `RACE_DATE` / `RACE_DATE_END`.
+1. Update the card in `backend/seed/` and the list in `backend/watch.json`.
 2. Redeploy `api` and `worker`.
 3. Load it:
 

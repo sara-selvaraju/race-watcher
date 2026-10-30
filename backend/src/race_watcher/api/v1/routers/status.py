@@ -9,9 +9,10 @@ from sqlalchemy.orm import Session
 from race_watcher.api.deps import SessionDep
 from race_watcher.api.v1.schemas.responses import StatusOut
 from race_watcher.core.config import settings
+from race_watcher.core.watchlist import watchlist
 from race_watcher.db import models as m
-from race_watcher.repositories import race_repo
 from race_watcher.services.poller import in_race_window
+from race_watcher.services.watched import watched_meetings
 
 router = APIRouter(prefix="/status", tags=["status"])
 
@@ -26,11 +27,11 @@ def status(session: Session = SessionDep) -> StatusOut:
     now = datetime.now(UTC)
     in_win = any(
         in_race_window(mt, now=now)
-        for mt in race_repo.list_meetings_between(session, *settings.race_days)
+        for mt in watched_meetings(session)
     )
     return StatusOut(
-        race_date=settings.race_date,
-        race_date_end=settings.race_days[1],
+        race_date=watchlist().start,
+        race_date_end=watchlist().end,
         odds_source=settings.odds_source,
         race_card_source=settings.race_card_source,
         prediction_engine=settings.prediction_engine,

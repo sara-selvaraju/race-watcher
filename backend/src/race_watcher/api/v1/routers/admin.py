@@ -10,12 +10,11 @@ from race_watcher.api.deps import (
     SessionDep,
     require_admin,
 )
-from race_watcher.core.config import settings
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
-from race_watcher.repositories import race_repo
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
+from race_watcher.services.watched import watched_meetings, watched_races
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_admin)])
 
@@ -42,12 +41,12 @@ def predict(
     engine: PredictionEngine = EngineDep,
     meeting_id: int | None = None,
 ) -> dict:
-    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
+    meetings = watched_meetings(session, meeting_id)
     if not meetings:
         return {"created": 0, "skipped": "no_meeting"}
     created = 0
     for meeting in meetings:
-        for race in meeting.races:
+        for race in watched_races(meeting):
             created += len(run_predictions_for_race(session, race, engine))
     session.commit()
     return {"created": created}
@@ -112,13 +111,13 @@ def cleanup_research_runners(
     reset the field back to the seed-only state. Top picks and predictions for the
     deleted runners cascade away via the existing FK ondelete=CASCADE.
     """
-    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
+    meetings = watched_meetings(session, meeting_id)
     if not meetings:
         return {"deleted": 0, "skipped": "no_meeting"}
 
     deleted = 0
     for meeting in meetings:
-        for race in meeting.races:
+        for race in watched_races(meeting):
             for runner in list(race.runners):
                 if runner.seed_price_source is None and runner.seed_price is None:
                     session.delete(runner)

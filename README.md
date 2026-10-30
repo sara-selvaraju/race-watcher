@@ -160,15 +160,40 @@ cd backend && uv run python -c "import json; from race_watcher.api.app import ap
 cd ../frontend && npm run gen:api:local
 ```
 
-## Setting up a race day
+## Choosing what to watch
 
-1. Write the card as JSON in `backend/seed/` (see `flemington-carnival-2026.json` for the
-   format). One entry per meeting; a meeting is one track on one date. Races without a final
-   field yet can have `"runners": []`, and a day with no card yet can have `"races": []`.
-2. Point the app at it with `SEED_FILE_PATH`, and set `RACE_DATE` (and `RACE_DATE_END` for a
-   multi-day carnival).
-3. Load it with `POST /api/v1/admin/ingest`. Loading again is safe: it updates races and
-   runners in place.
+`backend/watch.json` says which races the app follows and where their card is:
+
+```json
+{
+  "card": "seed/flemington-carnival-2026.json",
+  "watch": [
+    { "track": "Flemington", "date": "2026-11-03" },
+    { "track": "Flemington", "date": "2026-11-07", "races": [7, 8, 9] },
+    { "track": "Randwick",   "date": "2026-11-07", "races": [9] }
+  ]
+}
+```
+
+- Each line under `watch` is a meeting: a track on a date. Leave out `races` to watch the whole
+  card, or list race numbers to watch just those.
+- Only watched races appear on the site, get odds fetched, get rated, picked and written up.
+  Watching one race costs a fraction of watching a whole carnival.
+- The site shows the days from the first date listed to the last. Once every watched race has
+  run, the worker goes idle.
+- `card` is the race card file, relative to `watch.json`.
+
+To watch something new:
+
+1. Write its card as JSON in `backend/seed/` (see `flemington-carnival-2026.json` for the
+   format). One entry per meeting. Races without a final field yet can have `"runners": []`,
+   and a day with no card yet can have `"races": []`. The card can include more than you watch.
+2. Update `watch.json`.
+3. Deploy, then load the card with `POST /api/v1/admin/ingest` (with your admin token). Loading
+   again is safe: it updates races and runners in place.
+
+Without a `watch.json`, the app falls back to watching every race from `RACE_DATE` to
+`RACE_DATE_END`, from the card at `SEED_FILE_PATH`.
 
 ## Configuration
 
@@ -177,8 +202,8 @@ All settings are environment variables; `.env.example` lists them with comments.
 | Variable | What it does |
 |---|---|
 | `DATABASE_URL` | Postgres connection |
-| `RACE_DATE`, `RACE_DATE_END` | First and last race day shown (inclusive) |
-| `SEED_FILE_PATH` | The race card JSON |
+| `WATCH_FILE_PATH` | The watchlist (default `watch.json` in `backend/`) |
+| `RACE_DATE`, `RACE_DATE_END`, `SEED_FILE_PATH` | Fallbacks used only when there's no watchlist |
 | `OPENROUTER_API_KEY` | Needed for odds, picks and notes |
 | `OPENROUTER_MODEL` | Model for odds and notes |
 | `OPENROUTER_RESEARCH_MODEL` | Model for picks and missing runners |

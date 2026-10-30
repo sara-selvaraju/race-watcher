@@ -8,16 +8,15 @@ from zoneinfo import ZoneInfo
 
 from sqlalchemy.orm import Session
 
-from race_watcher.core.config import settings
 from race_watcher.core.logging import get_logger
 from race_watcher.db import models as m
 from race_watcher.repositories import (
     prediction_repo,
     price_repo,
-    race_repo,
     summary_repo,
     top_pick_repo,
 )
+from race_watcher.services.watched import watched_meetings, watched_races
 
 log = get_logger("race_summary")
 
@@ -141,8 +140,8 @@ def summarize_all(
 
     now = now or datetime.now(UTC)
     written = unchanged = failed = 0
-    for meeting in race_repo.list_meetings_between(session, *settings.race_days, meeting_id):
-        for race in meeting.races:
+    for meeting in watched_meetings(session, meeting_id):
+        for race in watched_races(meeting):
             if has_jumped(meeting, race, now):
                 continue
             facts = build_facts(session, meeting, race)

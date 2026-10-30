@@ -1,0 +1,9 @@
+{
+  "card": "seed/flemington-carnival-2026.json",
+  "watch": [
+    { "track": "Flemington", "date": "2026-10-31" },
+    { "track": "Flemington", "date": "2026-11-03" },
+    { "track": "Flemington", "date": "2026-11-05" },
+    { "track": "Flemington", "date": "2026-11-07" }
+  ]
+}

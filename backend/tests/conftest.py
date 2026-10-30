@@ -5,6 +5,14 @@ from pathlib import Path
 
 import pytest
 
+from race_watcher.core.config import settings
+
+
+@pytest.fixture(autouse=True)
+def _no_watch_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Tests use RACE_DATE settings unless they write their own watch file."""
+    monkeypatch.setattr(settings, "watch_file_path", tmp_path / "no-watch.json")
+
 
 @pytest.fixture
 def tiny_seed(tmp_path: Path) -> Path:

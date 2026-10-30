@@ -8,18 +8,21 @@ from sqlalchemy.orm import Session
 
 from race_watcher.core.config import settings
 from race_watcher.core.logging import get_logger
+from race_watcher.core.watchlist import watchlist
 from race_watcher.db import models as m
 from race_watcher.domain.models import DomainMeeting
 from race_watcher.domain.ports import OddsSource
-from race_watcher.repositories import alert_repo, price_repo, race_repo
+from race_watcher.repositories import alert_repo, price_repo
 from race_watcher.services.movement import evaluate_movement
+from race_watcher.services.watched import watched_meetings, watched_races
 
 log = get_logger("poller")
 
 def _meeting_window_utc(meeting: m.Meeting) -> tuple[datetime, datetime] | None:
-    if not meeting.races:
+    races = watched_races(meeting)
+    if not races:
         return None
-    starts = [r.start_time_local for r in meeting.races if r.start_time_local]
+    starts = [r.start_time_local for r in races if r.start_time_local]
     if not starts:
         return None
     tz = ZoneInfo(meeting.timezone)
@@ -49,9 +52,9 @@ def poll_once(
 ) -> dict:
     """One poll cycle across every meeting in the race-day window (or just `meeting_id`). Idempotent."""
     now = now or datetime.now(UTC)
-    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
+    meetings = watched_meetings(session, meeting_id)
     if not meetings:
-        log.warning("poller.no_meeting", race_date=str(settings.race_date))
+        log.warning("poller.no_meeting", watching=f"{watchlist().start}..{watchlist().end}")
         return {"snapshots": 0, "alerts": 0, "skipped": "no_meeting"}
 
     snapshots = alerts = 0
@@ -76,13 +79,14 @@ def _poll_meeting(
 
     if domain_meeting is None:
         # Adapter needs the lightweight domain shape; rebuild from DB if not supplied.
+        from race_watcher.domain.models import DomainMeeting as DM
+        from race_watcher.domain.models import DomainRace as DR
         from race_watcher.services.predictions import _to_domain_runner
-        from race_watcher.domain.models import DomainMeeting as DM, DomainRace as DR
         from race_watcher.services.race_summary import has_jumped
 
         # Only ask for races still to run: prices for finished races are noise and cost tokens.
         now = now or datetime.now(UTC)
-        to_run = [r for r in meeting.races if not has_jumped(meeting, r, now)]
+        to_run = [r for r in watched_races(meeting) if not has_jumped(meeting, r, now)]
         if not to_run:
             return {"snapshots": 0, "alerts": 0}
 
@@ -108,7 +112,7 @@ def _poll_meeting(
 
     # index runners by (race_number, runner_number)
     runner_index: dict[tuple[int, int], m.Runner] = {}
-    for race in meeting.races:
+    for race in watched_races(meeting):
         for runner in race.runners:
             runner_index[(race.number, runner.number)] = runner
 

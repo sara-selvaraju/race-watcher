@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
-from race_watcher.core.config import settings
 from race_watcher.core.logging import get_logger
 from race_watcher.db import models as m
 from race_watcher.domain.models import DomainFormLine, DomainMeeting, DomainRace, DomainRunner
-from race_watcher.repositories import race_repo, top_pick_repo
+from race_watcher.repositories import top_pick_repo
+from race_watcher.services.watched import watched_meetings, watched_races
 
 log = get_logger("top_picks")
 
@@ -55,7 +55,7 @@ def refresh_all_races(session: Session, adapter, meeting_id: int | None = None) 
         log.warning("top_picks.adapter_not_supported", adapter=adapter.name)
         return {"races": 0, "picks": 0, "skipped": "adapter_not_supported"}
 
-    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
+    meetings = watched_meetings(session, meeting_id)
     if not meetings:
         return {"races": 0, "picks": 0, "skipped": "no_meeting"}
 
@@ -80,7 +80,7 @@ def _refresh_meeting(session: Session, adapter, meeting: m.Meeting) -> dict:
 
     races_done = 0
     total_picks = 0
-    for race in meeting.races:
+    for race in watched_races(meeting):
         domain_race = _to_domain_race(race)
         if not domain_race.runners:
             continue

@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Session
 
-from race_watcher.core.config import settings
 from race_watcher.core.logging import get_logger
 from race_watcher.db import models as m
 from race_watcher.domain.models import DomainMeeting, DomainRace, DomainRunner
-from race_watcher.repositories import race_repo
+from race_watcher.services.watched import watched_meetings, watched_races
 
 log = get_logger("expand_field")
 
@@ -43,7 +42,7 @@ def expand_all_races(session: Session, adapter, meeting_id: int | None = None) -
     if not hasattr(adapter, "fetch_race_field"):
         return {"races": 0, "added": 0, "updated": 0, "skipped": "adapter_not_supported"}
 
-    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
+    meetings = watched_meetings(session, meeting_id)
     if not meetings:
         return {"races": 0, "added": 0, "updated": 0, "skipped": "no_meeting"}
 
@@ -75,7 +74,7 @@ def _expand_meeting(session: Session, adapter, meeting: m.Meeting) -> dict:
     total_added = 0
     total_updated = 0
     total_skipped_dup = 0
-    for race in meeting.races:
+    for race in watched_races(meeting):
         domain_race = _to_domain_race(race)
         runners = adapter.fetch_race_field(domain_meeting, domain_race)
         if not runners:
