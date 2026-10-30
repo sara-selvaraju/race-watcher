@@ -88,3 +88,27 @@ def test_forced_poll_skips_races_that_have_run(session: Session) -> None:
     odds = _CountingOdds()
     poll_once(session, odds, now=datetime(2026, 6, 20, 6, 0, tzinfo=UTC), force=True)
     assert odds.races_asked == []
+
+
+def test_moves_only_compare_prices_from_the_same_bookmaker(session: Session) -> None:
+    from decimal import Decimal
+
+    from race_watcher.domain.models import DomainPrice
+    from race_watcher.repositories import alert_repo
+
+    class Odds:
+        name = "fake"
+
+        def __init__(self, source: str, price: str) -> None:
+            self.source, self.price = source, Decimal(price)
+
+        def fetch_prices(self, meeting):
+            return [DomainPrice(race_number=1, runner_number=1, price=self.price,
+                                source=self.source, taken_at=datetime.now(UTC))]
+
+    when = datetime(2026, 6, 20, 0, 30, tzinfo=UTC)
+    poll_once(session, Odds("TAB", "4.00"), now=when)
+    poll_once(session, Odds("Sportsbet", "2.50"), now=when)  # different bookmaker: not a move
+    assert alert_repo.list_recent_alerts(session) == []
+    poll_once(session, Odds("TAB", "3.00"), now=when)  # TAB 4.00 -> 3.00: a 25% firm
+    assert [a.direction for a in alert_repo.list_recent_alerts(session)] == ["firm"]

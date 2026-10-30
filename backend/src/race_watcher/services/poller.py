@@ -153,8 +153,10 @@ def _poll_meeting(
         if runner is None:
             continue
 
-        prev = price_repo.latest_price(session, runner.id)
-        baseline = price_repo.open_baseline_price(session, runner.id)
+        # Moves only count against the same bookmaker's earlier prices: a change of source
+        # isn't the market moving.
+        prev = price_repo.latest_price(session, runner.id, source=p.source)
+        baseline = price_repo.open_baseline_price(session, runner.id, source=p.source)
 
         price_repo.insert_price(
             session, runner_id=runner.id, source=p.source, price=p.price, taken_at=p.taken_at

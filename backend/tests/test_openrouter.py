@@ -6,6 +6,8 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from race_watcher.adapters.openrouter import OpenRouterAdapter
 from race_watcher.adapters.seed import SeedFileAdapter
 
@@ -167,3 +169,13 @@ def test_summarize_race_uses_plain_model_without_web_search() -> None:
     call = stub.chat.completions.calls[0]
     assert call["model"] == "openai/gpt-4o-mini"
     assert "tools" not in call
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [("TAB Fixed Odds", "TAB"), ("sportsbet.com.au", "Sportsbet"), ("Ladbrokes", "Ladbrokes"), ("Palmerbet", "Palmerbet")],
+)
+def test_bookmaker_names_are_normalised(raw: str, expected: str) -> None:
+    from race_watcher.adapters.openrouter import _bookmaker
+
+    assert _bookmaker(raw) == expected

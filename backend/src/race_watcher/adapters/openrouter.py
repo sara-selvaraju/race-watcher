@@ -44,11 +44,11 @@ SUBMIT_ODDS_PARAMS = {
                     },
                     "price": {
                         "type": "number",
-                        "description": "Current decimal WIN odds, e.g. 3.40.",
+                        "description": "Current fixed-odds decimal WIN price, e.g. 3.40.",
                     },
                     "source": {
                         "type": "string",
-                        "description": "Bookmaker / aggregator the price came from.",
+                        "description": "The bookmaker: TAB, Sportsbet or Ladbrokes.",
                     },
                 },
                 "required": [
@@ -79,26 +79,39 @@ SUBMIT_ODDS_TOOL = {
     },
 }
 
+# Fixed-odds win prices from ONE bookmaker per race, first that has the race in this order.
+# One consistent source keeps movement alerts honest: a change of source isn't a market move.
+BOOKMAKERS = ("TAB", "Sportsbet", "Ladbrokes")
+
 SYSTEM_PROMPT = (
-    "You are a price-research agent for a personal race-day dashboard.\n\n"
-    "Goal: report the current decimal WIN odds for EVERY runner in the list provided. "
-    "You will be given 9 races with their full runner lists. Aim for as close to full coverage "
-    "as possible — at minimum, every runner that has a tradeable price on at least one mainstream "
-    "Australian bookmaker.\n\n"
+    "You are a price-research agent for an informational race-day dashboard.\n\n"
+    "Goal: report the current FIXED-ODDS WIN price for every runner in the race provided, all "
+    "from ONE bookmaker.\n\n"
+    "Which bookmaker: use TAB fixed odds if TAB has a fixed-odds win market for this race. If "
+    "not, use Sportsbet. If neither, use Ladbrokes. Take every runner's price from that one "
+    "bookmaker; do not mix bookmakers within a race.\n\n"
     "Method:\n"
-    "- Use the web_search tool LIBERALLY. One search per race is the minimum; one search per "
-    "bookmaker per race is fine if it improves coverage. Try several sources to fill gaps.\n"
-    "- Prefer public odds-comparison pages and bookmaker landing pages that list WIN markets: "
-    "racing.com, gobet.com.au, racenet.com.au, punters.com.au, Sportsbet, TAB, Ladbrokes, Bet365.\n"
-    "- For each runner, pick the best public price you can verify; record which source you used.\n\n"
+    "- Use web search to find that bookmaker's current fixed-odds win market for the race.\n"
+    "- Only use the bookmaker's live market (its own site or a page that clearly shows that "
+    "bookmaker's current fixed odds). Do NOT use tote/parimutuel prices, 'best price' "
+    "comparisons, tips articles or preview pages.\n\n"
     "Strict rules:\n"
-    "- Do not invent prices. If a runner is genuinely not quoted anywhere public, omit it.\n"
+    "- Do not invent prices. If the bookmaker doesn't quote a runner, omit it.\n"
+    "- source must be exactly the bookmaker's name: TAB, Sportsbet or Ladbrokes.\n"
     "- race_number and runner_number in your output MUST match the input list EXACTLY — "
     "do not renumber, do not guess. Use the horse name as a cross-check.\n"
-    "- Call submit_odds EXACTLY ONCE, at the end, with the consolidated batch.\n"
-    "- Output ONLY the tool call. No prose, no explanation.\n"
-    "- This is for personal use, not betting advice."
+    "- Call submit_odds EXACTLY ONCE, at the end.\n"
+    "- Output ONLY the tool call. No prose, no explanation."
 )
+
+
+def _bookmaker(source: str) -> str:
+    """Normalise e.g. 'TAB Fixed Odds' or 'sportsbet.com.au' to the bookmaker's name."""
+    low = source.casefold()
+    for name in BOOKMAKERS:
+        if name.casefold() in low:
+            return name
+    return source.strip()[:40] or "unknown"
 
 
 class OpenRouterAdapter:
@@ -738,7 +751,7 @@ def _parse_submit_payload(payload: dict, meeting: DomainMeeting) -> list[DomainP
                 race_number=race_num,
                 runner_number=runner_num,
                 price=price,
-                source=str(entry.get("source") or "openrouter-web"),
+                source=_bookmaker(str(entry.get("source") or "unknown")),
                 taken_at=now,
             )
         )
