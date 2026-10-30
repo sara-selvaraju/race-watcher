@@ -33,3 +33,6 @@ dist/
 
 # allow frontend .env.production (no secrets, just public API URL)
 !frontend/.env.production
+
+# Claude Code local state
+.claude/

@@ -1,62 +1,82 @@
-# Railway deploy
+# Deploying to Railway
 
-You'll create **three services** in one Railway project plus a Postgres plugin.
+Race Watcher runs as one Railway project with four parts: a Postgres database and three services
+built from this repo (`api`, `worker`, `web`).
 
-## 1) Postgres
+## 1. Postgres
 
-Add the **Postgres** plugin. Railway exposes `DATABASE_URL` to the project.
+Add the **Postgres** database to the project. Railway provides `DATABASE_URL`; reference it from
+the `api` and `worker` services.
 
-## 2) `api` service (FastAPI)
+## 2. `api` service
 
-- Repo: this repo
-- Root directory: `backend`
-- Builder: Nixpacks (auto-detected)
-- Start command (override): `uv run alembic upgrade head && uv run uvicorn race_watcher.api.app:app --host 0.0.0.0 --port $PORT`
-- Healthcheck path: `/healthz`
-- Required env:
-  - `DATABASE_URL` — reference Postgres plugin
-  - `RACE_DATE=2026-06-20`
-  - `TZ=Australia/Melbourne`
-  - `RACE_CARD_SOURCE=seed`
-  - `SEED_FILE_PATH=seed/flemington.json`
-  - `ODDS_SOURCE=openrouter` (default — uses any model via OpenRouter + web search)
-  - `PREDICTION_ENGINE=heuristic`
-  - `OPENROUTER_API_KEY` (required for `ODDS_SOURCE=openrouter`)
-  - `OPENROUTER_MODEL=anthropic/claude-sonnet-4.5` (default — change to any OpenRouter-supported model)
-  - `OPENROUTER_WEB_SEARCH=true` (default — appends `:online` so the model can actually look up odds)
-  - For the alternative direct-Anthropic path: `ODDS_SOURCE=claude` + `ANTHROPIC_API_KEY` + `CLAUDE_RESEARCH_MODEL=claude-sonnet-4-6`
-- On-demand odds refresh: `POST /api/v1/admin/refresh-odds`. There is no longer a 5-min poll — call this when you want fresh prices.
-- After first deploy: `POST /api/v1/admin/ingest` once to load the seed → DB, then `POST /api/v1/admin/predict` to seed heuristic predictions.
+- **Source:** this repo, root directory `backend`
+- **Start command:** `uv run alembic upgrade head && uv run uvicorn race_watcher.api.app:app --host 0.0.0.0 --port $PORT`
+  (database migrations run on every start)
+- **Healthcheck path:** `/healthz`
+- **Public domain:** yes; the website needs it
+- **Variables:**
 
-## 3) `worker` service (background)
+| Variable | Example |
+|---|---|
+| `DATABASE_URL` | reference to Postgres |
+| `ADMIN_TOKEN` | a long random string, e.g. from `openssl rand -hex 24` |
+| `OPENROUTER_API_KEY` | your OpenRouter key |
+| `RACE_DATE` | `2026-10-31` |
+| `RACE_DATE_END` | `2026-11-07` (leave out for a single day) |
+| `SEED_FILE_PATH` | `seed/flemington-carnival-2026.json` |
+| `TZ` | `Australia/Melbourne` |
 
-- Repo: this repo
-- Root directory: `backend`
-- Builder: Nixpacks
-- Start command (override): `uv run python -m race_watcher.worker.main`
-- No public domain, no healthcheck.
-- Same env as `api`.
-- Polling is **disabled**. The worker only re-runs heuristic predictions every 30 min so ratings stay current as snapshots roll in. Odds refresh is now on-demand via `POST /api/v1/admin/refresh-odds`.
-- Tunables (only used when `/admin/refresh-odds` is called):
-  - `MOVEMENT_THRESHOLD_PCT=10`
-  - `RACE_WINDOW_OPEN_MIN_BEFORE=120`, `RACE_WINDOW_CLOSE_MIN_AFTER=15` (the refresh endpoint bypasses the window)
+  Everything else has a sensible default; see `.env.example`.
 
-## 4) `web` service (Next.js)
+## 3. `worker` service
 
-- Repo: this repo
-- Root directory: `frontend`
-- Builder: Nixpacks
-- Build command: `npm install && npm run build`
-- Start command: `npm run start`
-- Healthcheck path: `/`
-- Required env at **build time**:
-  - `NEXT_PUBLIC_API_BASE_URL=https://<api-service-public-url>` — Next.js bakes `NEXT_PUBLIC_*` into the client at build, so set this *before* the build runs.
+- **Source:** this repo, root directory `backend`
+- **Start command:** `uv run python -m race_watcher.worker.main`
+- **No public domain, no healthcheck.**
+- **Variables:** the same as `api`, apart from `ADMIN_TOKEN`, which it doesn't use. Optionally
+  set `POLL_INTERVAL_SECONDS` to fetch odds more or less often (default 900).
 
-## Confirming the pipeline
+On start, the worker loads the race card if nothing is loaded for the race days yet. It then runs
+two jobs: odds every 15 minutes during race hours, and ratings plus notes every 10 minutes.
 
-1. `api` /healthz → 200
-2. `POST /api/v1/admin/ingest` → meeting loaded
-3. `worker` logs `poller.fetched` and `poller.done`
-4. `GET /api/v1/meeting/today` returns the meeting with current prices and a price history per runner
-5. `GET /api/v1/alerts` returns moves once thresholds trip
-6. `web` shows the dashboard, R1–R9 nav, runner table, movement feed
+## 4. `web` service
+
+- **Source:** this repo, root directory `frontend`
+- **Build command:** `npm install && npm run build`
+- **Start command:** `npm run start`
+- **Healthcheck path:** `/`
+- **Variables:** `NEXT_PUBLIC_API_BASE_URL=https://<your api domain>`. This is baked in when the
+  site is built, so set it before the first build, and redeploy `web` if it changes.
+
+## Deploying changes
+
+If the services are connected to GitHub with the root directories above, pushing deploys them.
+
+You can also deploy straight from a local copy with the Railway CLI. Run these from the repo
+root; `--path-as-root` is needed because the services build from a subfolder:
+
+```bash
+railway up backend  --path-as-root -s api    --detach
+railway up backend  --path-as-root -s worker --detach
+railway up frontend --path-as-root -s web    --detach
+```
+
+## Checking it's working
+
+1. `https://<api domain>/healthz` returns `{"status": "ok"}`.
+2. `https://<api domain>/api/v1/meetings` lists the race days and races.
+3. The worker's logs show `worker.boot`, then `worker.odds` every 15 minutes
+   (`poller.outside_window` outside race hours) and `worker.summaries` every 10.
+4. The website shows the race days. Pressing **Refresh** asks for the admin token once, then runs
+   odds, tips, ratings, field and notes for that day.
+
+## Loading a new race card
+
+1. Update the JSON in `backend/seed/` and, if the dates change, `RACE_DATE` / `RACE_DATE_END`.
+2. Redeploy `api` and `worker`.
+3. Load it:
+
+   ```bash
+   curl -X POST -H "X-Admin-Token: $ADMIN_TOKEN" https://<api domain>/api/v1/admin/ingest
+   ```
