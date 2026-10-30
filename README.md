@@ -4,6 +4,11 @@ A race-day dashboard for Australian thoroughbred racing. For every race it shows
 odds and how they're moving, a rating for each runner, the top three picks with sourced
 reasoning, and a short plain-English note on why those runners are the picks.
 
+It's built to follow the races you care about for a day or a few days, not to run all year.
+Pick a meeting, a carnival or a handful of races, load their cards, and watch them come
+together: prices firming and drifting, picks settling, notes updating. When the last race has
+run, the worker goes quiet and costs nothing until you point it at the next set of races.
+
 It's currently set up for the 2026 Flemington Spring Carnival: Derby Day, Melbourne Cup Day,
 Oaks Day and Stakes Day.
 
