@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     )
 
     race_date: date = Field(default=date(2026, 6, 20), alias="RACE_DATE")
+    # Shared secret for /admin endpoints (sent as X-Admin-Token). Unset = admin open, for local dev only.
+    admin_token: str | None = Field(default=None, alias="ADMIN_TOKEN")
     # Last race day shown (inclusive), for a carnival spanning several days. Unset = one day.
     race_date_end: date | None = Field(default=None, alias="RACE_DATE_END")
     tz: str = Field(default="Australia/Melbourne", alias="TZ")

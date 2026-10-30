@@ -1,9 +1,15 @@
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from race_watcher.api.deps import CardSourceDep, EngineDep, OddsSourceDep, SessionDep
+from race_watcher.api.deps import (
+    CardSourceDep,
+    EngineDep,
+    OddsSourceDep,
+    SessionDep,
+    require_admin,
+)
 from race_watcher.core.config import settings
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
 from race_watcher.repositories import race_repo
@@ -11,7 +17,7 @@ from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_admin)])
 
 # Every LLM-backed action below accepts an optional `meeting_id` so the frontend can refresh one
 # track at a time; omitted, it runs across every meeting on RACE_DATE.

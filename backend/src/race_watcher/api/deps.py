@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import secrets
 from collections.abc import Iterator
 
-from fastapi import Depends
+from fastapi import Depends, Header, HTTPException
 from sqlalchemy.orm import Session
 
 from race_watcher.adapters import (
@@ -10,6 +11,7 @@ from race_watcher.adapters import (
     get_prediction_engine,
     get_race_card_source,
 )
+from race_watcher.core.config import settings
 from race_watcher.db.session import SessionLocal
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
 
@@ -32,6 +34,15 @@ def odds_source() -> OddsSource:
 
 def prediction_engine() -> PredictionEngine:
     return get_prediction_engine()
+
+
+def require_admin(x_admin_token: str | None = Header(default=None)) -> None:
+    """Gate admin actions (they spend LLM credit) behind ADMIN_TOKEN when it's set."""
+    expected = settings.admin_token
+    if not expected:
+        return
+    if not x_admin_token or not secrets.compare_digest(x_admin_token, expected):
+        raise HTTPException(status_code=401, detail="Admin token missing or wrong")
 
 
 SessionDep = Depends(db_session)

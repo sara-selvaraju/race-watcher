@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
@@ -59,15 +59,48 @@ type StepState = { status: StepStatus; summary?: string; error?: string };
 
 type Props = { meetingId: number; track: string };
 
+// Admin actions spend LLM credit, so the API wants a shared token (X-Admin-Token). It's kept in
+// this browser only, entered once by whoever runs the dashboard.
+const TOKEN_KEY = "race-watcher.admin-token";
+
+function readToken(): string {
+  try {
+    return localStorage.getItem(TOKEN_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function saveToken(token: string) {
+  try {
+    if (token) localStorage.setItem(TOKEN_KEY, token);
+    else localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    // Private mode etc.: the token just won't be remembered.
+  }
+}
+
+class Unauthorized extends Error {}
+
 export function RefreshBar({ meetingId, track }: Props) {
   const qc = useQueryClient();
   const [runningFor, setRunningFor] = useState<number | null>(null);
   const [steps, setSteps] = useState<StepState[] | null>(null);
   const [stepsFor, setStepsFor] = useState<number | null>(null);
   const running = runningFor != null;
+  const [token, setToken] = useState("");
+  const [askToken, setAskToken] = useState(false);
+  const [tokenRejected, setTokenRejected] = useState(false);
+  const [draft, setDraft] = useState("");
 
-  async function runAll() {
+  useEffect(() => setToken(readToken()), []);
+
+  async function runAll(withToken = token) {
     if (running) return;
+    if (!withToken) {
+      setAskToken(true);
+      return;
+    }
     setRunningFor(meetingId);
     setStepsFor(meetingId);
     setSteps(STEPS.map(() => ({ status: "pending" })));
@@ -78,12 +111,16 @@ export function RefreshBar({ meetingId, track }: Props) {
       update(i, { status: "running" });
       try {
         // openapi-fetch typing for arbitrary admin paths is loose; cast through unknown.
-        const { data, error } = await (
+        const { data, error, response } = await (
           api.POST as unknown as (
             path: string,
-            init: { params: { query: { meeting_id: number } } },
-          ) => Promise<{ data?: unknown; error?: unknown }>
-        )(STEPS[i].path, { params: { query: { meeting_id: meetingId } } });
+            init: { params: { query: { meeting_id: number } }; headers: Record<string, string> },
+          ) => Promise<{ data?: unknown; error?: unknown; response: Response }>
+        )(STEPS[i].path, {
+          params: { query: { meeting_id: meetingId } },
+          headers: { "X-Admin-Token": withToken },
+        });
+        if (response.status === 401) throw new Unauthorized();
         if (error || !data) {
           throw new Error(typeof error === "string" ? error : JSON.stringify(error ?? "no data"));
         }
@@ -93,11 +130,31 @@ export function RefreshBar({ meetingId, track }: Props) {
           ["meetings", "alerts", "status"].map((k) => qc.invalidateQueries({ queryKey: [k] })),
         );
       } catch (err) {
+        if (err instanceof Unauthorized) {
+          saveToken("");
+          setToken("");
+          setTokenRejected(true);
+          setAskToken(true);
+          setSteps(null);
+          break;
+        }
         update(i, { status: "error", error: err instanceof Error ? err.message.slice(0, 120) : "failed" });
         break;
       }
     }
     setRunningFor(null);
+  }
+
+  function submitToken(e: React.FormEvent) {
+    e.preventDefault();
+    const t = draft.trim();
+    if (!t) return;
+    saveToken(t);
+    setToken(t);
+    setDraft("");
+    setAskToken(false);
+    setTokenRejected(false);
+    void runAll(t);
   }
 
   const shown = stepsFor === meetingId ? steps : null;
@@ -109,7 +166,7 @@ export function RefreshBar({ meetingId, track }: Props) {
         type="button"
         className="btn btn-primary"
         disabled={running}
-        onClick={runAll}
+        onClick={() => void runAll()}
         title="Fetch odds, research tips, recompute ratings, fill out the field, then write race notes. Takes a few minutes."
       >
         <span className={clsx(running && "animate-spin-slow")} aria-hidden>
@@ -118,7 +175,26 @@ export function RefreshBar({ meetingId, track }: Props) {
         {otherRunning ? "Another track is refreshing" : running ? `Refreshing ${track}…` : `Refresh ${track}`}
       </button>
 
-      {shown ? (
+      {askToken ? (
+        <form onSubmit={submitToken} className="flex flex-wrap items-center gap-2 text-sm">
+          <label htmlFor="admin-token" className={clsx(tokenRejected ? "text-drift" : "text-ink-2")}>
+            {tokenRejected ? "That admin token wasn't accepted. Try again:" : "Enter the admin token to refresh:"}
+          </label>
+          <input
+            id="admin-token"
+            type="password"
+            autoComplete="off"
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            className="rounded-md border border-line bg-surface px-2 py-1 w-56"
+          />
+          <button type="submit" className="btn">Save and refresh</button>
+          <button type="button" className="text-ink-3 underline" onClick={() => setAskToken(false)}>
+            Cancel
+          </button>
+        </form>
+      ) : shown ? (
         <ol className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
           {shown.map((s, i) => (
             <li
