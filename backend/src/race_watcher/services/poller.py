@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -62,53 +63,80 @@ def poll_once(
         if not force and not in_race_window(meeting, now=now):
             log.info("poller.outside_window", track=meeting.track)
             continue
-        result = _poll_meeting(session, odds, meeting, now=now)
+        result = _poll_meeting(session, odds, meeting, now=now, force=force)
         snapshots += result["snapshots"]
         alerts += result["alerts"]
     return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}
+
+
+def _domain_race_meeting(meeting: m.Meeting, race: m.Race) -> DomainMeeting:
+    """The adapter's lightweight shape, holding just one race."""
+    from race_watcher.domain.models import DomainRace
+    from race_watcher.services.predictions import _to_domain_runner
+
+    return DomainMeeting(
+        track=meeting.track,
+        date=meeting.date,
+        timezone=meeting.timezone,
+        races=(
+            DomainRace(
+                number=race.number,
+                name=race.name,
+                distance_m=race.distance_m,
+                klass=race.klass,
+                start_time_local=race.start_time_local,
+                runners=tuple(_to_domain_runner(rn) for rn in race.runners),
+            ),
+        ),
+    )
+
+
+def races_to_price(meeting: m.Meeting, now: datetime, *, force: bool = False) -> list[m.Race]:
+    """Watched races worth fetching odds for: still to run and, unless forced, jumping within
+    RACE_WINDOW_OPEN_MIN_BEFORE minutes. Prices only matter in a race's build-up, so a race is
+    fetched about 8 times (every 15 min for 2 hours) rather than all day."""
+    from race_watcher.services.race_summary import has_jumped
+
+    lead = timedelta(minutes=settings.race_window_open_min_before)
+    tz = ZoneInfo(meeting.timezone)
+    out = []
+    for race in watched_races(meeting):
+        if not race.runners or has_jumped(meeting, race, now):
+            continue
+        if not force and race.start_time_local is not None:
+            start = datetime.combine(meeting.date, race.start_time_local, tzinfo=tz).astimezone(UTC)
+            if now < start - lead:
+                continue
+        out.append(race)
+    return out
 
 
 def _poll_meeting(
     session: Session,
     odds: OddsSource,
     meeting: m.Meeting,
-    domain_meeting: DomainMeeting | None = None,
     *,
     now: datetime | None = None,
+    force: bool = False,
 ) -> dict:
+    now = now or datetime.now(UTC)
+    races = races_to_price(meeting, now, force=force)
+    if not races:
+        return {"snapshots": 0, "alerts": 0}
 
-    if domain_meeting is None:
-        # Adapter needs the lightweight domain shape; rebuild from DB if not supplied.
-        from race_watcher.domain.models import DomainMeeting as DM
-        from race_watcher.domain.models import DomainRace as DR
-        from race_watcher.services.predictions import _to_domain_runner
-        from race_watcher.services.race_summary import has_jumped
-
-        # Only ask for races still to run: prices for finished races are noise and cost tokens.
-        now = now or datetime.now(UTC)
-        to_run = [r for r in watched_races(meeting) if not has_jumped(meeting, r, now)]
-        if not to_run:
-            return {"snapshots": 0, "alerts": 0}
-
-        domain_meeting = DM(
-            track=meeting.track,
-            date=meeting.date,
-            timezone=meeting.timezone,
-            races=tuple(
-                DR(
-                    number=r.number,
-                    name=r.name,
-                    distance_m=r.distance_m,
-                    klass=r.klass,
-                    start_time_local=r.start_time_local,
-                    runners=tuple(_to_domain_runner(rn) for rn in r.runners),
-                )
-                for r in to_run
-            ),
-        )
-
-    prices = odds.fetch_prices(domain_meeting)
-    log.info("poller.fetched", count=len(prices), source=odds.name)
+    # One request per race: a whole day in one request (~130 runners) came back with only the
+    # first race or two priced. Requests run a few at a time; DB writes stay on this thread.
+    requests = [_domain_race_meeting(meeting, r) for r in races]  # ORM reads stay on this thread
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        batches = list(pool.map(odds.fetch_prices, requests))
+    prices = [p for batch in batches for p in batch]
+    log.info(
+        "poller.fetched",
+        track=meeting.track,
+        races=[r.number for r in races],
+        priced=[len(b) for b in batches],
+        source=odds.name,
+    )
 
     # index runners by (race_number, runner_number)
     runner_index: dict[tuple[int, int], m.Runner] = {}

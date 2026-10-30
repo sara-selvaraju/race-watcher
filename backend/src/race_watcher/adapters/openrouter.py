@@ -32,7 +32,7 @@ SUBMIT_ODDS_PARAMS = {
                 "properties": {
                     "race_number": {
                         "type": "integer",
-                        "description": "Race number at the meeting (1-9).",
+                        "description": "Race number at the meeting, as given.",
                     },
                     "runner_number": {
                         "type": "integer",
@@ -257,7 +257,9 @@ class OpenRouterAdapter:
         try:
             resp = self._client.chat.completions.create(
                 model=self.effective_model,
-                max_tokens=4096,
+                # Room for "thinking" models (e.g. GLM), which can spend 4k+ tokens reasoning
+                # before they call submit_odds. One race's answer itself is under 1k.
+                max_tokens=12000,
                 temperature=0,
                 messages=[
                     {"role": "system", "content": SYSTEM_PROMPT},

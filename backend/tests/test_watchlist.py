@@ -37,8 +37,11 @@ def session():
             s.add(mt)
             s.flush()
             for n in range(1, 4):
-                s.add(m.Race(meeting_id=mt.id, number=n, name=f"R{n}", distance_m=1200,
-                             klass=None, start_time_local=datetime(2026, 1, 1, 12 + n).time()))
+                race = m.Race(meeting_id=mt.id, number=n, name=f"R{n}", distance_m=1200,
+                              klass=None, start_time_local=datetime(2026, 1, 1, 12 + n).time())
+                s.add(race)
+                s.flush()
+                s.add(m.Runner(race_id=race.id, number=1, name=f"Horse {n}"))
         s.commit()
         yield s
 
@@ -85,7 +88,7 @@ def test_odds_are_only_fetched_for_watched_races(
             return []
 
     poll_once(session, Odds(), now=datetime(2026, 11, 7, 1, 0, tzinfo=UTC), force=True)
-    assert asked == [("Randwick", 2), ("Randwick", 3)]
+    assert sorted(asked) == [("Randwick", 2), ("Randwick", 3)]
 
 
 def test_watch_file_card_is_resolved_next_to_the_watch_file(
