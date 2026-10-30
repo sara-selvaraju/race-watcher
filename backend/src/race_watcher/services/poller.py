@@ -59,7 +59,7 @@ def poll_once(
         if not force and not in_race_window(meeting, now=now):
             log.info("poller.outside_window", track=meeting.track)
             continue
-        result = _poll_meeting(session, odds, meeting)
+        result = _poll_meeting(session, odds, meeting, now=now)
         snapshots += result["snapshots"]
         alerts += result["alerts"]
     return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}
@@ -70,12 +70,21 @@ def _poll_meeting(
     odds: OddsSource,
     meeting: m.Meeting,
     domain_meeting: DomainMeeting | None = None,
+    *,
+    now: datetime | None = None,
 ) -> dict:
 
     if domain_meeting is None:
         # Adapter needs the lightweight domain shape; rebuild from DB if not supplied.
         from race_watcher.services.predictions import _to_domain_runner
         from race_watcher.domain.models import DomainMeeting as DM, DomainRace as DR
+        from race_watcher.services.race_summary import has_jumped
+
+        # Only ask for races still to run: prices for finished races are noise and cost tokens.
+        now = now or datetime.now(UTC)
+        to_run = [r for r in meeting.races if not has_jumped(meeting, r, now)]
+        if not to_run:
+            return {"snapshots": 0, "alerts": 0}
 
         domain_meeting = DM(
             track=meeting.track,
@@ -90,7 +99,7 @@ def _poll_meeting(
                     start_time_local=r.start_time_local,
                     runners=tuple(_to_domain_runner(rn) for rn in r.runners),
                 )
-                for r in meeting.races
+                for r in to_run
             ),
         )
 

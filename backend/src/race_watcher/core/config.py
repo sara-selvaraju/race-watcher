@@ -25,7 +25,9 @@ class Settings(BaseSettings):
     race_date_end: date | None = Field(default=None, alias="RACE_DATE_END")
     tz: str = Field(default="Australia/Melbourne", alias="TZ")
 
-    poll_interval_seconds: int = Field(default=300, alias="POLL_INTERVAL_SECONDS")
+    # How often the worker fetches live odds while a race day is on. Each fetch is one
+    # web-search LLM call per meeting, so this is the main cost dial.
+    poll_interval_seconds: int = Field(default=900, alias="POLL_INTERVAL_SECONDS")
     movement_threshold_pct: float = Field(default=10.0, alias="MOVEMENT_THRESHOLD_PCT")
     race_window_open_min_before: int = Field(default=120, alias="RACE_WINDOW_OPEN_MIN_BEFORE")
     race_window_close_min_after: int = Field(default=15, alias="RACE_WINDOW_CLOSE_MIN_AFTER")

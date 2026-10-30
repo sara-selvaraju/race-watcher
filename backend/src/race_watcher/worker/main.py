@@ -12,6 +12,7 @@ from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.db.session import SessionLocal
 from race_watcher.repositories import race_repo
 from race_watcher.services.ingest import ingest_meetings
+from race_watcher.services.poller import poll_once
 from race_watcher.services.predictions import run_predictions_for_race
 from race_watcher.services.race_summary import has_jumped, summarize_all
 
@@ -59,13 +60,30 @@ def _refresh_summaries() -> None:
     log.info("worker.summaries", **result)
 
 
+def _poll_odds() -> None:
+    """Fetch live odds for every meeting whose race window is open.
+
+    poll_once checks each meeting's window itself (2 hours before the first race to 15 minutes
+    after the last), so outside race hours this does nothing and costs nothing. New prices
+    feed the next _refresh_summaries run, which re-rates runners and rewrites notes.
+    """
+    try:
+        adapter = get_odds_source()
+    except Exception as exc:  # missing API key etc. — keep the worker alive
+        log.warning("worker.odds_adapter_unavailable", error=str(exc))
+        return
+    with SessionLocal() as session:
+        result = poll_once(session, adapter)
+    log.info("worker.odds", **result)
+
+
 def main() -> None:
     log.info(
         "worker.boot",
         race_days=f"{settings.race_days[0]}..{settings.race_days[1]}",
         odds_source=settings.odds_source,
         prediction_engine=settings.prediction_engine,
-        note="live polling disabled — use POST /api/v1/admin/refresh-odds on demand",
+        poll_every_min=settings.poll_interval_seconds // 60,
     )
 
     _ensure_meeting_loaded()
@@ -79,6 +97,16 @@ def main() -> None:
         "interval",
         minutes=10,
         id="summaries",
+        max_instances=1,
+        coalesce=True,
+        next_run_time=datetime.now(UTC),
+    )
+    # Live odds on a timer. Only spends anything inside a meeting's race window.
+    sched.add_job(
+        _poll_odds,
+        "interval",
+        seconds=settings.poll_interval_seconds,
+        id="odds",
         max_instances=1,
         coalesce=True,
         next_run_time=datetime.now(UTC),
