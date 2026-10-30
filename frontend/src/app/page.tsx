@@ -70,7 +70,7 @@ export default function Page() {
 function LoadingState() {
   return (
     <main className="mx-auto max-w-7xl px-6 py-12 grid place-items-center min-h-[60vh]">
-      <p className="font-display text-2xl text-ink-3 animate-pulse">Loading today&apos;s races…</p>
+      <p className="font-display text-2xl text-ink-3 animate-pulse">Loading races…</p>
     </main>
   );
 }
@@ -93,7 +93,7 @@ function EmptyState() {
   return (
     <main className="mx-auto max-w-xl px-6 py-12">
       <div className="panel p-8">
-        <h1 className="panel-title">No meetings loaded for today</h1>
+        <h1 className="panel-title">No race days loaded</h1>
         <p className="mt-3 text-ink-2">
           Load the seed card with <code className="text-sm bg-surface-2 px-1 rounded">POST /api/v1/admin/ingest</code>.
         </p>

@@ -41,13 +41,6 @@ export function schedule(meetings: Meeting[]): ScheduledRace[] {
 // A race counts as run two minutes after its advertised start.
 export const JUMPED_GRACE_MS = 2 * 60_000;
 
-// Per track: the most recently run race (for its result/notes) plus every race still to run.
-export function visibleRaces(races: ScheduledRace[], now: number): ScheduledRace[] {
-  const run = races.filter((s) => hasJumped(s.startMs, now));
-  const lastRun = run[run.length - 1];
-  return races.filter((s) => s === lastRun || !hasJumped(s.startMs, now));
-}
-
 export function hasJumped(startMs: number | null, now: number): boolean {
   return startMs != null && now > startMs + JUMPED_GRACE_MS;
 }

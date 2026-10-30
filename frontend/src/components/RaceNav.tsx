@@ -2,7 +2,8 @@
 
 import { clsx } from "@/lib/clsx";
 import type { MeetingsOut } from "@/lib/api/client";
-import { hasJumped, trackColour, visibleRaces, type ScheduledRace } from "@/lib/tracks";
+import { raceDayLabel } from "@/lib/time";
+import { hasJumped, trackColour, type ScheduledRace } from "@/lib/tracks";
 
 type Props = {
   meetings: MeetingsOut;
@@ -14,10 +15,11 @@ type Props = {
 
 export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: Props) {
   const activeMeeting = timeline.find((s) => s.race.id === activeRaceId)?.meeting ?? meetings[0];
-  const races = visibleRaces(
-    timeline.filter((s) => s.meeting.id === activeMeeting.id).sort((a, b) => a.race.number - b.race.number),
-    now,
-  );
+  const races = timeline
+    .filter((s) => s.meeting.id === activeMeeting.id)
+    .sort((a, b) => a.race.number - b.race.number);
+  // Several days at one track (a carnival): tabs are days. Otherwise tabs are tracks.
+  const byDay = new Set(meetings.map((m) => m.date)).size > 1;
 
   function openMeeting(meetingId: number) {
     const own = timeline.filter((s) => s.meeting.id === meetingId);
@@ -26,7 +28,7 @@ export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: 
   }
 
   return (
-    <nav className="panel overflow-hidden" aria-label="Meetings and races">
+    <nav className="panel overflow-hidden" aria-label={byDay ? "Race days and races" : "Meetings and races"}>
       <div role="tablist" className="flex border-b border-line overflow-x-auto">
         {meetings.map((m, i) => {
           const selected = m.id === activeMeeting.id;
@@ -37,8 +39,9 @@ export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: 
               role="tab"
               aria-selected={selected}
               onClick={() => openMeeting(m.id)}
+              disabled={m.races.length === 0}
               className={clsx(
-                "relative flex-1 min-w-[8.5rem] px-4 py-3 text-left",
+                "relative flex-1 min-w-[8.5rem] px-4 py-3 text-left disabled:cursor-default disabled:hover:text-ink-3",
                 selected ? "bg-surface" : "bg-surface-2 text-ink-3 hover:text-ink-2",
               )}
             >
@@ -49,10 +52,13 @@ export function MeetingNav({ meetings, timeline, now, activeRaceId, onSelect }: 
               <span className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ background: trackColour(m.track, i) }} />
                 <span className={clsx("font-display text-xl font-bold leading-none", selected && "text-ink")}>
-                  {m.track}
+                  {byDay ? raceDayLabel(m.date) : m.track}
                 </span>
               </span>
-              <span className="block text-sm mt-1">{left > 0 ? `${left} to run` : "Finished"}</span>
+              <span className="block text-sm mt-1">
+                {byDay && `${m.track}, `}
+                {m.races.length === 0 ? "Card to come" : left > 0 ? `${left} to run` : "Finished"}
+              </span>
             </button>
           );
         })}

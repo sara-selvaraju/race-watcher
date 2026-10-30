@@ -5,9 +5,9 @@ import { api, type AlertsOut, type MeetingsOut, type StatusOut } from "./client"
 
 export function useMeetings() {
   return useQuery<MeetingsOut>({
-    queryKey: ["meeting", "today"],
+    queryKey: ["meetings"],
     queryFn: async () => {
-      const { data, error } = await api.GET("/api/v1/meetings/today");
+      const { data, error } = await api.GET("/api/v1/meetings");
       if (error || !data) throw new Error("Failed to load meetings");
       return data;
     },

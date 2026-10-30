@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     )
 
     race_date: date = Field(default=date(2026, 6, 20), alias="RACE_DATE")
+    # Last race day shown (inclusive), for a carnival spanning several days. Unset = one day.
+    race_date_end: date | None = Field(default=None, alias="RACE_DATE_END")
     tz: str = Field(default="Australia/Melbourne", alias="TZ")
 
     poll_interval_seconds: int = Field(default=300, alias="POLL_INTERVAL_SECONDS")
@@ -54,6 +56,11 @@ class Settings(BaseSettings):
     betfair_cert_key_path: str | None = Field(default=None, alias="BETFAIR_CERT_KEY_PATH")
 
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
+
+    @property
+    def race_days(self) -> tuple[date, date]:
+        """First and last race day shown (inclusive)."""
+        return self.race_date, self.race_date_end or self.race_date
 
     @property
     def database_url_sync(self) -> str:

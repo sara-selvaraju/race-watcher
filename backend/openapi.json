@@ -34,7 +34,7 @@
           "meeting"
         ],
         "summary": "Get Today Meeting",
-        "description": "First meeting on the race date. Kept for older clients \u2014 prefer /meetings/today.",
+        "description": "First meeting on the first race day. Kept for older clients \u2014 prefer /meetings.",
         "operationId": "get_today_meeting_api_v1_meeting_today_get",
         "responses": {
           "200": {
@@ -92,13 +92,39 @@
         }
       }
     },
+    "/api/v1/meetings": {
+      "get": {
+        "tags": [
+          "meeting"
+        ],
+        "summary": "List Meetings",
+        "description": "Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date.",
+        "operationId": "list_meetings_api_v1_meetings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MeetingOut"
+                  },
+                  "type": "array",
+                  "title": "Response List Meetings Api V1 Meetings Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/meetings/today": {
       "get": {
         "tags": [
           "meeting"
         ],
         "summary": "List Today Meetings",
-        "description": "Every meeting on the race date (one per track).",
+        "description": "Alias of /meetings, kept for older clients.",
         "operationId": "list_today_meetings_api_v1_meetings_today_get",
         "responses": {
           "200": {
@@ -1139,6 +1165,11 @@
             "format": "date",
             "title": "Race Date"
           },
+          "race_date_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Race Date End"
+          },
           "odds_source": {
             "type": "string",
             "title": "Odds Source"
@@ -1179,6 +1210,7 @@
         "type": "object",
         "required": [
           "race_date",
+          "race_date_end",
           "odds_source",
           "race_card_source",
           "prediction_engine",

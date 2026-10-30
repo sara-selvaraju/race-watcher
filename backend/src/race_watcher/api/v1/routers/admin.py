@@ -36,7 +36,7 @@ def predict(
     engine: PredictionEngine = EngineDep,
     meeting_id: int | None = None,
 ) -> dict:
-    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
     if not meetings:
         return {"created": 0, "skipped": "no_meeting"}
     created = 0
@@ -106,7 +106,7 @@ def cleanup_research_runners(
     reset the field back to the seed-only state. Top picks and predictions for the
     deleted runners cascade away via the existing FK ondelete=CASCADE.
     """
-    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
     if not meetings:
         return {"deleted": 0, "skipped": "no_meeting"}
 

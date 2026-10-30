@@ -15,7 +15,7 @@ router = APIRouter(prefix="/alerts", tags=["alerts"])
 @router.get("", response_model=list[MovementAlertOut])
 def list_alerts(session: Session = SessionDep, limit: int = 50) -> list[MovementAlertOut]:
     out: list[MovementAlertOut] = []
-    for a in alert_repo.list_recent_alerts(session, limit=limit, on_date=settings.race_date):
+    for a in alert_repo.list_recent_alerts(session, limit=limit, between=settings.race_days):
         runner = session.get(m.Runner, a.runner_id)
         race = session.get(m.Race, runner.race_id) if runner else None
         meeting = session.get(m.Meeting, race.meeting_id) if race else None

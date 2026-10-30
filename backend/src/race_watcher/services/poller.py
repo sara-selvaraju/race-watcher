@@ -47,9 +47,9 @@ def poll_once(
     now: datetime | None = None,
     force: bool = False,
 ) -> dict:
-    """One poll cycle across every meeting on the race date (or just `meeting_id`). Idempotent."""
+    """One poll cycle across every meeting in the race-day window (or just `meeting_id`). Idempotent."""
     now = now or datetime.now(UTC)
-    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
     if not meetings:
         log.warning("poller.no_meeting", race_date=str(settings.race_date))
         return {"snapshots": 0, "alerts": 0, "skipped": "no_meeting"}

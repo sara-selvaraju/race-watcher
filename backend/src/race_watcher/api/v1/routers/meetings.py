@@ -129,20 +129,26 @@ def _meeting_to_out(session: Session, meeting: m.Meeting) -> MeetingOut:
 
 @router.get("/today", response_model=MeetingOut)
 def get_today_meeting(session: Session = SessionDep) -> MeetingOut:
-    """First meeting on the race date. Kept for older clients — prefer /meetings/today."""
+    """First meeting on the first race day. Kept for older clients — prefer /meetings."""
     meeting = race_repo.get_meeting_by_date(session, settings.race_date)
     if meeting is None:
         raise HTTPException(status_code=404, detail=f"No meeting loaded for {settings.race_date}")
     return _meeting_to_out(session, meeting)
 
 
-@meetings_router.get("/today", response_model=list[MeetingOut])
-def list_today_meetings(session: Session = SessionDep) -> list[MeetingOut]:
-    """Every meeting on the race date (one per track)."""
+@meetings_router.get("", response_model=list[MeetingOut])
+def list_meetings(session: Session = SessionDep) -> list[MeetingOut]:
+    """Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date."""
     return [
         _meeting_to_out(session, mt)
-        for mt in race_repo.list_meetings_by_date(session, settings.race_date)
+        for mt in race_repo.list_meetings_between(session, *settings.race_days)
     ]
+
+
+@meetings_router.get("/today", response_model=list[MeetingOut])
+def list_today_meetings(session: Session = SessionDep) -> list[MeetingOut]:
+    """Alias of /meetings, kept for older clients."""
+    return list_meetings(session)
 
 
 @router.get("/races/{race_id}", response_model=RaceOut)

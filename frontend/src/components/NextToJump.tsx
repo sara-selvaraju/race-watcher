@@ -1,7 +1,7 @@
 "use client";
 
 import { clsx } from "@/lib/clsx";
-import { countdown, viewerTime } from "@/lib/time";
+import { countdown, raceDayLabel, viewerTime } from "@/lib/time";
 import { hasJumped, trackColour, type ScheduledRace } from "@/lib/tracks";
 
 type Props = {
@@ -18,7 +18,7 @@ export function NextToJump({ timeline, now, activeRaceId, onSelect }: Props) {
     return (
       <section className="panel px-5 py-6">
         <h2 className="panel-title">All races have run</h2>
-        <p className="mt-1 text-ink-3">Today&apos;s card is finished. Results stay browsable below.</p>
+        <p className="mt-1 text-ink-3">Every race day is finished. Each race stays browsable below.</p>
       </section>
     );
   }
@@ -41,7 +41,7 @@ export function NextToJump({ timeline, now, activeRaceId, onSelect }: Props) {
         </div>
         <div className="text-right shrink-0">
           <p className="num font-bold text-5xl leading-none">{next.startMs ? countdown(next.startMs - now) : "—"}</p>
-          {next.startMs && <p className="text-sm text-ink-2 mt-1">{viewerTime(next.startMs)} your time</p>}
+          {next.startMs && <p className="text-sm text-ink-2 mt-1">{viewerTime(next.startMs, now)} your time</p>}
         </div>
       </button>
 
@@ -58,7 +58,9 @@ export function NextToJump({ timeline, now, activeRaceId, onSelect }: Props) {
               )}
               style={{ borderTopWidth: 4, borderTopColor: trackColour(s.meeting.track, s.meetingIndex) }}
             >
-              <span className="block text-sm text-ink-3 truncate">{s.meeting.track}</span>
+              <span className="block text-sm text-ink-3 truncate">
+                {s.meeting.date === next.meeting.date ? s.meeting.track : raceDayLabel(s.meeting.date)}
+              </span>
               <span className="block font-display text-xl font-bold leading-tight">R{s.race.number}</span>
               <span className="num block text-lg text-ink-2">{s.startMs ? countdown(s.startMs - now) : "—"}</span>
             </button>

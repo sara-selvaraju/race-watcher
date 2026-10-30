@@ -47,15 +47,15 @@ def recent_alert_for_runner(
 
 
 def list_recent_alerts(
-    session: Session, *, limit: int = 50, on_date: date | None = None
+    session: Session, *, limit: int = 50, between: tuple[date, date] | None = None
 ) -> list[m.MovementAlert]:
     stmt = select(m.MovementAlert)
-    if on_date is not None:
+    if between is not None:
         stmt = (
             stmt.join(m.Runner, m.MovementAlert.runner_id == m.Runner.id)
             .join(m.Race, m.Runner.race_id == m.Race.id)
             .join(m.Meeting, m.Race.meeting_id == m.Meeting.id)
-            .where(m.Meeting.date == on_date)
+            .where(m.Meeting.date >= between[0], m.Meeting.date <= between[1])
         )
     stmt = (
         stmt.order_by(desc(m.MovementAlert.created_at))

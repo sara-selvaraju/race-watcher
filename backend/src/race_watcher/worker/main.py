@@ -21,9 +21,9 @@ log = get_logger("worker")
 
 def _ensure_meeting_loaded() -> None:
     with SessionLocal() as session:
-        if race_repo.list_meetings_by_date(session, settings.race_date):
+        if race_repo.list_meetings_between(session, *settings.race_days):
             return
-        log.info("worker.ingesting_seed", race_date=str(settings.race_date))
+        log.info("worker.ingesting_seed", race_days=f"{settings.race_days[0]}..{settings.race_days[1]}")
         ingest_meetings(session, get_race_card_source())
 
 
@@ -33,7 +33,7 @@ def _refresh_predictions() -> int:
     now = datetime.now(UTC)
     rated = 0
     with SessionLocal() as session:
-        for meeting in race_repo.list_meetings_by_date(session, settings.race_date):
+        for meeting in race_repo.list_meetings_between(session, *settings.race_days):
             for race in meeting.races:
                 if has_jumped(meeting, race, now):
                     continue
@@ -47,7 +47,7 @@ def _refresh_summaries() -> None:
     """Re-rate, then rewrite notes for any upcoming race whose picks, prices or field changed.
     Idle once every race on the card has jumped."""
     if not _refresh_predictions():
-        log.info("worker.idle", reason="no races left to run", race_date=str(settings.race_date))
+        log.info("worker.idle", reason="no races left to run", race_days=f"{settings.race_days[0]}..{settings.race_days[1]}")
         return
     try:
         adapter = get_odds_source()
@@ -62,7 +62,7 @@ def _refresh_summaries() -> None:
 def main() -> None:
     log.info(
         "worker.boot",
-        race_date=str(settings.race_date),
+        race_days=f"{settings.race_days[0]}..{settings.race_days[1]}",
         odds_source=settings.odds_source,
         prediction_engine=settings.prediction_engine,
         note="live polling disabled — use POST /api/v1/admin/refresh-odds on demand",

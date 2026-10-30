@@ -1,0 +1,3656 @@
+{
+ "meetings": [
+  {
+   "meeting": {
+    "track": "Flemington",
+    "date": "2026-10-31",
+    "going": "Good 4",
+    "rail": "True Entire Circuit",
+    "timezone": "Australia/Melbourne",
+    "source": "racingaustralia.horse FreeFields (fields, form, scratchings published 30-Oct 12:45PM); races.com.au (Ladbrokes odds 30-Oct); justhorseracing.com.au (R9 odds)"
+   },
+   "races": [
+    {
+     "number": 1,
+     "name": "Channel 9 Carbine Club Stakes",
+     "distance_m": 1600,
+     "class": "Group 3",
+     "start_time": "12:20",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Mister Whiskers",
+       "trainer": "Charlotte Littlefield",
+       "jockey": "Jett Stanley",
+       "weight_kg": 57.0,
+       "barrier": 1,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 11"
+      },
+      {
+       "number": 2,
+       "name": "Unhinged",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 2.9,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 23x4211"
+      },
+      {
+       "number": 3,
+       "name": "High Falls",
+       "trainer": "Shane Jackson",
+       "jockey": "John Allen",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11"
+      },
+      {
+       "number": 4,
+       "name": "Fast Freddie",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "William Pike",
+       "weight_kg": 57.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 14.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x231"
+      },
+      {
+       "number": 5,
+       "name": "Strong Tempo",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Harry Coffey",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 18.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11"
+      },
+      {
+       "number": 6,
+       "name": "Glenorchy",
+       "trainer": "Chris Waller",
+       "jockey": "Craig Williams",
+       "weight_kg": 57.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 8.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 526x2"
+      },
+      {
+       "number": 7,
+       "name": "Star Of Macedon",
+       "trainer": "John Symons & Sheila Laxon",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 6,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 2332x16"
+      },
+      {
+       "number": 8,
+       "name": "Zoehrer",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Luke Currie",
+       "weight_kg": 57.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 418"
+      },
+      {
+       "number": 9,
+       "name": "Conquer The World",
+       "trainer": "Clinton McDonald",
+       "jockey": "Ben Melham",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 5.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 321"
+      },
+      {
+       "number": 10,
+       "name": "The Roaring Sun",
+       "trainer": "Chris Waller",
+       "jockey": "Damian Lane",
+       "weight_kg": 57.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 6.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x3"
+      },
+      {
+       "number": 11,
+       "name": "Cab Franc (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Thomas Stockdale",
+       "weight_kg": 57.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 51.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 532"
+      },
+      {
+       "number": 12,
+       "name": "Tuzemak",
+       "trainer": "Reece Goodwin",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 55.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 23x3621"
+      }
+     ]
+    },
+    {
+     "number": 2,
+     "name": "TAB ONE POOL Vanity",
+     "distance_m": 1400,
+     "class": "Group 3",
+     "start_time": "13:00",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Regal Ambition",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Michael Dee",
+       "weight_kg": 57.5,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 2.25,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x113"
+      },
+      {
+       "number": 2,
+       "name": "I Am Aria",
+       "trainer": "Mark Walker",
+       "jockey": "Blake Shinn",
+       "weight_kg": 56.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 6.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 230x1722"
+      },
+      {
+       "number": 3,
+       "name": "Affari",
+       "trainer": "Chris Waller",
+       "jockey": "Craig Williams",
+       "weight_kg": 56.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 9.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 35x22221"
+      },
+      {
+       "number": 4,
+       "name": "Pin Up Sheila",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "James McDonald",
+       "weight_kg": 56.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.8,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11x62"
+      },
+      {
+       "number": 5,
+       "name": "Beautiful You (NZ)",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 56.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 26.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2113"
+      },
+      {
+       "number": 6,
+       "name": "Shintono (NZ)",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Harry Coffey",
+       "weight_kg": 56.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 124x"
+      },
+      {
+       "number": 7,
+       "name": "Consulate",
+       "trainer": "Chris Waller",
+       "jockey": "Damian Lane",
+       "weight_kg": 56.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x21x75"
+      },
+      {
+       "number": 8,
+       "name": "Autumn Lover",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "William Pike",
+       "weight_kg": 56.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 23.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 534x1745"
+      },
+      {
+       "number": 9,
+       "name": "Youmzaa (NZ)",
+       "trainer": "Matt Laurie",
+       "jockey": "Patrick Moloney",
+       "weight_kg": 56.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 14.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 21"
+      },
+      {
+       "number": 10,
+       "name": "Divine Eruption",
+       "trainer": "Symon Wilde",
+       "jockey": "Jamie Mott",
+       "weight_kg": 56.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 3x1"
+      },
+      {
+       "number": 11,
+       "name": "Miss Dividend",
+       "trainer": "Dominic Sutton",
+       "jockey": "Billy Egan",
+       "weight_kg": 56.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 21"
+      },
+      {
+       "number": 12,
+       "name": "Blue Dream",
+       "trainer": "Grahame Begg",
+       "jockey": "Ben Melham",
+       "weight_kg": 56.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1"
+      },
+      {
+       "number": 13,
+       "name": "Full Confidence",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Jye McNeil",
+       "weight_kg": 56.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 343"
+      }
+     ]
+    },
+    {
+     "number": 3,
+     "name": "HKJC World Pool Wakeful Stakes",
+     "distance_m": 2000,
+     "class": "Group 2",
+     "start_time": "13:40",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Icelady",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 3.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 422x212"
+      },
+      {
+       "number": 2,
+       "name": "Grinzinger Heart",
+       "trainer": "Ben Brisbourne",
+       "jockey": "Lachlan King",
+       "weight_kg": 57.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 419x070"
+      },
+      {
+       "number": 3,
+       "name": "De Armas (NZ)",
+       "trainer": "Chris Waller",
+       "jockey": "Blake Shinn",
+       "weight_kg": 56.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 3.7,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11x4x524"
+      },
+      {
+       "number": 4,
+       "name": "Voynichese",
+       "trainer": "Nick Olive",
+       "jockey": "Declan Bates",
+       "weight_kg": 56.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 26.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2117x877"
+      },
+      {
+       "number": 5,
+       "name": "Your Colour",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 55.0,
+       "barrier": 19,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 8.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x40132"
+      },
+      {
+       "number": 6,
+       "name": "Churchill Rose",
+       "trainer": "Andrew Gluyas",
+       "jockey": "Craig Williams",
+       "weight_kg": 55.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 27.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x58x6212"
+      },
+      {
+       "number": 7,
+       "name": "Sumac",
+       "trainer": "Lee & Cherie Curtis",
+       "jockey": "Jye McNeil",
+       "weight_kg": 55.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 83587x6751"
+      },
+      {
+       "number": 8,
+       "name": "Anglais",
+       "trainer": "Nick Ryan",
+       "jockey": "Ben Allen",
+       "weight_kg": 55.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 19.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 4x331"
+      },
+      {
+       "number": 9,
+       "name": "Autumn In Grinzing",
+       "trainer": "Danny O'Brien",
+       "jockey": "Damien Thornton",
+       "weight_kg": 55.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 9x1746"
+      },
+      {
+       "number": 10,
+       "name": "Fringilla",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Luke Currie",
+       "weight_kg": 55.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 14.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6215"
+      },
+      {
+       "number": 11,
+       "name": "Tharwa",
+       "trainer": "Chris Waller",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.0,
+       "barrier": 18,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 10.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 4324"
+      },
+      {
+       "number": 12,
+       "name": "Nikitria",
+       "trainer": "Clinton McDonald",
+       "jockey": "Ben Melham",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 85x105"
+      },
+      {
+       "number": 13,
+       "name": "Adakite",
+       "trainer": "Shane Nichols & Hayden Black",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 55.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 533x252"
+      },
+      {
+       "number": 14,
+       "name": "Endless Fury",
+       "trainer": "Peter Chow",
+       "jockey": "Billy Egan",
+       "weight_kg": 55.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 126.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x531"
+      },
+      {
+       "number": 15,
+       "name": "So Royal",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Jamie Mott",
+       "weight_kg": 55.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 16"
+      },
+      {
+       "number": 16,
+       "name": "Shameful Impulse",
+       "trainer": "Rob Blacker",
+       "jockey": "William Pike",
+       "weight_kg": 55.0,
+       "barrier": 21,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 91.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 5139"
+      },
+      {
+       "number": 17,
+       "name": "Quynh",
+       "trainer": "Emma-Lee & David Browne",
+       "jockey": "Harry Coffey",
+       "weight_kg": 55.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x441"
+      },
+      {
+       "number": 18,
+       "name": "Autumn Deel",
+       "trainer": "Matt Cumani",
+       "jockey": "Michael Dee",
+       "weight_kg": 55.0,
+       "barrier": 20,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 91.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 644"
+      }
+     ]
+    },
+    {
+     "number": 4,
+     "name": "G.H. Mumm Rising Fast Stakes",
+     "distance_m": 1200,
+     "class": "Group 3",
+     "start_time": "14:20",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Hedged",
+       "trainer": "Gavin Bedggood",
+       "jockey": "Jamie Mott",
+       "weight_kg": 60.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 34.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 101326x529"
+      },
+      {
+       "number": 2,
+       "name": "Napoleonic",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "James McDonald",
+       "weight_kg": 59.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.8,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x228x30x26"
+      },
+      {
+       "number": 3,
+       "name": "Grand Larceny",
+       "trainer": "Michael, John & Wayne Hawkes",
+       "jockey": "Ben Melham",
+       "weight_kg": 59.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 23.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x3215x13x4"
+      },
+      {
+       "number": 4,
+       "name": "Ndola",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Jye McNeil",
+       "weight_kg": 58.0,
+       "barrier": 19,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 15.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2213x14521"
+      },
+      {
+       "number": 5,
+       "name": "Sweynesday (NZ)",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 58.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 9.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x1131x50x5"
+      },
+      {
+       "number": 6,
+       "name": "Gallant Son",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 12.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 24x1132x04"
+      },
+      {
+       "number": 7,
+       "name": "Disneck",
+       "trainer": "Bjorn Baker",
+       "jockey": "Jason Collett",
+       "weight_kg": 56.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 23.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 8x160x6006"
+      },
+      {
+       "number": 8,
+       "name": "Meridius",
+       "trainer": "Lloyd Kennewell",
+       "jockey": "Mark Zahra",
+       "weight_kg": 56.5,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 20.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 5x15x1301x"
+      },
+      {
+       "number": 9,
+       "name": "Watchme Win",
+       "trainer": "Andrew Gluyas",
+       "jockey": "Ben Allen",
+       "weight_kg": 56.5,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x228x5648"
+      },
+      {
+       "number": 10,
+       "name": "Golden Straand",
+       "trainer": "Matthew Smith",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 9.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 115x113x12"
+      },
+      {
+       "number": 11,
+       "name": "De Bergerac",
+       "trainer": "Grahame Begg",
+       "jockey": "Luke Cartwright (a)",
+       "weight_kg": 54.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 34.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 0962213696"
+      },
+      {
+       "number": 12,
+       "name": "King Zephyr",
+       "trainer": "Grahame Begg",
+       "jockey": "William Pike",
+       "weight_kg": 54.5,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 11.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 12x62268x4"
+      },
+      {
+       "number": 13,
+       "name": "Klabel (NZ)",
+       "trainer": "Richard & Chantelle Jolly",
+       "jockey": "Jett Stanley",
+       "weight_kg": 54.5,
+       "barrier": 14,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 126.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 9312x94656"
+      },
+      {
+       "number": 14,
+       "name": "Grand Impact (NZ)",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Michael Dee",
+       "weight_kg": 54.0,
+       "barrier": 20,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 27.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x060x2225"
+      },
+      {
+       "number": 15,
+       "name": "Jenni The Fox",
+       "trainer": "Ciaron Maher",
+       "jockey": "Jabez Johnstone (a)",
+       "weight_kg": 54.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 51.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 43401200x6"
+      },
+      {
+       "number": 16,
+       "name": "Celsius Star",
+       "trainer": "Shawn Mathrick",
+       "jockey": "Craig Newitt",
+       "weight_kg": 54.0,
+       "barrier": 18,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 81.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 3317444x22"
+      },
+      {
+       "number": 17,
+       "name": "The Cosmic One",
+       "trainer": "Travis Doudle",
+       "jockey": "Harry Coffey",
+       "weight_kg": 54.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 31x171111"
+      },
+      {
+       "number": 18,
+       "name": "Jimmy Recard",
+       "trainer": "Ciaron Maher",
+       "jockey": "Beau Mertens",
+       "weight_kg": 54.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 8x111367x0"
+      },
+      {
+       "number": 19,
+       "name": "Verdoux",
+       "trainer": "Leon & Troy Corstens & Will Larkin",
+       "jockey": "Declan Bates",
+       "weight_kg": 54.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x112905x66"
+      },
+      {
+       "number": 20,
+       "name": "Hankee Alpha (NZ)",
+       "trainer": "Cindy Alderson",
+       "jockey": "Craig Williams",
+       "weight_kg": 54.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 3.9,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 0x326235x1"
+      }
+     ]
+    },
+    {
+     "number": 5,
+     "name": "The ABC Bullion Damien Oliver",
+     "distance_m": 1400,
+     "class": "Group 2",
+     "start_time": "15:00",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Pericles",
+       "trainer": "Bjorn Baker",
+       "jockey": "Jason Collett",
+       "weight_kg": 59.5,
+       "barrier": 3,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 42x1357x77"
+      },
+      {
+       "number": 2,
+       "name": "Private Eye",
+       "trainer": "Joseph Pride",
+       "jockey": "James McDonald",
+       "weight_kg": 59.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 6.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x365x2732"
+      },
+      {
+       "number": 3,
+       "name": "War Machine (NZ)",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Damian Lane",
+       "weight_kg": 59.0,
+       "barrier": 18,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 100x30x301"
+      },
+      {
+       "number": 4,
+       "name": "Desert Lightning (NZ)",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Ben Melham",
+       "weight_kg": 57.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 20.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 5x4180x667"
+      },
+      {
+       "number": 5,
+       "name": "Warnie (IRE)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 5.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x308x4164"
+      },
+      {
+       "number": 6,
+       "name": "Here To Shock (NZ)",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 55.5,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 104270x645"
+      },
+      {
+       "number": 7,
+       "name": "Cote Atlantique (IRE)",
+       "trainer": "Henry Dwyer",
+       "jockey": "Declan Bates",
+       "weight_kg": 55.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x222065321"
+      },
+      {
+       "number": 8,
+       "name": "Welwal (GB)",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Beau Mertens",
+       "weight_kg": 55.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 276x34144x"
+      },
+      {
+       "number": 9,
+       "name": "Cafe Millenium",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Ms Celine Gaudray",
+       "weight_kg": 54.5,
+       "barrier": 19,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 21.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x4150x037"
+      },
+      {
+       "number": 10,
+       "name": "Hughes",
+       "trainer": "Gavin Bedggood",
+       "jockey": "Jett Stanley",
+       "weight_kg": 54.5,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 11.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 50627115x3"
+      },
+      {
+       "number": 11,
+       "name": "Steparty",
+       "trainer": "Paul Preusker",
+       "jockey": "John Allen",
+       "weight_kg": 54.5,
+       "barrier": 14,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 7.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 97721150x2"
+      },
+      {
+       "number": 12,
+       "name": "Persian Spirit",
+       "trainer": "Symon Wilde",
+       "jockey": "Craig Williams",
+       "weight_kg": 54.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 6.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 13648x2401"
+      },
+      {
+       "number": 13,
+       "name": "Amenable",
+       "trainer": "Grahame Begg",
+       "jockey": "Michael Dee",
+       "weight_kg": 53.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 15.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 660x48x344"
+      },
+      {
+       "number": 14,
+       "name": "Holymanz (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Jabez Johnstone (a)",
+       "weight_kg": 53.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 51.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 83153754x0"
+      },
+      {
+       "number": 15,
+       "name": "Zou Sensation",
+       "trainer": "Leon & Troy Corstens & Will Larkin",
+       "jockey": "William Pike",
+       "weight_kg": 53.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 21.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 418x505739"
+      },
+      {
+       "number": 16,
+       "name": "Recon",
+       "trainer": "Pat Carey & Harris Walker",
+       "jockey": "Patrick Moloney",
+       "weight_kg": 53.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 31.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x5160x6004"
+      }
+     ]
+    },
+    {
+     "number": 6,
+     "name": "Coolmore Stud Stakes",
+     "distance_m": 1200,
+     "class": "Group 1",
+     "start_time": "15:40",
+     "runners": [
+      {
+       "number": 1,
+       "name": "The Next Episode",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 3.8,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 0x1211x1"
+      },
+      {
+       "number": 2,
+       "name": "Paradoxium",
+       "trainer": "Bjorn Baker",
+       "jockey": "Jason Collett",
+       "weight_kg": 57.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 15.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 4x1x106x14"
+      },
+      {
+       "number": 3,
+       "name": "Alibaba",
+       "trainer": "Ken & Kasey Keys",
+       "jockey": "Craig Newitt",
+       "weight_kg": 57.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 61.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 31389x4"
+      },
+      {
+       "number": 4,
+       "name": "Stretan Ruler",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Jamie Mott",
+       "weight_kg": 57.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 101.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x4125x04"
+      },
+      {
+       "number": 5,
+       "name": "St Gotthard",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.6,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11x22"
+      },
+      {
+       "number": 6,
+       "name": "Marffiano",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Luke Currie",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 71.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1525x1"
+      },
+      {
+       "number": 7,
+       "name": "Under Focus",
+       "trainer": "Kris Lees",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 15.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 213x633"
+      },
+      {
+       "number": 8,
+       "name": "Steel Will",
+       "trainer": "Chris Waller",
+       "jockey": "Jye McNeil",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 37x1162"
+      },
+      {
+       "number": 9,
+       "name": "Mbube",
+       "trainer": "Lloyd Kennewell",
+       "jockey": "Billy Egan",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 23.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x23"
+      },
+      {
+       "number": 10,
+       "name": "The Machine Gun",
+       "trainer": "Peter Snowden",
+       "jockey": "William Pike",
+       "weight_kg": 57.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 51.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 11x6"
+      },
+      {
+       "number": 11,
+       "name": "Doubt Time",
+       "trainer": "Nick Ryan",
+       "jockey": "Michael Dee",
+       "weight_kg": 57.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 19.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x53"
+      },
+      {
+       "number": 12,
+       "name": "Natural Fling",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 7.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 12x132"
+      },
+      {
+       "number": 13,
+       "name": "Satono Glow (NZ)",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "Ben Melham",
+       "weight_kg": 55.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 5.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 114x11"
+      },
+      {
+       "number": 14,
+       "name": "Pembrey",
+       "trainer": "Tony Gollan",
+       "jockey": "Craig Williams",
+       "weight_kg": 55.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 11.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1510x16"
+      }
+     ]
+    },
+    {
+     "number": 7,
+     "name": "Howden Victoria Derby",
+     "distance_m": 2500,
+     "class": "Group 1",
+     "start_time": "16:20",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Cormier",
+       "trainer": "Paul Messara & Leah Gavranich",
+       "jockey": "Jamie Mott",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 122x0843"
+      },
+      {
+       "number": 2,
+       "name": "Stormy Marco",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 183x2954"
+      },
+      {
+       "number": 3,
+       "name": "True Rebel",
+       "trainer": "Danny O'Brien",
+       "jockey": "Billy Egan",
+       "weight_kg": 57.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 8.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 3121"
+      },
+      {
+       "number": 4,
+       "name": "King Snitz",
+       "trainer": "Shane Jackson",
+       "jockey": "Damian Lane",
+       "weight_kg": 57.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 9311"
+      },
+      {
+       "number": 5,
+       "name": "Murshidi",
+       "trainer": "Ciaron Maher",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 18,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 15.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 6x7321"
+      },
+      {
+       "number": 6,
+       "name": "Vallice",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 13.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 51x44522"
+      },
+      {
+       "number": 7,
+       "name": "Skua",
+       "trainer": "Ciaron Maher",
+       "jockey": "John Allen",
+       "weight_kg": 57.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 14.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x31662"
+      },
+      {
+       "number": 8,
+       "name": "Cignetti (NZ)",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "William Pike",
+       "weight_kg": 57.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 14.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 35x1233"
+      },
+      {
+       "number": 9,
+       "name": "Icy You",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Craig Williams",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 12.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 21242"
+      },
+      {
+       "number": 10,
+       "name": "True Tone",
+       "trainer": "Chris Waller",
+       "jockey": "Jason Collett",
+       "weight_kg": 57.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 19.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 44213"
+      },
+      {
+       "number": 11,
+       "name": "Hierarchy",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Ben Melham",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 3148"
+      },
+      {
+       "number": 12,
+       "name": "Written Empire",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Harry Coffey",
+       "weight_kg": 57.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 31.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 4136"
+      },
+      {
+       "number": 13,
+       "name": "Russian Rock",
+       "trainer": "Michael Trotter",
+       "jockey": "Michael Dee",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 27.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 3x154"
+      },
+      {
+       "number": 14,
+       "name": "Cold Shower",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Jett Stanley",
+       "weight_kg": 57.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 316"
+      },
+      {
+       "number": 15,
+       "name": "King Winston",
+       "trainer": "Greg Eurell",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 57.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 51.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 0245"
+      },
+      {
+       "number": 16,
+       "name": "Quick Finish",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Jye McNeil",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 20.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 5111"
+      }
+     ]
+    },
+    {
+     "number": 8,
+     "name": "TAB Empire Rose Stakes",
+     "distance_m": 1600,
+     "class": "Group 1",
+     "start_time": "17:00",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Lady Shenandoah",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 2.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x3342x441"
+      },
+      {
+       "number": 2,
+       "name": "Idle Flyer",
+       "trainer": "Matthew Smith",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 9.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x411x64405"
+      },
+      {
+       "number": 3,
+       "name": "Surfin’ Bird",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 4.6,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 15x251x411"
+      },
+      {
+       "number": 4,
+       "name": "Cilacap",
+       "trainer": "Grahame Begg",
+       "jockey": "Michael Dee",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 41.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 10x76831x5"
+      },
+      {
+       "number": 5,
+       "name": "Unleeshing",
+       "trainer": "Bjorn Baker",
+       "jockey": "Jason Collett",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 8.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 31152x2211"
+      },
+      {
+       "number": 6,
+       "name": "Pondalowie",
+       "trainer": "Emma-Lee & David Browne",
+       "jockey": "Harry Coffey",
+       "weight_kg": 57.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 67.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 64x35x8156"
+      },
+      {
+       "number": 7,
+       "name": "Jenni Multabella (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Declan Bates",
+       "weight_kg": 57.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 91.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1x26x31222"
+      },
+      {
+       "number": 8,
+       "name": "Salty Pearl",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ben Allen",
+       "weight_kg": 56.5,
+       "barrier": 1,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 21.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 323135x346"
+      },
+      {
+       "number": 9,
+       "name": "Sass Appeal",
+       "trainer": "Danny O'Brien",
+       "jockey": "Damian Lane",
+       "weight_kg": 56.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 16.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 21111x1442"
+      },
+      {
+       "number": 10,
+       "name": "Concord Connie",
+       "trainer": "Charlotte Littlefield",
+       "jockey": "Craig Williams",
+       "weight_kg": 56.5,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 5.5,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 2x111x23"
+      },
+      {
+       "number": 11,
+       "name": "Pillow Fight",
+       "trainer": "Bjorn Baker",
+       "jockey": "William Pike",
+       "weight_kg": 56.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": {
+        "source": "races.com.au (Ladbrokes fixed odds)",
+        "price": 35.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x67222x652"
+      }
+     ]
+    },
+    {
+     "number": 9,
+     "name": "Asahi Super Dry Sprint",
+     "distance_m": 1100,
+     "class": "Group 3",
+     "start_time": "17:40",
+     "runners": [
+      {
+       "number": 1,
+       "name": "Geegees Mistruth",
+       "trainer": "Mark Walker",
+       "jockey": "William Pike",
+       "weight_kg": 59.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures x3N721x558"
+      },
+      {
+       "number": 2,
+       "name": "Generosity",
+       "trainer": "Chris Waller",
+       "jockey": "Mark Zahra",
+       "weight_kg": 58.0,
+       "barrier": 18,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 37x156x780"
+      },
+      {
+       "number": 3,
+       "name": "Inkaruna",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Craig Williams",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 1x2200x433"
+      },
+      {
+       "number": 4,
+       "name": "Flying For Fun",
+       "trainer": "Bryce Heys",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": {
+        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "price": 2.4,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 71x1949x72"
+      },
+      {
+       "number": 5,
+       "name": "Naifah",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 235x3151x2"
+      },
+      {
+       "number": 6,
+       "name": "Thanks Gorgeous",
+       "trainer": "Mark & Levi Kavanagh",
+       "jockey": "Jye McNeil",
+       "weight_kg": 56.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 4117210x86"
+      },
+      {
+       "number": 7,
+       "name": "Hearcomesthestar",
+       "trainer": "John Moloney",
+       "jockey": "Beau Mertens",
+       "weight_kg": 56.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 27x331x057"
+      },
+      {
+       "number": 8,
+       "name": "Precious Charm",
+       "trainer": "Symon Wilde",
+       "jockey": "Jett Stanley",
+       "weight_kg": 56.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 515178950x"
+      },
+      {
+       "number": 9,
+       "name": "Gentle Steel",
+       "trainer": "Julius Sandhu",
+       "jockey": "Jamie Mott",
+       "weight_kg": 56.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 4x111496x1"
+      },
+      {
+       "number": 10,
+       "name": "Bridal Waltz",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Ben Melham",
+       "weight_kg": 55.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 23x172x223"
+      },
+      {
+       "number": 11,
+       "name": "Eagle Express",
+       "trainer": "Chris Waller",
+       "jockey": "Jason Collett",
+       "weight_kg": 55.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": {
+        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "price": 21.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures x16678x124"
+      },
+      {
+       "number": 12,
+       "name": "Xarpo",
+       "trainer": "Simon Zahra",
+       "jockey": "Ryan Houston (a)",
+       "weight_kg": 55.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 2x1239286x"
+      },
+      {
+       "number": 13,
+       "name": "Swift Force",
+       "trainer": "John Keys",
+       "jockey": "Craig Newitt",
+       "weight_kg": 55.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 1x121x14x2"
+      },
+      {
+       "number": 14,
+       "name": "Silver Wedding",
+       "trainer": "Ciaron Maher",
+       "jockey": "Harry Coffey",
+       "weight_kg": 55.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": {
+        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "price": 21.0,
+        "as_of": "2026-10-30"
+       },
+       "form_summary": "Last-10 figures 1128x135x9"
+      },
+      {
+       "number": 15,
+       "name": "Photograph",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 6446x2x263"
+      },
+      {
+       "number": 16,
+       "name": "Agarwood",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "Logan Bates (a)",
+       "weight_kg": 55.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 0x242784x0"
+      },
+      {
+       "number": 17,
+       "name": "Nepo Baby",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 55.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": "Last-10 figures 1x33228x73"
+      },
+      {
+       "number": 18,
+       "name": "Tres Magnifique",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Michael Dee",
+       "weight_kg": 55.0,
+       "barrier": 5,
+       "scratched": true,
+       "odds": null,
+       "form_summary": "Last-10 figures 0x1116x223"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "meeting": {
+    "track": "Flemington",
+    "date": "2026-11-03",
+    "going": null,
+    "rail": null,
+    "timezone": "Australia/Melbourne",
+    "source": "racingaustralia.horse FreeFields (Acceptances/Form, final fields published Fri 30-Oct-26 1:51PM AEDT; Weights for Race 7); vrc.com.au Lexus Melbourne Cup Day page"
+   },
+   "races": [
+    {
+     "number": 1,
+     "name": "Darley Maribyrnong Plate",
+     "distance_m": 1000,
+     "class": "Group 3",
+     "start_time": "10:45",
+     "runners": [
+      {
+       "number": 1,
+       "name": "ROYAL PRESS",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Jye McNeil",
+       "weight_kg": 58.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "AMSTERDAM",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 58.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "JETSETTER",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "Luke Currie",
+       "weight_kg": 58.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "LUMINEUX",
+       "trainer": "Ben Brisbourne",
+       "jockey": "Craig Williams",
+       "weight_kg": 58.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "SPEEDBOATCONFESION",
+       "trainer": "Simon Zahra",
+       "jockey": "Jordan Childs",
+       "weight_kg": 58.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "AMELIA’S AFFAIR",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Damian Lane",
+       "weight_kg": 56.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "FUNDED",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Ben Melham",
+       "weight_kg": 56.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "LA LA LILLY",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Michael Dee",
+       "weight_kg": 56.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "RAIN BENDER",
+       "trainer": "Ben Brisbourne",
+       "jockey": "Lachlan King",
+       "weight_kg": 56.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 2,
+     "name": "Pin & Win Community Handicap",
+     "distance_m": 2000,
+     "class": "Benchmark 80",
+     "start_time": "11:20",
+     "runners": [
+      {
+       "number": 1,
+       "name": "MILITARY ACADEMY (GB)",
+       "trainer": "Jane Chapple-Hyam",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 65.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "FOUJITA SAN",
+       "trainer": "Shane Jackson",
+       "jockey": "Mark Zahra",
+       "weight_kg": 62.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "CHARISSE",
+       "trainer": "Gerard Moloney",
+       "jockey": "Patrick Moloney",
+       "weight_kg": 61.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "FLYING VALLEY",
+       "trainer": "Ciaron Maher",
+       "jockey": "Tommy Berry",
+       "weight_kg": 60.5,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "POLITELY DUN",
+       "trainer": "Danny O'Brien",
+       "jockey": "Blake Shinn",
+       "weight_kg": 60.5,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "SHAIYHAR (IRE)",
+       "trainer": "Olivia Osborne",
+       "jockey": "Luke Nolen",
+       "weight_kg": 60.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "JOHNICH",
+       "trainer": "Jason Warren",
+       "jockey": "Harry Coffey",
+       "weight_kg": 60.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "FEDERER",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ben Allen",
+       "weight_kg": 59.5,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "UNSEEN RULER (NZ)",
+       "trainer": "Matthew Williams",
+       "jockey": "Dean Yendall",
+       "weight_kg": 59.5,
+       "barrier": 19,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "CHISPA (NZ)",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 58.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "DAD AND DAVE (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Jabez Johnstone (a)",
+       "weight_kg": 58.5,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "MR O’REILLY",
+       "trainer": "Richard Laming",
+       "jockey": "Logan Bates (a)",
+       "weight_kg": 57.5,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "YAUSON",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Jordan Childs",
+       "weight_kg": 57.5,
+       "barrier": 21,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "ICHNUSA",
+       "trainer": "Ciaron Maher",
+       "jockey": "Thomas Stockdale",
+       "weight_kg": 57.0,
+       "barrier": 20,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "INTERJECTION",
+       "trainer": "Simon Ryan",
+       "jockey": "Jamie Mott",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 16,
+       "name": "DUBAI WATCH",
+       "trainer": "Vincent Hall",
+       "jockey": "Luke Currie",
+       "weight_kg": 56.5,
+       "barrier": 22,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 17,
+       "name": "TERRORTORIAN",
+       "trainer": "Nick Ryan",
+       "jockey": "Billy Egan",
+       "weight_kg": 56.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 18,
+       "name": "CAELIUS",
+       "trainer": "Peter Gelagotis",
+       "jockey": "Ben Melham",
+       "weight_kg": 54.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 3,
+     "name": "TAB ONE POOL Trophy",
+     "distance_m": 1800,
+     "class": "Listed",
+     "start_time": "12:00",
+     "runners": [
+      {
+       "number": 1,
+       "name": "MISTER WHISKERS",
+       "trainer": "Charlotte Littlefield",
+       "jockey": "Jett Stanley",
+       "weight_kg": 57.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "STAR OF MACEDON",
+       "trainer": "John Symons & Sheila Laxon",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "TRUE TONE",
+       "trainer": "Chris Waller",
+       "jockey": "Damian Lane",
+       "weight_kg": 57.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "GILGEOUS",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Tommy Berry",
+       "weight_kg": 57.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "CAB FRANC (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Thomas Stockdale",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "KATOTO",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "WAIHEKE ROSE (NZ)",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Jordan Childs",
+       "weight_kg": 55.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "FRINGILLA",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Craig Williams",
+       "weight_kg": 55.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "TANABATA",
+       "trainer": "Chris Waller",
+       "jockey": "Zac Purton",
+       "weight_kg": 55.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "BILLYCART",
+       "trainer": "Taige Weir",
+       "jockey": "Dean Yendall",
+       "weight_kg": 55.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "STAR JE TAIME",
+       "trainer": "Danny O'Brien",
+       "jockey": "Billy Egan",
+       "weight_kg": 55.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 4,
+     "name": "The Schweppervescence Plate",
+     "distance_m": 1000,
+     "class": "3YO Set Weights plus Penalties (ungraded)",
+     "start_time": "12:40",
+     "runners": [
+      {
+       "number": 1,
+       "name": "BIG WIGS",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Blake Shinn",
+       "weight_kg": 57.5,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "THE SPEED MACHINE",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Thomas Stockdale",
+       "weight_kg": 57.5,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "OLE GO",
+       "trainer": "Michael Hickmott",
+       "jockey": "James McDonald",
+       "weight_kg": 57.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "PEYTON",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "Zac Lloyd",
+       "weight_kg": 57.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "ASTON",
+       "trainer": "Andrew Noblet",
+       "jockey": "Harry Coffey",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "SPLENDACIOUS",
+       "trainer": "Scott Cameron",
+       "jockey": "Damian Lane",
+       "weight_kg": 57.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "STRIKE PACKAGE",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "GIN TWIST",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Luke Currie",
+       "weight_kg": 56.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "JADZIA",
+       "trainer": "Grahame Begg",
+       "jockey": "Jordan Childs",
+       "weight_kg": 55.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "GAS STATION ROSE",
+       "trainer": "Alex Rae",
+       "jockey": "Craig Williams",
+       "weight_kg": 55.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "SEMANTICS",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Ethan Brown",
+       "weight_kg": 55.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "PARCAE",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Michael Dee",
+       "weight_kg": 55.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "FOVEA",
+       "trainer": "Bjorn Baker",
+       "jockey": "Ms Rachel King",
+       "weight_kg": 55.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "SOUTHERN SWAY",
+       "trainer": "Dominic Sutton",
+       "jockey": "Billy Egan",
+       "weight_kg": 55.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "SANCTUARY",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ethan Brown",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 5,
+     "name": "Australian Heritage Cup",
+     "distance_m": 2800,
+     "class": "Benchmark 96",
+     "start_time": "13:20",
+     "runners": [
+      {
+       "number": 1,
+       "name": "NEWLOOK (FR)",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Tommy Berry",
+       "weight_kg": 60.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "ATHABASCAN (FR)",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "Zac Lloyd",
+       "weight_kg": 59.5,
+       "barrier": 22,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "HIGHLAND BLING (IRE)",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Dylan Browne McMonagle",
+       "weight_kg": 59.5,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "TEMPESTI (ITY)",
+       "trainer": "Gavin Bedggood",
+       "jockey": "Jamie Mott",
+       "weight_kg": 59.5,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "JENNIVAMOOSE (NZ)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Mark Zahra",
+       "weight_kg": 59.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "NEWFOUNDLAND (IRE)",
+       "trainer": "Shane Jackson",
+       "jockey": "Declan Bates",
+       "weight_kg": 58.5,
+       "barrier": 18,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "TARAMANSOUR (IRE)",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Luke Currie",
+       "weight_kg": 58.5,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "ZARIR (IRE)",
+       "trainer": "Julius Sandhu",
+       "jockey": "Beau Mertens",
+       "weight_kg": 58.5,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "AUTUMN MYSTERY",
+       "trainer": "Rory Hunter",
+       "jockey": "Brad Rawiller",
+       "weight_kg": 57.5,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "AFTER SUMMER",
+       "trainer": "Dominic Sutton",
+       "jockey": "Billy Egan",
+       "weight_kg": 55.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "GRAND PIERRO",
+       "trainer": "Jason Warren",
+       "jockey": "Craig Williams",
+       "weight_kg": 55.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "SAM HAWKENS (IRE)",
+       "trainer": "John O'Shea & Tom Charlton",
+       "jockey": "Tim Clark",
+       "weight_kg": 55.5,
+       "barrier": 17,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "VEGAS JACK",
+       "trainer": "Craig Conron",
+       "jockey": "Dean Yendall",
+       "weight_kg": 54.5,
+       "barrier": 16,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "FARAG (NZ)",
+       "trainer": "Aaron Purcell",
+       "jockey": "Teo Nugent",
+       "weight_kg": 54.0,
+       "barrier": 20,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "SIR CHARTWELL (FR)",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 53.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 16,
+       "name": "BEACH PAD",
+       "trainer": "Shane Jackson",
+       "jockey": "William Pike",
+       "weight_kg": 53.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 17,
+       "name": "AUTUMNHEAT",
+       "trainer": "Matt Cumani",
+       "jockey": "Harry Coffey",
+       "weight_kg": 53.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 18,
+       "name": "BLACK PEPPERMINT",
+       "trainer": "Patrick Payne",
+       "jockey": "Michael Dee",
+       "weight_kg": 53.0,
+       "barrier": 21,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 6,
+     "name": "Asahi Super Dry Plate",
+     "distance_m": 1800,
+     "class": "Listed",
+     "start_time": "13:55",
+     "runners": [
+      {
+       "number": 1,
+       "name": "AUGUSTUS (GER)",
+       "trainer": "Ciaron Maher",
+       "jockey": "John Allen",
+       "weight_kg": 60.5,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "RELENTLESS VOYAGER (GB)",
+       "trainer": "Ciaron Maher",
+       "jockey": "Blake Shinn",
+       "weight_kg": 59.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "TAVI TIME (NZ)",
+       "trainer": "Kris Lees",
+       "jockey": "Ben Melham",
+       "weight_kg": 58.5,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "SABAJ",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Mark Zahra",
+       "weight_kg": 57.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "ST LAWRENCE (NZ)",
+       "trainer": "Gavin Bedggood",
+       "jockey": "James McDonald",
+       "weight_kg": 56.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "AL DUCA",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.5,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "WYMARK (NZ)",
+       "trainer": "Gavin Bedggood",
+       "jockey": "Jett Stanley",
+       "weight_kg": 55.5,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "IMMEDIACY (NZ)",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Tommy Berry",
+       "weight_kg": 54.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "AMBASSADORIAL",
+       "trainer": "Jane Chapple-Hyam",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 54.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "DARKBONEE",
+       "trainer": "Symon Wilde",
+       "jockey": "Craig Williams",
+       "weight_kg": 54.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "MAGNASPIN",
+       "trainer": "Leon & Troy Corstens & Will Larkin",
+       "jockey": "Declan Bates",
+       "weight_kg": 54.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "REAL CLASS (NZ)",
+       "trainer": "Clinton McDonald",
+       "jockey": null,
+       "weight_kg": 54.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "NEW YORK HURRICANE",
+       "trainer": "Liam Howley",
+       "jockey": "Ms Alana Kelly",
+       "weight_kg": 54.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "DIFFERENT GRAVY",
+       "trainer": "Henry Dwyer",
+       "jockey": null,
+       "weight_kg": 54.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 7,
+     "name": "Lexus Melbourne Cup",
+     "distance_m": 3200,
+     "class": "Group 1",
+     "start_time": "15:00",
+     "note": "Race 7 by elimination (final fields published for races 1-6 and 8-10 only; Cup is the only remaining race). Cup final field and barriers not yet published (expected after Saturday 31 Oct acceptances). Guide sites say 3:00pm but not confirmed on an official race card.",
+     "runners": []
+    },
+    {
+     "number": 8,
+     "name": "Crown Amanda Elliott",
+     "distance_m": 1400,
+     "class": "Listed",
+     "start_time": "15:50",
+     "runners": [
+      {
+       "number": 1,
+       "name": "MILSONS POINT",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ben Allen",
+       "weight_kg": 59.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "BARRACKS",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ethan Brown",
+       "weight_kg": 58.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "OUR EMPEROR",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Tim Clark",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "BEAUTIFUL YOU (NZ)",
+       "trainer": "Annabel & Rob Archibald",
+       "jockey": "Daniel Stackhouse",
+       "weight_kg": 54.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "RANARSSON",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Ben Melham",
+       "weight_kg": 54.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "HIGH FALLS",
+       "trainer": "Shane Jackson",
+       "jockey": "John Allen",
+       "weight_kg": 54.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "TOLAGA BAY",
+       "trainer": "Mark Walker",
+       "jockey": "Craig Williams",
+       "weight_kg": 54.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "SHOOTING BRAKE",
+       "trainer": "Dominic Sutton",
+       "jockey": "Billy Egan",
+       "weight_kg": 54.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "HARRY LIME",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Ms Rachel King",
+       "weight_kg": 54.0,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "OBAMBULATE",
+       "trainer": "Trent Busuttin & Natalie Young",
+       "jockey": "Tommy Berry",
+       "weight_kg": 54.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "AUTUMN LOVER",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Luke Nolen",
+       "weight_kg": 54.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "MERRY CHASE",
+       "trainer": "Clinton McDonald",
+       "jockey": "Beau Mertens",
+       "weight_kg": 54.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "MR NATURAL",
+       "trainer": "Lindsey Smith",
+       "jockey": "Damian Lane",
+       "weight_kg": 54.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "THE THORNCASTER",
+       "trainer": "Ciaron Maher",
+       "jockey": "Zac Lloyd",
+       "weight_kg": 54.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "BOY FROM ZADAR",
+       "trainer": "Paul Koumis",
+       "jockey": "Craig Newitt",
+       "weight_kg": 54.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 9,
+     "name": "The Hong Kong Jockey Club Stakes",
+     "distance_m": 1400,
+     "class": "Group 3",
+     "start_time": "16:35",
+     "runners": [
+      {
+       "number": 1,
+       "name": "STYLISH",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Ethan Brown",
+       "weight_kg": 58.0,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "SHADHAVAR",
+       "trainer": "Tom Dabernig",
+       "jockey": "Craig Williams",
+       "weight_kg": 58.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "OH TOO GOOD",
+       "trainer": "Kevin Daffy",
+       "jockey": "Damian Lane",
+       "weight_kg": 57.0,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "DANCE TO THE BOOM",
+       "trainer": "Bjorn Baker",
+       "jockey": "Ms Rachel King",
+       "weight_kg": 57.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "MISS FREELOVE",
+       "trainer": "Peter Snowden",
+       "jockey": "Blake Shinn",
+       "weight_kg": 56.0,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "RUSKA ROMA",
+       "trainer": "Grahame Begg",
+       "jockey": "Jordan Childs",
+       "weight_kg": 56.0,
+       "barrier": 16,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "SO YOU PENCE",
+       "trainer": "Matthew Dale",
+       "jockey": "Tommy Berry",
+       "weight_kg": 55.0,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "TERILEE",
+       "trainer": "Michael Kent",
+       "jockey": "William Pike",
+       "weight_kg": 55.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "BETWITCHERY",
+       "trainer": "Leon & Troy Corstens & Will Larkin",
+       "jockey": "Luke Currie",
+       "weight_kg": 55.0,
+       "barrier": 17,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "BON MISTRESS",
+       "trainer": "Ken & Kasey Keys",
+       "jockey": "Jett Stanley",
+       "weight_kg": 55.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "GOLD MEDALLIST",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Luke Nolen",
+       "weight_kg": 55.0,
+       "barrier": 18,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "BUTTERNUT PRINCESS",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Ben Melham",
+       "weight_kg": 55.0,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "STEALTH OF NIGHT (IRE)",
+       "trainer": "Ben, Will & JD Hayes",
+       "jockey": "Zac Lloyd",
+       "weight_kg": 55.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "MILOS FILOS",
+       "trainer": "Liam Howley",
+       "jockey": "Ms Alana Kelly",
+       "weight_kg": 55.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "TOMATO TOASTIE",
+       "trainer": "Gai Waterhouse & Adrian Bott",
+       "jockey": "Tim Clark",
+       "weight_kg": 55.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 16,
+       "name": "YOU SEXY THING",
+       "trainer": "Travis Doudle",
+       "jockey": "Ben Price",
+       "weight_kg": 55.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    },
+    {
+     "number": 10,
+     "name": "Channel 9 Trophy",
+     "distance_m": 1400,
+     "class": "Benchmark 90",
+     "start_time": "17:15",
+     "runners": [
+      {
+       "number": 1,
+       "name": "BUCCLEUCH",
+       "trainer": "Patrick Payne",
+       "jockey": "Billy Egan",
+       "weight_kg": 60.5,
+       "barrier": 4,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 2,
+       "name": "KEEP YOUR COOL",
+       "trainer": "Ciaron Maher",
+       "jockey": "Ben Melham",
+       "weight_kg": 57.0,
+       "barrier": 10,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 3,
+       "name": "PORTER",
+       "trainer": "Danny O'Brien",
+       "jockey": "Blake Shinn",
+       "weight_kg": 56.5,
+       "barrier": 8,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 4,
+       "name": "SPACE RIDER",
+       "trainer": "Mick Price & Michael Kent (Jnr)",
+       "jockey": "Mark Zahra",
+       "weight_kg": 56.5,
+       "barrier": 3,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 5,
+       "name": "SURF’S UP",
+       "trainer": "Chris Waller",
+       "jockey": "James McDonald",
+       "weight_kg": 56.0,
+       "barrier": 9,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 6,
+       "name": "HE’LL RIP",
+       "trainer": "Leon & Troy Corstens & Will Larkin",
+       "jockey": "Ben Allen",
+       "weight_kg": 55.5,
+       "barrier": 11,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 7,
+       "name": "JETT SMASH",
+       "trainer": "Danny O'Brien",
+       "jockey": "Damian Lane",
+       "weight_kg": 55.5,
+       "barrier": 14,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 8,
+       "name": "CASH",
+       "trainer": "Michael Hickmott",
+       "jockey": "Ethan Brown",
+       "weight_kg": 55.0,
+       "barrier": 1,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 9,
+       "name": "FERIVIA",
+       "trainer": "Phillip & Tommy Stokes",
+       "jockey": "Ms Jamie Melham",
+       "weight_kg": 55.0,
+       "barrier": 6,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 10,
+       "name": "MAN OF WORTH (IRE)",
+       "trainer": "Chris Waller",
+       "jockey": null,
+       "weight_kg": 54.5,
+       "barrier": 5,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 11,
+       "name": "QUISEEN",
+       "trainer": "Archie Alexander",
+       "jockey": "Craig Williams",
+       "weight_kg": 54.0,
+       "barrier": 2,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 12,
+       "name": "EVERAIN",
+       "trainer": "Anthony & Sam Freedman",
+       "jockey": "Zac Lloyd",
+       "weight_kg": 54.0,
+       "barrier": 13,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 13,
+       "name": "NO FUSS (NZ)",
+       "trainer": "Tony & Calvin McEvoy",
+       "jockey": "John Allen",
+       "weight_kg": 54.0,
+       "barrier": 12,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 14,
+       "name": "FUNDAMENTAL NATURE",
+       "trainer": "Ciaron Maher",
+       "jockey": "William Pike",
+       "weight_kg": 54.0,
+       "barrier": 15,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      },
+      {
+       "number": 15,
+       "name": "ITAZURA",
+       "trainer": "Peter G Moody & Katherine Coleman",
+       "jockey": "Luke Nolen",
+       "weight_kg": 54.0,
+       "barrier": 7,
+       "scratched": false,
+       "odds": null,
+       "form_summary": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "meeting": {
+    "track": "Flemington",
+    "date": "2026-11-05",
+    "going": null,
+    "rail": null,
+    "timezone": "Australia/Melbourne",
+    "source": "racingaustralia.horse FreeFields Nominations (published Fri 30-Oct-26 12:37PM AEDT); vrc.com.au Crown Oaks Day page"
+   },
+   "races": []
+  },
+  {
+   "meeting": {
+    "track": "Flemington",
+    "date": "2026-11-07",
+    "going": null,
+    "rail": null,
+    "timezone": "Australia/Melbourne",
+    "source": "vrc.com.au TAB Champions Stakes Day (2026-2027) page; Racing Australia nominations not yet published"
+   },
+   "races": []
+  }
+ ]
+}

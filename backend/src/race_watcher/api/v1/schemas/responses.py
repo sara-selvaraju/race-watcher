@@ -112,6 +112,7 @@ class MovementAlertOut(_ApiBase):
 
 class StatusOut(_ApiBase):
     race_date: date
+    race_date_end: date
     odds_source: str
     race_card_source: str
     prediction_engine: str

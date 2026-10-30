@@ -26,10 +26,11 @@ def status(session: Session = SessionDep) -> StatusOut:
     now = datetime.now(UTC)
     in_win = any(
         in_race_window(mt, now=now)
-        for mt in race_repo.list_meetings_by_date(session, settings.race_date)
+        for mt in race_repo.list_meetings_between(session, *settings.race_days)
     )
     return StatusOut(
         race_date=settings.race_date,
+        race_date_end=settings.race_days[1],
         odds_source=settings.odds_source,
         race_card_source=settings.race_card_source,
         prediction_engine=settings.prediction_engine,

@@ -29,6 +29,20 @@ def list_meetings_by_date(
     return list(session.scalars(stmt).all())
 
 
+def list_meetings_between(
+    session: Session, start: date, end: date, meeting_id: int | None = None
+) -> list[m.Meeting]:
+    """Every meeting from `start` to `end` inclusive (a carnival's race days), ordered by date."""
+    stmt = (
+        _meeting_query()
+        .where(m.Meeting.date >= start, m.Meeting.date <= end)
+        .order_by(m.Meeting.date, m.Meeting.id)
+    )
+    if meeting_id is not None:
+        stmt = stmt.where(m.Meeting.id == meeting_id)
+    return list(session.scalars(stmt).all())
+
+
 def get_meeting_by_date(session: Session, on_date: date) -> m.Meeting | None:
     meetings = list_meetings_by_date(session, on_date)
     return meetings[0] if meetings else None

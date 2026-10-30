@@ -141,7 +141,7 @@ def summarize_all(
 
     now = now or datetime.now(UTC)
     written = unchanged = failed = 0
-    for meeting in race_repo.list_meetings_by_date(session, settings.race_date, meeting_id):
+    for meeting in race_repo.list_meetings_between(session, *settings.race_days, meeting_id):
         for race in meeting.races:
             if has_jumped(meeting, race, now):
                 continue

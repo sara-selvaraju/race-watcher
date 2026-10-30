@@ -55,7 +55,7 @@ def refresh_all_races(session: Session, adapter, meeting_id: int | None = None) 
         log.warning("top_picks.adapter_not_supported", adapter=adapter.name)
         return {"races": 0, "picks": 0, "skipped": "adapter_not_supported"}
 
-    meetings = race_repo.list_meetings_by_date(session, settings.race_date, meeting_id)
+    meetings = race_repo.list_meetings_between(session, *settings.race_days, meeting_id)
     if not meetings:
         return {"races": 0, "picks": 0, "skipped": "no_meeting"}
 

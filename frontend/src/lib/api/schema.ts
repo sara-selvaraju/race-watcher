@@ -30,7 +30,7 @@ export interface paths {
         };
         /**
          * Get Today Meeting
-         * @description First meeting on the race date. Kept for older clients — prefer /meetings/today.
+         * @description First meeting on the first race day. Kept for older clients — prefer /meetings.
          */
         get: operations["get_today_meeting_api_v1_meeting_today_get"];
         put?: never;
@@ -58,6 +58,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/meetings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Meetings
+         * @description Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date.
+         */
+        get: operations["list_meetings_api_v1_meetings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/meetings/today": {
         parameters: {
             query?: never;
@@ -67,7 +87,7 @@ export interface paths {
         };
         /**
          * List Today Meetings
-         * @description Every meeting on the race date (one per track).
+         * @description Alias of /meetings, kept for older clients.
          */
         get: operations["list_today_meetings_api_v1_meetings_today_get"];
         put?: never;
@@ -441,6 +461,11 @@ export interface components {
              * Format: date
              */
             race_date: string;
+            /**
+             * Race Date End
+             * Format: date
+             */
+            race_date_end: string;
             /** Odds Source */
             odds_source: string;
             /** Race Card Source */
@@ -567,6 +592,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_meetings_api_v1_meetings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingOut"][];
                 };
             };
         };

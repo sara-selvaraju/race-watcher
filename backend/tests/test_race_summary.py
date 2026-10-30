@@ -37,11 +37,12 @@ class _FakeSummarizer:
 @pytest.fixture
 def session(tiny_seed: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(settings, "race_date", datetime(2026, 6, 20).date())
+    monkeypatch.setattr(settings, "race_date_end", None)
     engine = create_engine("sqlite://")
     Base.metadata.create_all(engine)
     with Session(engine) as s:
         ingest_meetings(s, SeedFileAdapter(path=tiny_seed))
-        for meeting in race_repo.list_meetings_by_date(s, settings.race_date):
+        for meeting in race_repo.list_meetings_between(s, *settings.race_days):
             for race in meeting.races:
                 run_predictions_for_race(s, race, HeuristicEngine())
         s.commit()
@@ -49,7 +50,7 @@ def session(tiny_seed: Path, monkeypatch: pytest.MonkeyPatch):
 
 
 def test_facts_list_heuristic_picks_in_rank_order(session: Session) -> None:
-    meeting = race_repo.list_meetings_by_date(session, settings.race_date)[0]
+    meeting = race_repo.list_meetings_between(session, *settings.race_days)[0]
     facts = build_facts(session, meeting, meeting.races[0])
     assert "Picks from: heuristic rating" in facts
     assert facts.index("Pick 1: Alpha (1)") < facts.index("Pick 2: Bravo (2)")
@@ -83,3 +84,19 @@ def test_form_figures_are_read_most_recent_first() -> None:
     )
     assert describe_form("Last 10: 6x50") == "most recent first: 10th or worse, 5th, spell, 6th"
     assert describe_form("Strong wet-track form.") == "Strong wet-track form."
+
+
+def test_race_day_window_spans_carnival_days(
+    session: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    later = m.Meeting(
+        track="Flemington", date=datetime(2026, 6, 23).date(), going=None, rail=None,
+        timezone="Australia/Melbourne", source="test",
+    )
+    session.add(later)
+    session.flush()
+    assert len(race_repo.list_meetings_between(session, *settings.race_days)) == 1
+
+    monkeypatch.setattr(settings, "race_date_end", datetime(2026, 6, 23).date())
+    dates = [mt.date for mt in race_repo.list_meetings_between(session, *settings.race_days)]
+    assert dates == [datetime(2026, 6, 20).date(), datetime(2026, 6, 23).date()]

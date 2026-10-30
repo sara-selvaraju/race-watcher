@@ -90,7 +90,7 @@ export function RefreshBar({ meetingId, track }: Props) {
         update(i, { status: "done", summary: STEPS[i].summarize(data as Record<string, unknown>) });
         // Invalidate after each step so the UI updates progressively as data lands.
         await Promise.all(
-          ["meeting", "alerts", "status"].map((k) => qc.invalidateQueries({ queryKey: [k] })),
+          ["meetings", "alerts", "status"].map((k) => qc.invalidateQueries({ queryKey: [k] })),
         );
       } catch (err) {
         update(i, { status: "error", error: err instanceof Error ? err.message.slice(0, 120) : "failed" });
