@@ -63,6 +63,10 @@ There are three services and a database:
     race or two priced). Each price is stored as a new snapshot, never overwriting the old ones,
     and a move of 10% or more against the same bookmaker's earlier price is recorded as an alert.
     With no race in its build-up, it does nothing and costs nothing.
+  - **Morning check, 9:15am Melbourne time on race days** (`ODDS_CHECK_TIMES`). Prices every
+    race on the day's card, whatever its start time, so the board reflects the market after the
+    big early-morning money. These become the day's opening prices that later moves are
+    measured against.
   - **Ratings and notes, every 10 minutes.** Re-rates the runners using the latest prices, then
     rewrites the note for any race whose prices, picks or field have changed. Races that haven't
     changed are skipped, so this costs nothing when the market is quiet.
@@ -212,13 +216,15 @@ All settings are environment variables; `.env.example` lists them with comments.
 | `OPENROUTER_RESEARCH_MODEL` | Model for picks and missing runners |
 | `ADMIN_TOKEN` | Secret for the `/admin` endpoints and the Refresh button. **Set this in production** |
 | `POLL_INTERVAL_SECONDS` | How often the worker fetches odds during a race day (default 900, 15 minutes) |
+| `ODDS_CHECK_TIMES` | Fixed times each race day to price the whole card (default `09:15`, Melbourne time) |
 | `MOVEMENT_THRESHOLD_PCT` | Price move that counts as an alert (default 10) |
 | `NEXT_PUBLIC_API_BASE_URL` | The API's address, for the website (baked in at build time) |
 
 ### What it costs
 
 Odds fetching is one web-search LLM call per race every 15 minutes during its 2-hour build-up,
-so about 8 calls per race, or around 70 for a 9-race day. Notes only call the LLM when a race's
+so about 8 calls per race, plus one per race for the 9:15 morning check: around 80 for a 9-race
+day. Notes only call the LLM when a race's
 facts change. A full Refresh makes one odds call per race still to run, plus one research call
 per race for picks and another for missing runners.
 Check your usage on OpenRouter; raising `POLL_INTERVAL_SECONDS` is the main way to spend less.

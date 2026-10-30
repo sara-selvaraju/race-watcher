@@ -112,3 +112,17 @@ def test_moves_only_compare_prices_from_the_same_bookmaker(session: Session) -> 
     assert alert_repo.list_recent_alerts(session) == []
     poll_once(session, Odds("TAB", "3.00"), now=when)  # TAB 4.00 -> 3.00: a 25% firm
     assert [a.direction for a in alert_repo.list_recent_alerts(session)] == ["firm"]
+
+
+def test_race_day_check_prices_every_race_on_that_day_only(
+    session: Session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from race_watcher.services.poller import poll_race_day
+
+    odds = _CountingOdds()
+    # 9:15 Melbourne on race day: hours before R1's window opens, but the check prices it anyway.
+    poll_race_day(session, odds, datetime(2026, 6, 20).date(), now=datetime(2026, 6, 19, 23, 15, tzinfo=UTC))
+    assert odds.races_asked == [1]
+    odds.races_asked.clear()
+    poll_race_day(session, odds, datetime(2026, 6, 21).date())
+    assert odds.races_asked == []

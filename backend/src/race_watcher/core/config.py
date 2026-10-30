@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     # How often the worker fetches live odds while a race day is on. Each fetch is one
     # web-search LLM call per meeting, so this is the main cost dial.
     poll_interval_seconds: int = Field(default=900, alias="POLL_INTERVAL_SECONDS")
+    # Fixed times (HH:MM in TZ, comma-separated) on each race day when every race still to run is
+    # priced, whatever its start time. 09:15 catches the market after the big morning money.
+    odds_check_times: str = Field(default="09:15", alias="ODDS_CHECK_TIMES")
     movement_threshold_pct: float = Field(default=10.0, alias="MOVEMENT_THRESHOLD_PCT")
     race_window_open_min_before: int = Field(default=120, alias="RACE_WINDOW_OPEN_MIN_BEFORE")
     race_window_close_min_after: int = Field(default=15, alias="RACE_WINDOW_CLOSE_MIN_AFTER")

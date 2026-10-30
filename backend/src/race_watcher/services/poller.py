@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from zoneinfo import ZoneInfo
 
@@ -64,6 +64,21 @@ def poll_once(
             log.info("poller.outside_window", track=meeting.track)
             continue
         result = _poll_meeting(session, odds, meeting, now=now, force=force)
+        snapshots += result["snapshots"]
+        alerts += result["alerts"]
+    return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}
+
+
+def poll_race_day(session: Session, odds: OddsSource, on_date: date, *, now: datetime | None = None) -> dict:
+    """Price every race still to run at the watched meetings on `on_date`, ignoring race windows.
+
+    Used for the fixed morning check: one request per race, like a Refresh.
+    """
+    now = now or datetime.now(UTC)
+    snapshots = alerts = 0
+    meetings = [mt for mt in watched_meetings(session) if mt.date == on_date]
+    for meeting in meetings:
+        result = _poll_meeting(session, odds, meeting, now=now, force=True)
         snapshots += result["snapshots"]
         alerts += result["alerts"]
     return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}

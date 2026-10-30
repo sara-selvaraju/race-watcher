@@ -3,6 +3,7 @@ from __future__ import annotations
 import signal
 import time
 from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -12,7 +13,7 @@ from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.core.watchlist import watchlist
 from race_watcher.db.session import SessionLocal
 from race_watcher.services.ingest import ingest_meetings
-from race_watcher.services.poller import poll_once
+from race_watcher.services.poller import poll_once, poll_race_day
 from race_watcher.services.predictions import run_predictions_for_race
 from race_watcher.services.race_summary import has_jumped, summarize_all
 from race_watcher.services.watched import watched_meetings, watched_races
@@ -88,6 +89,19 @@ def _poll_odds() -> None:
     log.info("worker.odds", **result)
 
 
+def _odds_check() -> None:
+    """Fixed-time check (ODDS_CHECK_TIMES): price every race on today's card, whatever its start."""
+    try:
+        adapter = get_odds_source()
+    except Exception as exc:  # missing API key etc. — keep the worker alive
+        log.warning("worker.odds_adapter_unavailable", error=str(exc))
+        return
+    today = datetime.now(ZoneInfo(settings.tz)).date()
+    with SessionLocal() as session:
+        result = poll_race_day(session, adapter, today)
+    log.info("worker.odds_check", day=str(today), **result)
+
+
 def main() -> None:
     log.info(
         "worker.boot",
@@ -95,6 +109,7 @@ def main() -> None:
         odds_source=settings.odds_source,
         prediction_engine=settings.prediction_engine,
         poll_every_min=settings.poll_interval_seconds // 60,
+        odds_checks=settings.odds_check_times,
     )
 
     _ensure_meeting_loaded()
@@ -122,6 +137,21 @@ def main() -> None:
         coalesce=True,
         next_run_time=datetime.now(UTC),
     )
+    # Fixed daily checks, e.g. 09:15 Melbourne time. On days with no watched meeting they find
+    # nothing to price and cost nothing.
+    for hhmm in filter(None, (t.strip() for t in settings.odds_check_times.split(","))):
+        hour, minute = (int(x) for x in hhmm.split(":"))
+        sched.add_job(
+            _odds_check,
+            "cron",
+            hour=hour,
+            minute=minute,
+            timezone=ZoneInfo(settings.tz),
+            id=f"odds_check_{hour:02d}{minute:02d}",
+            max_instances=1,
+            coalesce=True,
+            misfire_grace_time=30 * 60,
+        )
     sched.start()
     log.info("worker.scheduled")
 
