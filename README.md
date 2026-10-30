@@ -211,3 +211,7 @@ frontend/
     components/     race nav, next to jump, picks, field, movement feed, refresh bar
     lib/            API client (generated), time and track helpers
 ```
+
+## Licence
+
+MIT. See [LICENSE](LICENSE).
