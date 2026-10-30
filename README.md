@@ -7,6 +7,8 @@ reasoning, and a short plain-English note on why those runners are the picks.
 It's currently set up for the 2026 Flemington Spring Carnival: Derby Day, Melbourne Cup Day,
 Oaks Day and Stakes Day.
 
+![Race Watcher showing Derby Day: next to jump, the race days, and the top picks with a race note](docs/screenshot.png)
+
 > **Not betting advice.** Ratings come from a simple, explainable heuristic, not a trained model,
 > and the odds and tips are gathered by an LLM doing web searches, which can be wrong or stale.
 > If gambling is causing you harm, call Gambling Help on 1800 858 858.
