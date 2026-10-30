@@ -23,9 +23,11 @@ Oaks Day and Stakes Day.
 - **Race days and races.** One tab per race day (or per track, when several tracks race on the
   same day), and every race on the card, run or not.
 - **Next to jump.** A live countdown to the next race, in Melbourne time and in yours.
-- **Odds.** Current win prices for every runner, fetched every 15 minutes while a race day is on,
-  kept as a history so you can see who's firming and who's drifting. Big moves (10% or more) show
-  up in a movement feed.
+- **Odds.** Fixed-odds win prices for every runner from one bookmaker (TAB, else Sportsbet, else
+  Ladbrokes), checked every 15 minutes in the 2 hours before each race and kept as a history so
+  you can see who's firming and who's drifting.
+- **Market moves.** Any price move of 10% or more, for the race on screen or across all races.
+  Moves only compare a bookmaker's price with its own earlier prices.
 - **Ratings.** A win chance and rating for each runner, recomputed as prices change.
 - **Top picks.** Three picks per race from web research, with numbered links to the sources.
 - **Race notes.** A short summary of why the picks are the picks, written from the prices, form
@@ -56,10 +58,11 @@ There are three services and a database:
   token.
 - **Worker** (`backend/src/race_watcher/worker/main.py`). A small always-on process with two timed
   jobs:
-  - **Odds, every 15 minutes.** Only does anything while a race day is "on": from 2 hours before
-    its first race to 15 minutes after its last. It asks for prices for the races still to run,
-    stores each one as a new snapshot (never overwriting the old ones), and records an alert when
-    a price moves 10% or more.
+  - **Odds, every 15 minutes.** Picks out the watched races jumping in the next 2 hours and sends
+    one web-search request per race (a whole day in one request came back with only the first
+    race or two priced). Each price is stored as a new snapshot, never overwriting the old ones,
+    and a move of 10% or more against the same bookmaker's earlier price is recorded as an alert.
+    With no race in its build-up, it does nothing and costs nothing.
   - **Ratings and notes, every 10 minutes.** Re-rates the runners using the latest prices, then
     rewrites the note for any race whose prices, picks or field have changed. Races that haven't
     changed are skipped, so this costs nothing when the market is quiet.
@@ -73,7 +76,7 @@ There are three services and a database:
 | Data | Source |
 |---|---|
 | Race card: races, fields, barriers, weights, jockeys, trainers, form figures | A JSON file in `backend/seed/`, put together from published final fields before each race day |
-| Live odds | An LLM with web search via [OpenRouter](https://openrouter.ai) (default `anthropic/claude-sonnet-4.5` with `:online`) |
+| Live odds | Fixed-odds win prices from one bookmaker per race (TAB, else Sportsbet, else Ladbrokes), found by an LLM with web search via [OpenRouter](https://openrouter.ai) (default `anthropic/claude-sonnet-4.5` with `:online`) |
 | Top picks and their sources | [Perplexity Sonar](https://openrouter.ai/perplexity/sonar-pro) via OpenRouter |
 | Runners missing from the card | Perplexity Sonar; these are marked "unverified" on the site |
 | Race notes | The same LLM without web search, given only facts from the database |
@@ -214,9 +217,10 @@ All settings are environment variables; `.env.example` lists them with comments.
 
 ### What it costs
 
-Odds fetching is one web-search LLM call per race day every 15 minutes, for about 7–8 hours, so
-around 30 calls a day. Notes only call the LLM when a race's facts change. A full Refresh makes
-one call for odds plus one research call per race for picks and another for missing runners.
+Odds fetching is one web-search LLM call per race every 15 minutes during its 2-hour build-up,
+so about 8 calls per race, or around 70 for a 9-race day. Notes only call the LLM when a race's
+facts change. A full Refresh makes one odds call per race still to run, plus one research call
+per race for picks and another for missing runners.
 Check your usage on OpenRouter; raising `POLL_INTERVAL_SECONDS` is the main way to spend less.
 
 ## Deploying

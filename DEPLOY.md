@@ -36,7 +36,8 @@ the `api` and `worker` services.
   set `POLL_INTERVAL_SECONDS` to fetch odds more or less often (default 900).
 
 On start, the worker loads the race card if nothing is loaded for the race days yet. It then runs
-two jobs: odds every 15 minutes during race hours, and ratings plus notes every 10 minutes.
+two jobs: odds every 15 minutes for races jumping in the next 2 hours (one request per race),
+and ratings plus notes every 10 minutes.
 
 ## 4. `web` service
 
