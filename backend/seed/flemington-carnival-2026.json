@@ -1915,7 +1915,7 @@
        "barrier": 16,
        "scratched": false,
        "odds": {
-        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "source": "justhorseracing.com.au tips",
         "price": 2.4,
         "as_of": "2026-10-30"
        },
@@ -1996,7 +1996,7 @@
        "barrier": 6,
        "scratched": false,
        "odds": {
-        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "source": "justhorseracing.com.au tips",
         "price": 21.0,
         "as_of": "2026-10-30"
        },
@@ -2033,7 +2033,7 @@
        "barrier": 2,
        "scratched": false,
        "odds": {
-        "source": "justhorseracing.com.au tips (bookmaker not named)",
+        "source": "justhorseracing.com.au tips",
         "price": 21.0,
         "as_of": "2026-10-30"
        },
@@ -2546,7 +2546,7 @@
      "number": 4,
      "name": "The Schweppervescence Plate",
      "distance_m": 1000,
-     "class": "3YO Set Weights plus Penalties (ungraded)",
+     "class": "3YO Set Weights + Penalties",
      "start_time": "12:40",
      "runners": [
       {
