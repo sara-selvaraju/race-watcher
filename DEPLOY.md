@@ -68,8 +68,9 @@ railway up frontend --path-as-root -s web    --detach
 2. `https://<api domain>/api/v1/meetings` lists the race days and races.
 3. The worker's logs show `worker.boot`, then `worker.odds` every 15 minutes
    (`poller.outside_window` outside race hours) and `worker.summaries` every 10.
-4. The website shows the race days. Pressing **Refresh** asks for the admin token once, then runs
-   odds, tips, ratings, field and notes for that day.
+4. The website shows the race days, read-only. To refresh, open it with `?admin` on the end of
+   the address, enter the admin token once (the browser remembers it), then press **Refresh**.
+   It runs odds, tips, ratings, field and notes for that day.
 
 ## Loading a new race card
 

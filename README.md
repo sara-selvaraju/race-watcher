@@ -23,8 +23,10 @@ Oaks Day and Stakes Day.
 - **Top picks.** Three picks per race from web research, with numbered links to the sources.
 - **Race notes.** A short summary of why the picks are the picks, written from the prices, form
   and ratings in the database and nothing else.
-- **Refresh.** One button per day that runs the whole pipeline on demand: odds, tips, ratings,
-  missing runners, then notes.
+- **Refresh (admin only).** One button per day that runs the whole pipeline on demand: odds,
+  tips, ratings, missing runners, then notes. Viewers get a read-only page; the button only
+  appears in a browser that has the admin token. To enter it, open the site with `?admin` on the
+  end of the address (e.g. `https://your-site/?admin`).
 
 ## How it works
 
@@ -130,8 +132,8 @@ npm install
 npm run dev                                               # http://localhost:3000
 ```
 
-Locally, with `ADMIN_TOKEN` unset, the admin endpoints are open, and the Refresh button accepts
-any token you type.
+Locally, with `ADMIN_TOKEN` unset, the admin endpoints are open. Open
+http://localhost:3000/?admin and type anything as the token to get the Refresh button.
 
 Without an OpenRouter key the site still works from the race card alone: you'll see fields, form
 and preview prices, but no live odds, picks or notes.

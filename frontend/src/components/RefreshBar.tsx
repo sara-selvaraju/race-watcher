@@ -60,7 +60,8 @@ type StepState = { status: StepStatus; summary?: string; error?: string };
 type Props = { meetingId: number; track: string };
 
 // Admin actions spend LLM credit, so the API wants a shared token (X-Admin-Token). It's kept in
-// this browser only, entered once by whoever runs the dashboard.
+// this browser only, entered once by whoever runs the dashboard. Viewers never see the Refresh bar:
+// it appears only where a token is saved, or when the page is opened with ?admin to enter one.
 const TOKEN_KEY = "race-watcher.admin-token";
 
 function readToken(): string {
@@ -93,7 +94,11 @@ export function RefreshBar({ meetingId, track }: Props) {
   const [tokenRejected, setTokenRejected] = useState(false);
   const [draft, setDraft] = useState("");
 
-  useEffect(() => setToken(readToken()), []);
+  useEffect(() => {
+    const saved = readToken();
+    setToken(saved);
+    if (!saved && new URLSearchParams(window.location.search).has("admin")) setAskToken(true);
+  }, []);
 
   async function runAll(withToken = token) {
     if (running) return;
@@ -157,8 +162,17 @@ export function RefreshBar({ meetingId, track }: Props) {
     void runAll(t);
   }
 
+  function forgetToken() {
+    saveToken("");
+    setToken("");
+    setSteps(null);
+  }
+
   const shown = stepsFor === meetingId ? steps : null;
   const otherRunning = running && runningFor !== meetingId;
+
+  // Read-only for everyone without the token.
+  if (!token && !askToken) return null;
 
   return (
     <div className="border-t border-line bg-surface-2 px-5 py-3 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -216,6 +230,12 @@ export function RefreshBar({ meetingId, track }: Props) {
         </ol>
       ) : (
         <p className="text-sm text-ink-3">Odds, tips, ratings, field and notes for every {track} race.</p>
+      )}
+
+      {token && !running && (
+        <button type="button" className="ml-auto text-sm text-ink-3 underline" onClick={forgetToken}>
+          Forget token on this browser
+        </button>
       )}
     </div>
   );
