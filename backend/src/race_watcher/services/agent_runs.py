@@ -25,6 +25,7 @@ class Run:
     races: int = 0
     result: str | None = None
     sites: dict[str, int] = field(default_factory=dict)
+    model: str | None = None
     # Nothing to do (e.g. no race in its build-up). Recorded so the page can show the worker is alive.
     idle: bool = False
 
@@ -57,6 +58,7 @@ def record_run(session: Session, agent: str, trigger: str) -> Iterator[Run]:
                         result=run.result,
                         sites=run.sites or None,
                         error=error,
+                        model=run.model,
                     )
                 )
                 s.execute(delete(m.AgentRun).where(m.AgentRun.started_at < started - timedelta(days=KEEP_DAYS)))
@@ -69,6 +71,20 @@ def take_sites(source: object) -> dict[str, int]:
     """Sites an adapter cited since last asked (adapters without web search have none)."""
     take = getattr(source, "take_sites", None)
     return take() if callable(take) else {}
+
+
+def model_used(source: object, agent: str) -> str | None:
+    """The model `source` calls for `agent`, if it's an LLM adapter."""
+    try:
+        if agent == "odds":
+            return getattr(source, "effective_model", None)
+        if agent == "notes":
+            return getattr(source, "summary_model", None)
+        if agent in ("tipster", "field") and hasattr(source, "research_model_for"):
+            return source.research_model_for(agent)
+    except Exception:
+        pass
+    return None
 
 
 def recent_runs(session: Session, agent: str, *, limit: int = 8) -> list[m.AgentRun]:

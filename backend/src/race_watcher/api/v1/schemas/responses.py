@@ -139,6 +139,31 @@ class AgentRunOut(_ApiBase):
     # Website domain -> how many answers cited it.
     sites: dict[str, int]
     error: str | None
+    model: str | None
+
+
+class ModelOptionOut(_ApiBase):
+    id: str
+    name: str
+    # US dollars per million tokens; None if OpenRouter doesn't say.
+    input_per_m: Decimal | None
+    output_per_m: Decimal | None
+    tools: bool
+
+
+class AgentModelOut(_ApiBase):
+    # The model chosen on the admin page, else the default.
+    id: str
+    # The Railway variable that sets the default, and its value.
+    setting: str
+    default: str
+    # Chosen on the admin page (rather than the default), and when.
+    changed_at: datetime | None
+    # Suggested models that OpenRouter currently lists (all of them if the list can't be fetched).
+    suggested: list[str]
+    needs_tools: bool
+    # Price and tool support of the current model, if OpenRouter's list could be fetched.
+    info: ModelOptionOut | None
 
 
 class AgentOut(_ApiBase):
@@ -149,8 +174,10 @@ class AgentOut(_ApiBase):
     # Plain-English, one line per schedule.
     schedule: list[str]
     next_run: datetime | None
-    # None for agents that don't use an LLM.
+    # The model as called (e.g. with ":online"). None for agents that don't use an LLM.
     model: str | None
+    # How the model is chosen; None for agents that don't use an LLM.
+    model_choice: AgentModelOut | None
     web_search: bool
     looks_at: str
     reads: list[str]
@@ -180,3 +207,8 @@ class AdminOverviewOut(_ApiBase):
     watching: list[WatchOut]
     card: str | None
     settings: list[SettingOut]
+
+
+class SetModelIn(BaseModel):
+    # None goes back to the default (the Railway variable).
+    model: str | None

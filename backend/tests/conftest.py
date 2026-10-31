@@ -14,6 +14,25 @@ def _no_watch_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(settings, "watch_file_path", tmp_path / "no-watch.json")
 
 
+FAKE_OPENROUTER_MODELS = [
+    {"id": "anthropic/claude-sonnet-4.5", "name": "Claude Sonnet 4.5",
+     "pricing": {"prompt": "0.000003", "completion": "0.000015"}, "supported_parameters": ["tools"]},
+    {"id": "anthropic/claude-haiku-5.5", "name": "Claude Haiku 5.5",
+     "pricing": {"prompt": "0.000001", "completion": "0.000005"}, "supported_parameters": ["tools"]},
+    {"id": "perplexity/sonar-pro", "name": "Sonar Pro",
+     "pricing": {"prompt": "0.000003", "completion": "0.000015"}, "supported_parameters": []},
+]
+
+
+@pytest.fixture(autouse=True)
+def _no_openrouter_model_list(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Tests never fetch OpenRouter's model list; they get a small fake one."""
+    from race_watcher.services import agent_models
+
+    agent_models.clear_catalogue()
+    monkeypatch.setattr(agent_models, "_fetch_models", lambda: FAKE_OPENROUTER_MODELS)
+
+
 @pytest.fixture
 def tiny_seed(tmp_path: Path) -> Path:
     data = {

@@ -6,6 +6,7 @@ import { readToken, saveToken } from "@/lib/adminToken";
 import { api, type AdminOverviewOut, type AgentOut } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
 import { useNow } from "@/lib/useNow";
+import { ModelPicker } from "@/components/ModelPicker";
 
 class Unauthorized extends Error {}
 
@@ -71,7 +72,7 @@ export default function AdminPage() {
         ) : error || !data ? (
           <p className="panel px-5 py-4 text-drift">Couldn&apos;t load the admin overview. Is the API up?</p>
         ) : (
-          <Overview data={data} now={now} />
+          <Overview data={data} now={now} token={token} />
         )}
       </main>
     </>
@@ -108,7 +109,7 @@ function TokenForm({ rejected, onSave }: { rejected: boolean; onSave: (token: st
   );
 }
 
-function Overview({ data, now }: { data: AdminOverviewOut; now: number }) {
+function Overview({ data, now, token }: { data: AdminOverviewOut; now: number; token: string }) {
   return (
     <>
       <section className="space-y-4" aria-labelledby="agents-title">
@@ -119,11 +120,12 @@ function Overview({ data, now }: { data: AdminOverviewOut; now: number }) {
           <p className="mt-2 text-ink-2">
             What each agent does, when it runs, what it looks at and what it&apos;s done lately. They&apos;re
             defined in <code className="text-[0.9em]">backend/src/race_watcher/agents.py</code>, which also sets the
-            worker&apos;s schedules. To add an agent, start there.
+            worker&apos;s schedules. To add an agent, start there. A model changed here is used from the
+            agent&apos;s next run.
           </p>
         </div>
         {data.agents.map((a) => (
-          <AgentCard key={a.key} agent={a} now={now} />
+          <AgentCard key={a.key} agent={a} now={now} token={token} />
         ))}
       </section>
 
@@ -180,7 +182,7 @@ function Overview({ data, now }: { data: AdminOverviewOut; now: number }) {
   );
 }
 
-function AgentCard({ agent: a, now }: { agent: AgentOut; now: number }) {
+function AgentCard({ agent: a, now, token }: { agent: AgentOut; now: number; token: string }) {
   return (
     <article className="panel overflow-hidden" aria-labelledby={`agent-${a.key}`}>
       <header className="panel-head flex-wrap">
@@ -188,15 +190,9 @@ function AgentCard({ agent: a, now }: { agent: AgentOut; now: number }) {
           {a.name}
         </h2>
         <p className="text-sm">
-          {a.model ? (
-            <>
-              <span className="text-ink-3">AI model </span>
-              <code className="font-semibold break-all">{a.model}</code>
-              {a.web_search && <span className="text-ink-3">, with web search</span>}
-            </>
-          ) : (
-            <span className="text-ink-3">Not AI</span>
-          )}
+          <span className="text-ink-3">
+            {!a.model ? "Not AI" : a.web_search ? "AI, with web search" : "AI, no web access"}
+          </span>
         </p>
       </header>
 
@@ -221,6 +217,7 @@ function AgentCard({ agent: a, now }: { agent: AgentOut; now: number }) {
         </div>
 
         <dl className="px-5 py-4 space-y-3 text-sm md:border-l border-t md:border-t-0 border-line bg-surface-2">
+          {a.model_choice && <ModelPicker agent={a} choice={a.model_choice} token={token} />}
           <div>
             <dt className="text-ink-3">When it runs</dt>
             <dd>
@@ -278,6 +275,7 @@ function RecentRuns({ agent: a, now }: { agent: AgentOut; now: number }) {
               <span className="text-ink-3 text-right md:text-left">{TRIGGERS[r.trigger] ?? r.trigger}</span>
               <span className={clsx("col-span-2 md:col-span-1", r.status === "error" && "text-drift")}>
                 {r.status === "error" ? `Failed: ${r.error ?? "unknown error"}` : r.result}
+                {r.model && <code className="block text-xs text-ink-3 break-all">{r.model}</code>}
                 {r.races > 0 && r.status !== "error" && (
                   <span className="text-ink-3">
                     {" "}

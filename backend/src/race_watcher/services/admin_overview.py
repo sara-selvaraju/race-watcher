@@ -11,13 +11,16 @@ from sqlalchemy.orm import Session
 from race_watcher.agents import Agent, DailyAt, Every, OnRefresh, WithAgent, agent, agents
 from race_watcher.api.v1.schemas.responses import (
     AdminOverviewOut,
+    AgentModelOut,
     AgentOut,
     AgentRunOut,
+    ModelOptionOut,
     SettingOut,
     WatchOut,
 )
 from race_watcher.core.config import settings
 from race_watcher.core.watchlist import watchlist
+from race_watcher.services.agent_models import ModelInfo, catalogue, model_choices
 from race_watcher.services.agent_runs import last_run, recent_runs
 from race_watcher.services.watched import watched_meetings, watched_races
 
@@ -71,14 +74,45 @@ def _aware(dt: datetime) -> datetime:
     return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
 
-def overview(session: Session, now: datetime | None = None) -> AdminOverviewOut:
+def model_option(info: ModelInfo) -> ModelOptionOut:
+    return ModelOptionOut(
+        id=info.id,
+        name=info.name,
+        input_per_m=info.input_per_m,
+        output_per_m=info.output_per_m,
+        tools=info.tools,
+    )
+
+
+def _model_choice(spec: Agent, choices: dict, listed: dict[str, ModelInfo] | None) -> AgentModelOut | None:
+    if spec.model_id is None or spec.model_setting is None or spec.default_model is None:
+        return None
+    row = choices.get(spec.key)
+    info = listed.get(spec.model_id) if listed else None
+    return AgentModelOut(
+        id=spec.model_id,
+        setting=spec.model_setting,
+        default=spec.default_model,
+        changed_at=_aware(row.updated_at) if row else None,
+        suggested=[s for s in spec.suggested if listed is None or s in listed],
+        needs_tools=spec.needs_tools,
+        info=model_option(info) if info else None,
+    )
+
+
+def overview(
+    session: Session, now: datetime | None = None, *, listed: dict[str, ModelInfo] | None = None
+) -> AdminOverviewOut:
+    """`listed`: OpenRouter's model list, fetched (and cached) when not given."""
     now = now or datetime.now(UTC)
+    choices = model_choices(session)
+    listed = listed if listed is not None else catalogue()
     wl = watchlist()
     meetings = watched_meetings(session)
     race_days = sorted({mt.date for mt in meetings})
 
     agent_rows = []
-    for spec in agents():
+    for spec in agents({k: row.model for k, row in choices.items()}):
         last = last_run(session, spec.key)
         agent_rows.append(
             AgentOut(
@@ -89,6 +123,7 @@ def overview(session: Session, now: datetime | None = None) -> AdminOverviewOut:
                 schedule=[describe_schedule(w) for w in spec.schedules],
                 next_run=_next_run(session, spec, race_days, now),
                 model=spec.model,
+                model_choice=_model_choice(spec, choices, listed),
                 web_search=spec.web_search,
                 looks_at=spec.looks_at,
                 reads=list(spec.reads),
@@ -105,6 +140,7 @@ def overview(session: Session, now: datetime | None = None) -> AdminOverviewOut:
                         result=r.result,
                         sites=r.sites or {},
                         error=r.error,
+                        model=r.model,
                     )
                     for r in recent_runs(session, spec.key)
                 ],
@@ -138,12 +174,12 @@ def overview(session: Session, now: datetime | None = None) -> AdminOverviewOut:
             SettingOut(
                 name="OPENROUTER_MODEL",
                 value=settings.openrouter_model,
-                about="Model for the odds agent and race notes",
+                about="Default model for the odds agent and race notes",
             ),
             SettingOut(
                 name="OPENROUTER_RESEARCH_MODEL",
                 value=settings.openrouter_research_model,
-                about="Model for the tipster and field checker",
+                about="Default model for the tipster and field checker",
             ),
             SettingOut(
                 name="OPENROUTER_WEB_SEARCH",

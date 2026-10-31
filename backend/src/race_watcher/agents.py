@@ -10,10 +10,14 @@ To add an agent:
   2. Add an `Agent` entry to `agents()` below.
   3. If it runs on a timer, add its function to the worker's job table (`worker/main.py`).
   4. Wrap its runs in `record_run` (`services/agent_runs.py`) so they show on the admin page.
+
+An agent's model can be changed on the admin page (saved in the database, see
+`services/agent_models.py`); otherwise it uses the Railway variable named in `model_setting`.
 """
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import time
 
@@ -59,13 +63,22 @@ class Agent:
     purpose: str
     how: str
     schedules: tuple[Schedule, ...]
-    # None for agents that don't use an LLM.
+    # The model as called, e.g. with ":online" for web search. None for agents that don't use an LLM.
     model: str | None
     web_search: bool
     looks_at: str
     reads: tuple[str, ...]
     writes: tuple[str, ...]
     prompt: str | None = None
+    # The model chosen on the admin page, else the default below.
+    model_id: str | None = None
+    # The Railway variable giving the default model, and its value.
+    model_setting: str | None = None
+    default_model: str | None = None
+    # Suggested models for the admin page's picker (any OpenRouter model can be typed in).
+    suggested: tuple[str, ...] = ()
+    # The agent calls a tool to return its answer, so its model must support tool calling.
+    needs_tools: bool = False
 
 
 def _daily_times() -> tuple[time, ...]:
@@ -76,17 +89,55 @@ def _daily_times() -> tuple[time, ...]:
     return tuple(out)
 
 
-def _openrouter_model(base: str, *, online: bool) -> str:
-    return f"{base}:online" if online and settings.openrouter_web_search and not base.endswith(":online") else base
+def _with_web(base: str) -> str:
+    """As the OpenRouter adapter calls it: ":online" adds web search; Perplexity has it built in."""
+    if not settings.openrouter_web_search or base.startswith("perplexity/") or base.endswith(":online"):
+        return base
+    return f"{base}:online"
 
 
-def agents() -> list[Agent]:
-    """The agents, built from current settings (models and timings can change per deploy)."""
+# Suggestions only: they're checked against OpenRouter's live list, and any model can be typed in.
+GENERAL_MODELS = (
+    "anthropic/claude-sonnet-4.5",
+    "anthropic/claude-sonnet-5.5",
+    "anthropic/claude-haiku-5.5",
+    "openai/gpt-5-mini",
+    "google/gemini-2.5-flash",
+    "z-ai/glm-5.3",
+)
+RESEARCH_MODELS = (
+    "perplexity/sonar-pro",
+    "perplexity/sonar",
+    "perplexity/sonar-reasoning-pro",
+    "anthropic/claude-sonnet-5.5",
+)
+
+
+def agents(models: Mapping[str, str] | None = None) -> list[Agent]:
+    """The agents, built from current settings and `models` (choices from the admin page)."""
     from race_watcher.adapters import openrouter as orr
 
+    models = models or {}
     llm = settings.odds_source == "openrouter"
     lead_h = settings.race_window_open_min_before / 60
-    research = settings.openrouter_research_model
+    chosen = {
+        "odds": models.get("odds", settings.openrouter_model),
+        "notes": models.get("notes", settings.openrouter_model),
+        "tipster": models.get("tipster", settings.openrouter_research_model),
+        "field": models.get("field", settings.openrouter_research_model),
+    }
+
+    def model_fields(key: str, *, web: bool, default_setting: str, suggested: tuple[str, ...]) -> dict:
+        if not llm:
+            return {"model": None}
+        default = getattr(settings, default_setting.lower())
+        return {
+            "model": _with_web(chosen[key]) if web else chosen[key],
+            "model_id": chosen[key],
+            "model_setting": default_setting,
+            "default_model": default,
+            "suggested": suggested,
+        }
 
     return [
         Agent(
@@ -105,7 +156,8 @@ def agents() -> list[Agent]:
                 DailyAt(_daily_times(), covers="every race on the day's card"),
                 OnRefresh(),
             ),
-            model=_openrouter_model(settings.openrouter_model, online=True) if llm else None,
+            **model_fields("odds", web=True, default_setting="OPENROUTER_MODEL", suggested=GENERAL_MODELS),
+            needs_tools=llm,
             web_search=llm,
             looks_at=f"Bookmaker markets found by web search: {', '.join(orr.BOOKMAKERS)}",
             reads=("Race card: runners and saddlecloth numbers",),
@@ -138,7 +190,7 @@ def agents() -> list[Agent]:
                 "rewritten when its facts have changed, so a quiet market costs nothing."
             ),
             schedules=(Every(600, covers="races still to run whose facts changed"), OnRefresh()),
-            model=settings.openrouter_model if llm else None,
+            **model_fields("notes", web=False, default_setting="OPENROUTER_MODEL", suggested=GENERAL_MODELS),
             web_search=False,
             looks_at="Nothing outside the database: no web access",
             reads=("Top picks", "Prices", "Form", "Ratings"),
@@ -155,7 +207,7 @@ def agents() -> list[Agent]:
                 "numbered link to where it was read."
             ),
             schedules=(OnRefresh(),),
-            model=research if llm else None,
+            **model_fields("tipster", web=True, default_setting="OPENROUTER_RESEARCH_MODEL", suggested=RESEARCH_MODELS),
             web_search=llm,
             looks_at="racing.com first, then punters.com.au, racenet.com.au, bookmaker previews and tipster columns",
             reads=("Race card: runners",),
@@ -172,7 +224,7 @@ def agents() -> list[Agent]:
                 "card are kept; missing jockey, trainer or barrier details are filled in."
             ),
             schedules=(OnRefresh(),),
-            model=research if llm else None,
+            **model_fields("field", web=True, default_setting="OPENROUTER_RESEARCH_MODEL", suggested=RESEARCH_MODELS),
             web_search=llm,
             looks_at="racing.com, else racenet.com.au. Nothing else is accepted",
             reads=("Race card: race name, distance",),

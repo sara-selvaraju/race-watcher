@@ -14,6 +14,7 @@ from race_watcher.adapters import (
 from race_watcher.core.config import settings
 from race_watcher.db.session import SessionLocal
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
+from race_watcher.services.agent_models import model_overrides
 
 
 def db_session() -> Iterator[Session]:
@@ -24,12 +25,16 @@ def db_session() -> Iterator[Session]:
         session.close()
 
 
+SessionDep = Depends(db_session)
+
+
 def race_card_source() -> RaceCardSource:
     return get_race_card_source()
 
 
-def odds_source() -> OddsSource:
-    return get_odds_source()
+def odds_source(session: Session = SessionDep) -> OddsSource:
+    # Uses the models chosen on the admin page, if any.
+    return get_odds_source(models=model_overrides(session))
 
 
 def prediction_engine() -> PredictionEngine:
@@ -45,7 +50,6 @@ def require_admin(x_admin_token: str | None = Header(default=None)) -> None:
         raise HTTPException(status_code=401, detail="Admin token missing or wrong")
 
 
-SessionDep = Depends(db_session)
 CardSourceDep = Depends(race_card_source)
 OddsSourceDep = Depends(odds_source)
 EngineDep = Depends(prediction_engine)

@@ -11,3 +11,5 @@ export type StatusOut = paths["/api/v1/status"]["get"]["responses"]["200"]["cont
 export type AdminOverviewOut =
   paths["/api/v1/admin/overview"]["get"]["responses"]["200"]["content"]["application/json"];
 export type AgentOut = AdminOverviewOut["agents"][number];
+export type ModelOptionOut =
+  paths["/api/v1/admin/models"]["get"]["responses"]["200"]["content"]["application/json"][number];

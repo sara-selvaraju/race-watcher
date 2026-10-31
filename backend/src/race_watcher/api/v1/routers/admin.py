@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from race_watcher.agents import agents
 from race_watcher.api.deps import (
     CardSourceDep,
     EngineDep,
@@ -10,10 +11,11 @@ from race_watcher.api.deps import (
     SessionDep,
     require_admin,
 )
-from race_watcher.api.v1.schemas.responses import AdminOverviewOut
+from race_watcher.api.v1.schemas.responses import AdminOverviewOut, ModelOptionOut, SetModelIn
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
-from race_watcher.services.admin_overview import overview
-from race_watcher.services.agent_runs import record_run, take_sites
+from race_watcher.services.admin_overview import model_option, overview
+from race_watcher.services.agent_models import catalogue, set_model
+from race_watcher.services.agent_runs import model_used, record_run, take_sites
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import describe_poll, poll_once
 from race_watcher.services.predictions import run_predictions_for_race
@@ -24,6 +26,41 @@ router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(requir
 @router.get("/overview", response_model=AdminOverviewOut)
 def admin_overview(session: Session = SessionDep) -> AdminOverviewOut:
     """The agents (schedules, models, prompts, recent runs), what's watched, and key settings."""
+    return overview(session)
+
+
+@router.get("/models", response_model=list[ModelOptionOut])
+def list_models() -> list[ModelOptionOut]:
+    """OpenRouter's current models, with prices, for the admin page's model picker."""
+    listed = catalogue()
+    if listed is None:
+        raise HTTPException(status_code=502, detail="Couldn't fetch OpenRouter's model list")
+    return [model_option(info) for info in sorted(listed.values(), key=lambda i: i.id)]
+
+
+@router.put("/agents/{key}/model", response_model=AdminOverviewOut)
+def choose_model(key: str, body: SetModelIn, session: Session = SessionDep) -> AdminOverviewOut:
+    """Choose an agent's model, used from its next run. `model: null` goes back to the default."""
+    spec = next((a for a in agents() if a.key == key), None)
+    if spec is None:
+        raise HTTPException(status_code=404, detail=f"No agent called {key!r}")
+    if spec.model_setting is None:
+        raise HTTPException(status_code=400, detail=f"{spec.name} doesn't use an AI model")
+    model = (body.model or "").strip().removesuffix(":online") or None
+    if model is not None:
+        listed = catalogue()
+        if listed is not None:
+            info = listed.get(model)
+            if info is None:
+                raise HTTPException(status_code=400, detail=f"OpenRouter doesn't list a model called {model!r}")
+            if spec.needs_tools and not info.tools:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"{spec.name} needs a model that supports tool calling, and {model} doesn't",
+                )
+        if model == spec.default_model:
+            model = None  # choosing the default is the same as going back to it
+    set_model(session, key, model)
     return overview(session)
 
 
@@ -75,6 +112,7 @@ def refresh_odds(
     Bypasses the race-window gate so it works any time. Use this in place of the 5-min worker poll.
     """
     with record_run(session, "odds", "refresh") as run:
+        run.model = model_used(odds, "odds")
         result = poll_once(session, odds, meeting_id=meeting_id, force=True)
         run.races = result.get("races", 0)
         run.result = describe_poll(result)
@@ -96,6 +134,7 @@ def refresh_tips(
     from race_watcher.services.top_picks import refresh_all_races
 
     with record_run(session, "tipster", "refresh") as run:
+        run.model = model_used(odds, "tipster")
         result = refresh_all_races(session, odds, meeting_id)
         run.races = result.get("races", 0)
         run.result = f"{result.get('picks', 0)} picks in {run.races} races"
@@ -117,6 +156,7 @@ def expand_field(
     from race_watcher.services.expand_field import expand_all_races
 
     with record_run(session, "field", "refresh") as run:
+        run.model = model_used(odds, "field")
         result = expand_all_races(session, odds, meeting_id)
         run.races = result.get("races", 0)
         run.result = f"{result.get('added', 0)} runners added, {result.get('updated', 0)} updated"
@@ -164,6 +204,7 @@ def summarize(
     from race_watcher.services.race_summary import describe_notes, summarize_all
 
     with record_run(session, "notes", "refresh") as run:
+        run.model = model_used(odds, "notes")
         result = summarize_all(session, odds, meeting_id, force=force)
         run.races = result.get("written", 0) + result.get("unchanged", 0) + result.get("failed", 0)
         run.result = describe_notes(result)

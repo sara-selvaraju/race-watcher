@@ -210,5 +210,17 @@ class AgentRun(Base):
     # Website domain -> number of times the agent cited it.
     sites: Mapped[dict | None] = mapped_column(JSON, default=None)
     error: Mapped[str | None] = mapped_column(String(500), default=None)
+    # The model the run used, as called (e.g. with ":online"). None for agents that don't use one.
+    model: Mapped[str | None] = mapped_column(String(120), default=None)
 
     __table_args__ = (Index("ix_agent_run_agent_started", "agent", "started_at"),)
+
+
+class AgentModel(Base):
+    """A model chosen for an agent on the admin page, in place of its Railway-variable default."""
+
+    __tablename__ = "agent_model"
+
+    agent: Mapped[str] = mapped_column(String(40), primary_key=True)
+    model: Mapped[str] = mapped_column(String(120))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

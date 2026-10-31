@@ -152,6 +152,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Models
+         * @description OpenRouter's current models, with prices, for the admin page's model picker.
+         */
+        get: operations["list_models_api_v1_admin_models_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/agents/{key}/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Choose Model
+         * @description Choose an agent's model, used from its next run. `model: null` goes back to the default.
+         */
+        put: operations["choose_model_api_v1_admin_agents__key__model_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/ingest": {
         parameters: {
             query?: never;
@@ -316,6 +356,22 @@ export interface components {
             /** Settings */
             settings: components["schemas"]["SettingOut"][];
         };
+        /** AgentModelOut */
+        AgentModelOut: {
+            /** Id */
+            id: string;
+            /** Setting */
+            setting: string;
+            /** Default */
+            default: string;
+            /** Changed At */
+            changed_at: string | null;
+            /** Suggested */
+            suggested: string[];
+            /** Needs Tools */
+            needs_tools: boolean;
+            info: components["schemas"]["ModelOptionOut"] | null;
+        };
         /** AgentOut */
         AgentOut: {
             /** Key */
@@ -332,6 +388,7 @@ export interface components {
             next_run: string | null;
             /** Model */
             model: string | null;
+            model_choice: components["schemas"]["AgentModelOut"] | null;
             /** Web Search */
             web_search: boolean;
             /** Looks At */
@@ -370,6 +427,8 @@ export interface components {
             };
             /** Error */
             error: string | null;
+            /** Model */
+            model: string | null;
         };
         /** FormLineOut */
         FormLineOut: {
@@ -414,6 +473,19 @@ export interface components {
             timezone: string;
             /** Races */
             races: components["schemas"]["RaceOut"][];
+        };
+        /** ModelOptionOut */
+        ModelOptionOut: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Input Per M */
+            input_per_m: string | null;
+            /** Output Per M */
+            output_per_m: string | null;
+            /** Tools */
+            tools: boolean;
         };
         /** MovementAlertOut */
         MovementAlertOut: {
@@ -541,6 +613,11 @@ export interface components {
             /** Price History */
             price_history: components["schemas"]["PriceOut"][];
             prediction: components["schemas"]["PredictionOut"] | null;
+        };
+        /** SetModelIn */
+        SetModelIn: {
+            /** Model */
+            model: string | null;
         };
         /** SettingOut */
         SettingOut: {
@@ -808,6 +885,74 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOverviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_models_api_v1_admin_models_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModelOptionOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_model_api_v1_admin_agents__key__model_put: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetModelIn"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

@@ -13,7 +13,8 @@ from race_watcher.core.config import settings
 from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.core.watchlist import watchlist
 from race_watcher.db.session import SessionLocal
-from race_watcher.services.agent_runs import record_run, take_sites
+from race_watcher.services.agent_models import model_overrides
+from race_watcher.services.agent_runs import model_used, record_run, take_sites
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import describe_poll, poll_once, poll_race_day
 from race_watcher.services.predictions import run_predictions_for_race
@@ -40,6 +41,18 @@ def _ensure_meeting_loaded() -> None:
             return
         log.info("worker.ingesting_seed", watching=_watching())
         ingest_meetings(session, get_race_card_source())
+
+
+def _odds_source():
+    """The LLM adapter, with any models chosen on the admin page. Read each run, so a new choice
+    is used from the next run without a restart."""
+    try:
+        with SessionLocal() as session:
+            models = model_overrides(session)
+    except Exception as exc:  # e.g. the api hasn't added the table yet: use the defaults
+        log.warning("worker.model_choices_unavailable", error=str(exc))
+        models = {}
+    return get_odds_source(models=models)
 
 
 def _refresh_predictions() -> int:
@@ -69,11 +82,12 @@ def _refresh_summaries() -> None:
         log.info("worker.idle", reason="no races left to run", watching=_watching())
         return
     try:
-        adapter = get_odds_source()
+        adapter = _odds_source()
     except Exception as exc:  # missing API key etc. — keep the worker alive
         log.warning("worker.summary_adapter_unavailable", error=str(exc))
         return
     with SessionLocal() as session, record_run(session, "notes", "timer") as run:
+        run.model = model_used(adapter, "notes")
         result = summarize_all(session, adapter)
         run.races = result.get("written", 0) + result.get("failed", 0)
         run.idle = not run.races
@@ -89,7 +103,7 @@ def _poll_odds() -> None:
     feed the next _refresh_summaries run, which re-rates runners and rewrites notes.
     """
     try:
-        adapter = get_odds_source()
+        adapter = _odds_source()
     except Exception as exc:  # missing API key etc. — keep the worker alive
         log.warning("worker.odds_adapter_unavailable", error=str(exc))
         return
@@ -99,13 +113,14 @@ def _poll_odds() -> None:
         run.idle = not run.races
         run.result = describe_poll(result)
         run.sites = take_sites(adapter)
+        run.model = model_used(adapter, "odds")
     log.info("worker.odds", **result)
 
 
 def _odds_check() -> None:
     """Fixed-time check (ODDS_CHECK_TIMES): price every race on today's card, whatever its start."""
     try:
-        adapter = get_odds_source()
+        adapter = _odds_source()
     except Exception as exc:  # missing API key etc. — keep the worker alive
         log.warning("worker.odds_adapter_unavailable", error=str(exc))
         return
@@ -116,6 +131,7 @@ def _odds_check() -> None:
         run.idle = not run.races
         run.result = describe_poll(result)
         run.sites = take_sites(adapter)
+        run.model = model_used(adapter, "odds")
     log.info("worker.odds_check", day=str(today), **result)
 
 

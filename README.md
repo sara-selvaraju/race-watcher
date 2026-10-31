@@ -38,7 +38,8 @@ Oaks Day and Stakes Day.
   end of the address (e.g. `https://your-site/?admin`).
 - **Admin page (admin only).** `/admin` shows every agent: what it does, when it runs and runs
   next, its model and system prompt, what it looks at, and its recent runs with the sites it
-  cited. Also what's being watched and the main settings.
+  cited and the model used. You can change each AI agent's model there. Also what's being
+  watched and the main settings.
 
 ## How it works
 
@@ -92,8 +93,24 @@ list and the admin page shows it, so the two always agree.
 | Tipster | On Refresh | `OPENROUTER_RESEARCH_MODEL` |
 | Field checker | On Refresh | `OPENROUTER_RESEARCH_MODEL` |
 
+The models listed are the defaults; each can be changed on `/admin` (below).
+
 Each run is logged (when, why, what it did, which sites it cited) and shown on `/admin`. Runs
 with nothing to do are logged as idle and left off the list; logs older than 30 days are dropped.
+
+#### Changing an agent's model
+
+On `/admin`, each AI agent has **Change model**. Pick a suggested model (with OpenRouter's
+current price per million tokens) or type any OpenRouter model ID. The choice is saved in the
+database and used from the agent's next run, with no redeploy. **Go back to the default**
+returns to the Railway variable (`OPENROUTER_MODEL` or `OPENROUTER_RESEARCH_MODEL`).
+
+- The odds agent needs a model that supports tool calling; the page won't save one that doesn't.
+- Web search is added automatically (`:online`) for the odds agent, tipster and field checker,
+  except on Perplexity models, which search natively. The race-note writer never gets it.
+- Each run records the model it used, so you can compare results in the run history.
+- The race-note writer only rewrites a race when its facts change, so a new notes model shows
+  up as races' prices and picks move, not all at once.
 
 #### Adding an agent
 
@@ -242,8 +259,8 @@ All settings are environment variables; `.env.example` lists them with comments.
 | `WATCH_FILE_PATH` | The watchlist (default `watch.json` in `backend/`) |
 | `RACE_DATE`, `RACE_DATE_END`, `SEED_FILE_PATH` | Fallbacks used only when there's no watchlist |
 | `OPENROUTER_API_KEY` | Needed for odds, picks and notes |
-| `OPENROUTER_MODEL` | Model for odds and notes |
-| `OPENROUTER_RESEARCH_MODEL` | Model for picks and missing runners |
+| `OPENROUTER_MODEL` | Default model for odds and notes (changeable per agent on `/admin`) |
+| `OPENROUTER_RESEARCH_MODEL` | Default model for picks and missing runners (changeable per agent on `/admin`) |
 | `ADMIN_TOKEN` | Secret for the `/admin` endpoints and the Refresh button. **Set this in production** |
 | `POLL_INTERVAL_SECONDS` | How often the worker fetches odds during a race day (default 900, 15 minutes) |
 | `ODDS_CHECK_TIMES` | Fixed times each race day to price the whole card (default `09:15`, Melbourne time) |

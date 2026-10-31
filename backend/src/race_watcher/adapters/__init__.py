@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from race_watcher.core.config import settings
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
 
@@ -13,7 +15,8 @@ def get_race_card_source() -> RaceCardSource:
     raise NotImplementedError(f"race_card_source={settings.race_card_source} not wired")
 
 
-def get_odds_source() -> OddsSource:
+def get_odds_source(models: Mapping[str, str] | None = None) -> OddsSource:
+    """`models`: per-agent model choices from the admin page (only the OpenRouter adapter uses them)."""
     if settings.odds_source == "betfair":
         from race_watcher.adapters.betfair import BetfairAdapter
 
@@ -29,7 +32,7 @@ def get_odds_source() -> OddsSource:
     if settings.odds_source == "openrouter":
         from race_watcher.adapters.openrouter import OpenRouterAdapter
 
-        return OpenRouterAdapter()
+        return OpenRouterAdapter(models=models)
     raise NotImplementedError(f"odds_source={settings.odds_source} not wired")
 
 

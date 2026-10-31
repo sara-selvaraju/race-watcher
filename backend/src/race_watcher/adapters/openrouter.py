@@ -4,6 +4,7 @@ import json
 import re
 import threading
 from collections import Counter
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse
@@ -137,11 +138,15 @@ class OpenRouterAdapter:
         research_model: str | None = None,
         client: OpenAI | None = None,
         use_web_search: bool | None = None,
+        models: Mapping[str, str] | None = None,
     ):
         if client is None and not settings.openrouter_api_key:
             raise RuntimeError("OPENROUTER_API_KEY is not configured")
         self._model_base = (model or settings.openrouter_model).strip()
         self._research_model_base = (research_model or settings.openrouter_research_model).strip()
+        # Per-agent choices from the admin page ("odds", "notes", "tipster", "field"); agents
+        # without one use the model or research model above.
+        self._models = {k: v.strip() for k, v in (models or {}).items() if v and v.strip()}
         self._use_web_search = (
             settings.openrouter_web_search if use_web_search is None else use_web_search
         )
@@ -176,17 +181,22 @@ class OpenRouterAdapter:
 
     @property
     def effective_model(self) -> str:
-        return self._with_web(self._model_base)
+        """The odds agent's model, with web search."""
+        return self._with_web(self._models.get("odds", self._model_base))
 
     @property
     def effective_research_model(self) -> str:
-        # Perplexity Sonar models have native web search baked in — don't double up with :online.
-        return self._with_web(self._research_model_base, allow_online_suffix=False)
+        return self.research_model_for("tipster")
 
-    def _with_web(self, base: str, *, allow_online_suffix: bool = True) -> str:
+    def research_model_for(self, agent: str) -> str:
+        """The tipster's or field checker's model. Perplexity Sonar searches the web natively;
+        any other model gets web search added, since both agents depend on it."""
+        return self._with_web(self._models.get(agent, self._research_model_base))
+
+    def _with_web(self, base: str) -> str:
         if not self._use_web_search:
             return base
-        if base.startswith("perplexity/") or not allow_online_suffix:
+        if base.startswith("perplexity/"):
             return base  # already web-aware natively
         if base.endswith(":online"):
             return base
@@ -345,7 +355,7 @@ class OpenRouterAdapter:
             "Return JSON matching the submit_top_picks schema."
         )
         payload, citations = self._structured_call(
-            model=self.effective_research_model,
+            model=self.research_model_for("tipster"),
             system=TOP_PICKS_SYSTEM,
             user=user_msg,
             tool=SUBMIT_TOP_PICKS_TOOL,
@@ -360,7 +370,7 @@ class OpenRouterAdapter:
         log.info(
             "openrouter.top_picks_done",
             race=race.number,
-            model=self.effective_research_model,
+            model=self.research_model_for("tipster"),
             citations=len(citations),
         )
 
@@ -406,7 +416,7 @@ class OpenRouterAdapter:
     def summary_model(self) -> str:
         # No `:online` — the summary only restates facts we pass in, so web search would just
         # add cost and a route for unsourced claims.
-        return self._model_base
+        return self._models.get("notes", self._model_base)
 
     def summarize_race(self, facts: str) -> str | None:
         """Write a short plain-English note on why the picks are the picks, from `facts` only."""
@@ -436,7 +446,7 @@ class OpenRouterAdapter:
             "Return the complete official field for this race as JSON matching the submit_field schema."
         )
         payload, _citations = self._structured_call(
-            model=self.effective_research_model,
+            model=self.research_model_for("field"),
             system=FIELD_SYSTEM,
             user=user_msg,
             tool=SUBMIT_FIELD_TOOL,
@@ -465,7 +475,7 @@ class OpenRouterAdapter:
         log.info(
             "openrouter.field_done",
             race=race.number,
-            model=self.effective_research_model,
+            model=self.research_model_for("field"),
             source_host=source_host,
             source_url=source_url,
         )

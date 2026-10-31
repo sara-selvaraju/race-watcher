@@ -262,6 +262,129 @@
         }
       }
     },
+    "/api/v1/admin/models": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Models",
+        "description": "OpenRouter's current models, with prices, for the admin page's model picker.",
+        "operationId": "list_models_api_v1_admin_models_get",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelOptionOut"
+                  },
+                  "title": "Response List Models Api V1 Admin Models Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/agents/{key}/model": {
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Choose Model",
+        "description": "Choose an agent's model, used from its next run. `model: null` goes back to the default.",
+        "operationId": "choose_model_api_v1_admin_agents__key__model_put",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetModelIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOverviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/ingest": {
       "post": {
         "tags": [
@@ -777,6 +900,66 @@
         ],
         "title": "AdminOverviewOut"
       },
+      "AgentModelOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "setting": {
+            "type": "string",
+            "title": "Setting"
+          },
+          "default": {
+            "type": "string",
+            "title": "Default"
+          },
+          "changed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Changed At"
+          },
+          "suggested": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Suggested"
+          },
+          "needs_tools": {
+            "type": "boolean",
+            "title": "Needs Tools"
+          },
+          "info": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelOptionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "setting",
+          "default",
+          "changed_at",
+          "suggested",
+          "needs_tools",
+          "info"
+        ],
+        "title": "AgentModelOut"
+      },
       "AgentOut": {
         "properties": {
           "key": {
@@ -824,6 +1007,16 @@
               }
             ],
             "title": "Model"
+          },
+          "model_choice": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentModelOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "web_search": {
             "type": "boolean",
@@ -887,6 +1080,7 @@
           "schedule",
           "next_run",
           "model",
+          "model_choice",
           "web_search",
           "looks_at",
           "reads",
@@ -956,6 +1150,17 @@
               }
             ],
             "title": "Error"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
           }
         },
         "type": "object",
@@ -967,7 +1172,8 @@
           "races",
           "result",
           "sites",
-          "error"
+          "error",
+          "model"
         ],
         "title": "AgentRunOut"
       },
@@ -1151,6 +1357,55 @@
           "races"
         ],
         "title": "MeetingOut"
+      },
+      "ModelOptionOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "input_per_m": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Per M"
+          },
+          "output_per_m": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Per M"
+          },
+          "tools": {
+            "type": "boolean",
+            "title": "Tools"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "input_per_m",
+          "output_per_m",
+          "tools"
+        ],
+        "title": "ModelOptionOut"
       },
       "MovementAlertOut": {
         "properties": {
@@ -1582,6 +1837,26 @@
           "prediction"
         ],
         "title": "RunnerOut"
+      },
+      "SetModelIn": {
+        "properties": {
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "title": "SetModelIn"
       },
       "SettingOut": {
         "properties": {
