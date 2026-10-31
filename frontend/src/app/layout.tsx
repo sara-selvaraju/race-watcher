@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed } from "next/font/google";
 import { QueryProvider } from "@/components/QueryProvider";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const display = Barlow_Condensed({
   subsets: ["latin"],
@@ -19,7 +20,8 @@ const sans = Barlow({
 
 export const metadata: Metadata = {
   title: "Race Watcher",
-  description: "Personal race-day dashboard. Heuristic ratings, not financial advice.",
+  description:
+    "Follow the Flemington Spring Carnival race by race: odds, market moves, tips and race notes gathered and written by AI. Just for fun, not betting advice.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -27,17 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body className="min-h-screen">
         <QueryProvider>{children}</QueryProvider>
-        <footer className="border-t border-line bg-surface text-sm text-ink-3 mt-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 py-5 flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span>Ratings are a heuristic, not financial advice. Personal use only.</span>
-            <span className="sm:ml-auto">
-              Gamble responsibly. Gambling Help{" "}
-              <a className="font-semibold text-ink-2 underline underline-offset-2" href="tel:1800858858">
-                1800 858 858
-              </a>
-            </span>
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );

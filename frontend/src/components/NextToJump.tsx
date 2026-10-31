@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+import { ScrollHints } from "@/components/ScrollHints";
 import { clsx } from "@/lib/clsx";
 import { countdown, raceDayLabel, viewerTime } from "@/lib/time";
 import { hasJumped, trackColour, type ScheduledRace } from "@/lib/tracks";
@@ -12,6 +14,7 @@ type Props = {
 };
 
 export function NextToJump({ timeline, now, activeRaceId, onSelect }: Props) {
+  const stripRef = useRef<HTMLOListElement>(null);
   const upcoming = timeline.filter((s) => !hasJumped(s.startMs, now));
 
   if (upcoming.length === 0) {
@@ -45,28 +48,34 @@ export function NextToJump({ timeline, now, activeRaceId, onSelect }: Props) {
         </div>
       </button>
 
-      <ol className="flex gap-2 overflow-x-auto pb-1 -mb-1">
-        {rest.map((s) => (
-          <li key={s.race.id} className="shrink-0">
-            <button
-              type="button"
-              onClick={() => onSelect(s.race.id)}
-              aria-pressed={activeRaceId === s.race.id}
-              className={clsx(
-                "h-full w-36 rounded-[10px] border bg-surface px-3 py-3 text-left",
-                activeRaceId === s.race.id ? "border-turf ring-1 ring-turf" : "border-line hover:border-line-strong",
-              )}
-              style={{ borderTopWidth: 4, borderTopColor: trackColour(s.meeting.track, s.meetingIndex) }}
-            >
-              <span className="block text-sm text-ink-3 truncate">
-                {s.meeting.date === next.meeting.date ? s.meeting.track : raceDayLabel(s.meeting.date)}
-              </span>
-              <span className="block font-display text-xl font-bold leading-tight">R{s.race.number}</span>
-              <span className="num block text-lg text-ink-2">{s.startMs ? countdown(s.startMs - now) : "—"}</span>
-            </button>
-          </li>
-        ))}
-      </ol>
+      <div className="relative min-w-0" style={{ "--fade": "var(--bg)" } as React.CSSProperties}>
+        <ol ref={stripRef} className="flex gap-2 overflow-x-auto pb-1 -mb-1">
+          {rest.map((s) => (
+            <li key={s.race.id} className="shrink-0">
+              <button
+                type="button"
+                onClick={() => onSelect(s.race.id)}
+                aria-pressed={activeRaceId === s.race.id}
+                className={clsx(
+                  "h-full w-36 rounded-[10px] border bg-surface px-3 py-3 text-left",
+                  activeRaceId === s.race.id ? "border-turf ring-1 ring-turf" : "border-line hover:border-line-strong",
+                )}
+                style={{
+                  borderTopWidth: 4,
+                  borderTopColor: trackColour(s.meeting.track, s.meetingIndex),
+                }}
+              >
+                <span className="block text-sm text-ink-3 truncate">
+                  {s.meeting.date === next.meeting.date ? s.meeting.track : raceDayLabel(s.meeting.date)}
+                </span>
+                <span className="block font-display text-xl font-bold leading-tight">R{s.race.number}</span>
+                <span className="num block text-lg text-ink-2">{s.startMs ? countdown(s.startMs - now) : "—"}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <ScrollHints target={stripRef} />
+      </div>
     </section>
   );
 }

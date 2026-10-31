@@ -100,7 +100,7 @@ export function TopPicksBox({ race }: { race: Race }) {
       <header className="panel-head">
         <h3 className="panel-title">Top picks</h3>
         <p className="text-sm text-ink-3" title={source === "research" ? "LLM-researched picks: check the cited sources before betting" : undefined}>
-          {source === "research" ? "From web research. Check the sources." : "From the heuristic rating"}
+          {source === "research" ? "From web research. Check the sources." : "From a simple rating based mostly on the odds"}
         </p>
       </header>
 
