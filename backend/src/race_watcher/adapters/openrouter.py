@@ -5,6 +5,7 @@ import re
 import threading
 from collections import Counter
 from collections.abc import Mapping
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse
@@ -118,6 +119,26 @@ def _bookmaker(source: str) -> str:
     return source.strip()[:40] or "unknown"
 
 
+@dataclass
+class Usage:
+    calls: int = 0
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    # US dollars, as reported by OpenRouter. None if it didn't say.
+    cost: Decimal | None = None
+
+    def add(self, usage: object) -> None:
+        self.calls += 1
+        self.prompt_tokens += getattr(usage, "prompt_tokens", 0) or 0
+        self.completion_tokens += getattr(usage, "completion_tokens", 0) or 0
+        cost = getattr(usage, "cost", None)
+        if cost is not None:
+            try:
+                self.cost = (self.cost or Decimal(0)) + Decimal(str(cost))
+            except InvalidOperation:
+                pass
+
+
 class OpenRouterAdapter:
     """Reaches publicly available odds via OpenRouter (any chat model + Exa web search).
 
@@ -162,9 +183,26 @@ class OpenRouterAdapter:
                 default_headers=default_headers or None,
             )
         self._client = client
-        # Sites cited by web-search answers since take_sites() was last called (for the admin page).
+        # Sites cited and tokens/cost used since take_sites()/take_usage() were last called (for
+        # the admin page's run log and playground).
         self._sites: Counter[str] = Counter()
+        self._usage = Usage()
         self._sites_lock = threading.Lock()
+
+    def _create(self, **kwargs):
+        """One chat completion, asking OpenRouter to report what it cost, and noting the usage."""
+        resp = self._client.chat.completions.create(extra_body={"usage": {"include": True}}, **kwargs)
+        usage = getattr(resp, "usage", None)
+        if usage is not None:
+            with self._sites_lock:
+                self._usage.add(usage)
+        return resp
+
+    def take_usage(self) -> Usage:
+        """Calls, tokens and cost since the last call. Thread-safe."""
+        with self._sites_lock:
+            out, self._usage = self._usage, Usage()
+        return out
 
     def _note_sites(self, urls: list[str]) -> None:
         domains = {d for d in (_domain(u) for u in urls) if d}
@@ -227,7 +265,7 @@ class OpenRouterAdapter:
         """
         if self._model_supports_tools(model):
             try:
-                resp = self._client.chat.completions.create(
+                resp = self._create(
                     model=model,
                     max_tokens=max_tokens,
                     temperature=0,
@@ -256,7 +294,7 @@ class OpenRouterAdapter:
 
         # No-tools path: use response_format=json_schema. Sonar supports this.
         try:
-            resp = self._client.chat.completions.create(
+            resp = self._create(
                 model=model,
                 max_tokens=max_tokens,
                 temperature=0,
@@ -299,7 +337,7 @@ class OpenRouterAdapter:
         )
 
         try:
-            resp = self._client.chat.completions.create(
+            resp = self._create(
                 model=self.effective_model,
                 # Room for "thinking" models (e.g. GLM), which can spend 4k+ tokens reasoning
                 # before they call submit_odds. One race's answer itself is under 1k.
@@ -421,7 +459,7 @@ class OpenRouterAdapter:
     def summarize_race(self, facts: str) -> str | None:
         """Write a short plain-English note on why the picks are the picks, from `facts` only."""
         try:
-            resp = self._client.chat.completions.create(
+            resp = self._create(
                 model=self.summary_model,
                 max_tokens=600,
                 temperature=0.2,

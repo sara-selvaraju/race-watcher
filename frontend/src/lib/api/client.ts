@@ -13,3 +13,5 @@ export type AdminOverviewOut =
 export type AgentOut = AdminOverviewOut["agents"][number];
 export type ModelOptionOut =
   paths["/api/v1/admin/models"]["get"]["responses"]["200"]["content"]["application/json"][number];
+export type PlaygroundOut =
+  paths["/api/v1/admin/playground"]["post"]["responses"]["200"]["content"]["application/json"];

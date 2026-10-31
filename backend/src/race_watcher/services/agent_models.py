@@ -107,3 +107,16 @@ def catalogue() -> dict[str, ModelInfo] | None:
     with _catalogue_lock:
         _catalogue = (time.monotonic(), models)
     return models
+
+
+def model_problem(agent_name: str, needs_tools: bool, model: str) -> str | None:
+    """Why `model` can't be used for this agent, or None if it can (or the list can't be fetched)."""
+    listed = catalogue()
+    if listed is None:
+        return None
+    info = listed.get(model)
+    if info is None:
+        return f"OpenRouter doesn't list a model called {model!r}"
+    if needs_tools and not info.tools:
+        return f"{agent_name} needs a model that supports tool calling, and {model} doesn't"
+    return None

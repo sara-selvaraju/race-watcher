@@ -212,6 +212,9 @@ class AgentRun(Base):
     error: Mapped[str | None] = mapped_column(String(500), default=None)
     # The model the run used, as called (e.g. with ":online"). None for agents that don't use one.
     model: Mapped[str | None] = mapped_column(String(120), default=None)
+    # Tokens used and US dollars spent, as reported by OpenRouter.
+    tokens: Mapped[int | None] = mapped_column(Integer, default=None)
+    cost_usd: Mapped[Decimal | None] = mapped_column(Numeric(12, 6), default=None)
 
     __table_args__ = (Index("ix_agent_run_agent_started", "agent", "started_at"),)
 

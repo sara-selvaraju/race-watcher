@@ -140,6 +140,8 @@ class AgentRunOut(_ApiBase):
     sites: dict[str, int]
     error: str | None
     model: str | None
+    tokens: int | None
+    cost_usd: Decimal | None
 
 
 class ModelOptionOut(_ApiBase):
@@ -212,3 +214,69 @@ class AdminOverviewOut(_ApiBase):
 class SetModelIn(BaseModel):
     # None goes back to the default (the Railway variable).
     model: str | None
+
+
+class PlaygroundIn(BaseModel):
+    agent: str
+    race_id: int
+    # Any OpenRouter model ID; None uses the agent's current model.
+    model: str | None = None
+
+
+class PlaygroundPriceOut(_ApiBase):
+    runner_number: int
+    runner_name: str
+    price: Decimal
+    source: str
+    # The latest price already saved for this runner, for comparison.
+    saved_price: Decimal | None
+    saved_source: str | None
+
+
+class PlaygroundPickOut(_ApiBase):
+    rank: int
+    runner_number: int
+    runner_name: str
+    # Markdown links [¹](url) to the sources.
+    rationale: str | None
+
+
+class PlaygroundRunnerOut(_ApiBase):
+    runner_number: int
+    runner_name: str
+    jockey: str | None
+    trainer: str | None
+    barrier: int | None
+    scratched: bool
+    # Already on the race card.
+    on_card: bool
+
+
+class PlaygroundNoteOut(_ApiBase):
+    text: str | None
+    # Exactly what the model was given.
+    facts: str
+    # The note on the race page now, for comparison.
+    current: str | None
+
+
+class PlaygroundOut(_ApiBase):
+    agent: str
+    agent_name: str
+    # As called, e.g. with ":online".
+    model: str
+    race_id: int
+    race_label: str
+    started_at: datetime
+    seconds: float
+    calls: int
+    prompt_tokens: int
+    completion_tokens: int
+    cost_usd: Decimal | None
+    sites: dict[str, int]
+    # Set if the run failed outright. An empty answer is not an error: the lists are just empty.
+    error: str | None
+    prices: list[PlaygroundPriceOut] | None = None
+    picks: list[PlaygroundPickOut] | None = None
+    field: list[PlaygroundRunnerOut] | None = None
+    note: PlaygroundNoteOut | None = None

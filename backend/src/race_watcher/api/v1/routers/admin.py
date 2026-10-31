@@ -11,11 +11,17 @@ from race_watcher.api.deps import (
     SessionDep,
     require_admin,
 )
-from race_watcher.api.v1.schemas.responses import AdminOverviewOut, ModelOptionOut, SetModelIn
+from race_watcher.api.v1.schemas.responses import (
+    AdminOverviewOut,
+    ModelOptionOut,
+    PlaygroundIn,
+    PlaygroundOut,
+    SetModelIn,
+)
 from race_watcher.domain.ports import OddsSource, PredictionEngine, RaceCardSource
 from race_watcher.services.admin_overview import model_option, overview
-from race_watcher.services.agent_models import catalogue, set_model
-from race_watcher.services.agent_runs import model_used, record_run, take_sites
+from race_watcher.services.agent_models import catalogue, model_problem, set_model
+from race_watcher.services.agent_runs import collect, model_used, record_run
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import describe_poll, poll_once
 from race_watcher.services.predictions import run_predictions_for_race
@@ -48,20 +54,25 @@ def choose_model(key: str, body: SetModelIn, session: Session = SessionDep) -> A
         raise HTTPException(status_code=400, detail=f"{spec.name} doesn't use an AI model")
     model = (body.model or "").strip().removesuffix(":online") or None
     if model is not None:
-        listed = catalogue()
-        if listed is not None:
-            info = listed.get(model)
-            if info is None:
-                raise HTTPException(status_code=400, detail=f"OpenRouter doesn't list a model called {model!r}")
-            if spec.needs_tools and not info.tools:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"{spec.name} needs a model that supports tool calling, and {model} doesn't",
-                )
+        problem = model_problem(spec.name, spec.needs_tools, model)
+        if problem:
+            raise HTTPException(status_code=400, detail=problem)
         if model == spec.default_model:
             model = None  # choosing the default is the same as going back to it
     set_model(session, key, model)
     return overview(session)
+
+
+@router.post("/playground", response_model=PlaygroundOut)
+def playground(body: PlaygroundIn, session: Session = SessionDep) -> PlaygroundOut:
+    """Run one agent once on one race, with any model, and return what it produced. Spends real
+    OpenRouter credit, but saves nothing: the race page and run log are unchanged."""
+    from race_watcher.services.playground import PlaygroundError, run_playground
+
+    try:
+        return run_playground(session, body.agent, body.race_id, body.model)
+    except PlaygroundError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
 
 
 # Every LLM-backed action below accepts an optional `meeting_id` so the frontend can refresh one
@@ -116,7 +127,7 @@ def refresh_odds(
         result = poll_once(session, odds, meeting_id=meeting_id, force=True)
         run.races = result.get("races", 0)
         run.result = describe_poll(result)
-        run.sites = take_sites(odds)
+        collect(run, odds)
     return {"source": odds.name, **result}
 
 
@@ -138,7 +149,7 @@ def refresh_tips(
         result = refresh_all_races(session, odds, meeting_id)
         run.races = result.get("races", 0)
         run.result = f"{result.get('picks', 0)} picks in {run.races} races"
-        run.sites = take_sites(odds)
+        collect(run, odds)
     return {"source": odds.name, **result}
 
 
@@ -160,7 +171,7 @@ def expand_field(
         result = expand_all_races(session, odds, meeting_id)
         run.races = result.get("races", 0)
         run.result = f"{result.get('added', 0)} runners added, {result.get('updated', 0)} updated"
-        run.sites = take_sites(odds)
+        collect(run, odds)
     return {"source": odds.name, **result}
 
 
@@ -206,6 +217,7 @@ def summarize(
     with record_run(session, "notes", "refresh") as run:
         run.model = model_used(odds, "notes")
         result = summarize_all(session, odds, meeting_id, force=force)
+        collect(run, odds)
         run.races = result.get("written", 0) + result.get("unchanged", 0) + result.get("failed", 0)
         run.result = describe_notes(result)
     return {"source": odds.name, **result}

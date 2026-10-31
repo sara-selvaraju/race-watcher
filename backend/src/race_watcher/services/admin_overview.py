@@ -141,6 +141,8 @@ def overview(
                         sites=r.sites or {},
                         error=r.error,
                         model=r.model,
+                        tokens=r.tokens,
+                        cost_usd=r.cost_usd,
                     )
                     for r in recent_runs(session, spec.key)
                 ],

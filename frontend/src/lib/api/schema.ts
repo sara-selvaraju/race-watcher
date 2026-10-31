@@ -192,6 +192,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/playground": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Playground
+         * @description Run one agent once on one race, with any model, and return what it produced. Spends real
+         *     OpenRouter credit, but saves nothing: the race page and run log are unchanged.
+         */
+        post: operations["playground_api_v1_admin_playground_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/ingest": {
         parameters: {
             query?: never;
@@ -429,6 +450,10 @@ export interface components {
             error: string | null;
             /** Model */
             model: string | null;
+            /** Tokens */
+            tokens: number | null;
+            /** Cost Usd */
+            cost_usd: string | null;
         };
         /** FormLineOut */
         FormLineOut: {
@@ -518,6 +543,108 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+        };
+        /** PlaygroundIn */
+        PlaygroundIn: {
+            /** Agent */
+            agent: string;
+            /** Race Id */
+            race_id: number;
+            /** Model */
+            model?: string | null;
+        };
+        /** PlaygroundNoteOut */
+        PlaygroundNoteOut: {
+            /** Text */
+            text: string | null;
+            /** Facts */
+            facts: string;
+            /** Current */
+            current: string | null;
+        };
+        /** PlaygroundOut */
+        PlaygroundOut: {
+            /** Agent */
+            agent: string;
+            /** Agent Name */
+            agent_name: string;
+            /** Model */
+            model: string;
+            /** Race Id */
+            race_id: number;
+            /** Race Label */
+            race_label: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Seconds */
+            seconds: number;
+            /** Calls */
+            calls: number;
+            /** Prompt Tokens */
+            prompt_tokens: number;
+            /** Completion Tokens */
+            completion_tokens: number;
+            /** Cost Usd */
+            cost_usd: string | null;
+            /** Sites */
+            sites: {
+                [key: string]: number;
+            };
+            /** Error */
+            error: string | null;
+            /** Prices */
+            prices?: components["schemas"]["PlaygroundPriceOut"][] | null;
+            /** Picks */
+            picks?: components["schemas"]["PlaygroundPickOut"][] | null;
+            /** Field */
+            field?: components["schemas"]["PlaygroundRunnerOut"][] | null;
+            note?: components["schemas"]["PlaygroundNoteOut"] | null;
+        };
+        /** PlaygroundPickOut */
+        PlaygroundPickOut: {
+            /** Rank */
+            rank: number;
+            /** Runner Number */
+            runner_number: number;
+            /** Runner Name */
+            runner_name: string;
+            /** Rationale */
+            rationale: string | null;
+        };
+        /** PlaygroundPriceOut */
+        PlaygroundPriceOut: {
+            /** Runner Number */
+            runner_number: number;
+            /** Runner Name */
+            runner_name: string;
+            /** Price */
+            price: string;
+            /** Source */
+            source: string;
+            /** Saved Price */
+            saved_price: string | null;
+            /** Saved Source */
+            saved_source: string | null;
+        };
+        /** PlaygroundRunnerOut */
+        PlaygroundRunnerOut: {
+            /** Runner Number */
+            runner_number: number;
+            /** Runner Name */
+            runner_name: string;
+            /** Jockey */
+            jockey: string | null;
+            /** Trainer */
+            trainer: string | null;
+            /** Barrier */
+            barrier: number | null;
+            /** Scratched */
+            scratched: boolean;
+            /** On Card */
+            on_card: boolean;
         };
         /** PredictionOut */
         PredictionOut: {
@@ -961,6 +1088,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AdminOverviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    playground_api_v1_admin_playground_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlaygroundIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlaygroundOut"];
                 };
             };
             /** @description Validation Error */

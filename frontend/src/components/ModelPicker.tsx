@@ -39,7 +39,7 @@ export function ModelPicker({ agent, choice, token }: { agent: AgentOut; choice:
   );
 }
 
-function useModels(token: string) {
+export function useModels(token: string) {
   return useQuery<ModelOptionOut[]>({
     queryKey: ["admin-models", token],
     staleTime: 60 * 60_000,
@@ -161,7 +161,7 @@ function money(perM: string | null): string | null {
   return n === 0 ? "free" : `$${n < 0.1 ? n.toFixed(3) : n < 10 ? n.toFixed(2) : n.toFixed(0)}`;
 }
 
-function price(m: ModelOptionOut): string {
+export function price(m: ModelOptionOut): string {
   const input = money(m.input_per_m);
   const output = money(m.output_per_m);
   if (!input || !output) return "price unknown";

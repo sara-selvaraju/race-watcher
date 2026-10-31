@@ -6,6 +6,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
@@ -26,6 +27,8 @@ class Run:
     result: str | None = None
     sites: dict[str, int] = field(default_factory=dict)
     model: str | None = None
+    tokens: int | None = None
+    cost_usd: Decimal | None = None
     # Nothing to do (e.g. no race in its build-up). Recorded so the page can show the worker is alive.
     idle: bool = False
 
@@ -59,12 +62,24 @@ def record_run(session: Session, agent: str, trigger: str) -> Iterator[Run]:
                         sites=run.sites or None,
                         error=error,
                         model=run.model,
+                        tokens=run.tokens,
+                        cost_usd=run.cost_usd,
                     )
                 )
                 s.execute(delete(m.AgentRun).where(m.AgentRun.started_at < started - timedelta(days=KEEP_DAYS)))
                 s.commit()
         except Exception as exc:
             log.warning("agent_runs.record_failed", agent=agent, error=str(exc))
+
+
+def collect(run: Run, source: object) -> None:
+    """Fill in the sites, tokens and cost an adapter used during the run."""
+    run.sites = take_sites(source)
+    take = getattr(source, "take_usage", None)
+    usage = take() if callable(take) else None
+    if usage is not None and usage.calls:
+        run.tokens = usage.prompt_tokens + usage.completion_tokens
+        run.cost_usd = usage.cost
 
 
 def take_sites(source: object) -> dict[str, int]:

@@ -14,7 +14,7 @@ from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.core.watchlist import watchlist
 from race_watcher.db.session import SessionLocal
 from race_watcher.services.agent_models import model_overrides
-from race_watcher.services.agent_runs import model_used, record_run, take_sites
+from race_watcher.services.agent_runs import collect, model_used, record_run
 from race_watcher.services.ingest import ingest_meetings
 from race_watcher.services.poller import describe_poll, poll_once, poll_race_day
 from race_watcher.services.predictions import run_predictions_for_race
@@ -90,6 +90,7 @@ def _refresh_summaries() -> None:
         run.model = model_used(adapter, "notes")
         result = summarize_all(session, adapter)
         run.races = result.get("written", 0) + result.get("failed", 0)
+        collect(run, adapter)
         run.idle = not run.races
         run.result = describe_notes(result)
     log.info("worker.summaries", **result)
@@ -112,7 +113,7 @@ def _poll_odds() -> None:
         run.races = result.get("races", 0)
         run.idle = not run.races
         run.result = describe_poll(result)
-        run.sites = take_sites(adapter)
+        collect(run, adapter)
         run.model = model_used(adapter, "odds")
     log.info("worker.odds", **result)
 
@@ -130,7 +131,7 @@ def _odds_check() -> None:
         run.races = result.get("races", 0)
         run.idle = not run.races
         run.result = describe_poll(result)
-        run.sites = take_sites(adapter)
+        collect(run, adapter)
         run.model = model_used(adapter, "odds")
     log.info("worker.odds_check", day=str(today), **result)
 

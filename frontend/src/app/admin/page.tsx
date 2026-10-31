@@ -7,6 +7,7 @@ import { api, type AdminOverviewOut, type AgentOut } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
 import { useNow } from "@/lib/useNow";
 import { ModelPicker } from "@/components/ModelPicker";
+import { Playground } from "@/components/Playground";
 
 class Unauthorized extends Error {}
 
@@ -128,6 +129,8 @@ function Overview({ data, now, token }: { data: AdminOverviewOut; now: number; t
           <AgentCard key={a.key} agent={a} now={now} token={token} />
         ))}
       </section>
+
+      <Playground agents={data.agents} token={token} />
 
       <div className="grid gap-5 lg:grid-cols-2 items-start">
         <section className="panel overflow-hidden" aria-labelledby="watching-title">
@@ -275,7 +278,13 @@ function RecentRuns({ agent: a, now }: { agent: AgentOut; now: number }) {
               <span className="text-ink-3 text-right md:text-left">{TRIGGERS[r.trigger] ?? r.trigger}</span>
               <span className={clsx("col-span-2 md:col-span-1", r.status === "error" && "text-drift")}>
                 {r.status === "error" ? `Failed: ${r.error ?? "unknown error"}` : r.result}
-                {r.model && <code className="block text-xs text-ink-3 break-all">{r.model}</code>}
+                {(r.model || r.cost_usd != null) && (
+                  <span className="block text-xs text-ink-3">
+                    {r.model && <code className="break-all">{r.model}</code>}
+                    {r.cost_usd != null && `${r.model ? ", " : ""}$${Number(r.cost_usd).toFixed(4)}`}
+                    {r.tokens != null && `, ${r.tokens.toLocaleString()} tokens`}
+                  </span>
+                )}
                 {r.races > 0 && r.status !== "error" && (
                   <span className="text-ink-3">
                     {" "}

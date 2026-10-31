@@ -385,6 +385,66 @@
         }
       }
     },
+    "/api/v1/admin/playground": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Playground",
+        "description": "Run one agent once on one race, with any model, and return what it produced. Spends real\nOpenRouter credit, but saves nothing: the race page and run log are unchanged.",
+        "operationId": "playground_api_v1_admin_playground_post",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaygroundIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaygroundOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/ingest": {
       "post": {
         "tags": [
@@ -1161,6 +1221,29 @@
               }
             ],
             "title": "Model"
+          },
+          "tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tokens"
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd"
           }
         },
         "type": "object",
@@ -1173,7 +1256,9 @@
           "result",
           "sites",
           "error",
-          "model"
+          "model",
+          "tokens",
+          "cost_usd"
         ],
         "title": "AgentRunOut"
       },
@@ -1483,6 +1568,369 @@
           "created_at"
         ],
         "title": "MovementAlertOut"
+      },
+      "PlaygroundIn": {
+        "properties": {
+          "agent": {
+            "type": "string",
+            "title": "Agent"
+          },
+          "race_id": {
+            "type": "integer",
+            "title": "Race Id"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent",
+          "race_id"
+        ],
+        "title": "PlaygroundIn"
+      },
+      "PlaygroundNoteOut": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "facts": {
+            "type": "string",
+            "title": "Facts"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "facts",
+          "current"
+        ],
+        "title": "PlaygroundNoteOut"
+      },
+      "PlaygroundOut": {
+        "properties": {
+          "agent": {
+            "type": "string",
+            "title": "Agent"
+          },
+          "agent_name": {
+            "type": "string",
+            "title": "Agent Name"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "race_id": {
+            "type": "integer",
+            "title": "Race Id"
+          },
+          "race_label": {
+            "type": "string",
+            "title": "Race Label"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "seconds": {
+            "type": "number",
+            "title": "Seconds"
+          },
+          "calls": {
+            "type": "integer",
+            "title": "Calls"
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens"
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd"
+          },
+          "sites": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Sites"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "prices": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlaygroundPriceOut"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prices"
+          },
+          "picks": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlaygroundPickOut"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Picks"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlaygroundRunnerOut"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlaygroundNoteOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent",
+          "agent_name",
+          "model",
+          "race_id",
+          "race_label",
+          "started_at",
+          "seconds",
+          "calls",
+          "prompt_tokens",
+          "completion_tokens",
+          "cost_usd",
+          "sites",
+          "error"
+        ],
+        "title": "PlaygroundOut"
+      },
+      "PlaygroundPickOut": {
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "runner_number": {
+            "type": "integer",
+            "title": "Runner Number"
+          },
+          "runner_name": {
+            "type": "string",
+            "title": "Runner Name"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rank",
+          "runner_number",
+          "runner_name",
+          "rationale"
+        ],
+        "title": "PlaygroundPickOut"
+      },
+      "PlaygroundPriceOut": {
+        "properties": {
+          "runner_number": {
+            "type": "integer",
+            "title": "Runner Number"
+          },
+          "runner_name": {
+            "type": "string",
+            "title": "Runner Name"
+          },
+          "price": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Price"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "saved_price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Price"
+          },
+          "saved_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner_number",
+          "runner_name",
+          "price",
+          "source",
+          "saved_price",
+          "saved_source"
+        ],
+        "title": "PlaygroundPriceOut"
+      },
+      "PlaygroundRunnerOut": {
+        "properties": {
+          "runner_number": {
+            "type": "integer",
+            "title": "Runner Number"
+          },
+          "runner_name": {
+            "type": "string",
+            "title": "Runner Name"
+          },
+          "jockey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Jockey"
+          },
+          "trainer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trainer"
+          },
+          "barrier": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barrier"
+          },
+          "scratched": {
+            "type": "boolean",
+            "title": "Scratched"
+          },
+          "on_card": {
+            "type": "boolean",
+            "title": "On Card"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runner_number",
+          "runner_name",
+          "jockey",
+          "trainer",
+          "barrier",
+          "scratched",
+          "on_card"
+        ],
+        "title": "PlaygroundRunnerOut"
       },
       "PredictionOut": {
         "properties": {

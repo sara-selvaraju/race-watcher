@@ -38,8 +38,8 @@ Oaks Day and Stakes Day.
   end of the address (e.g. `https://your-site/?admin`).
 - **Admin page (admin only).** `/admin` shows every agent: what it does, when it runs and runs
   next, its model and system prompt, what it looks at, and its recent runs with the sites it
-  cited and the model used. You can change each AI agent's model there. Also what's being
-  watched and the main settings.
+  cited, the model used and what it cost. You can change each AI agent's model there, and try
+  any model in the playground. Also what's being watched and the main settings.
 
 ## How it works
 
@@ -95,7 +95,8 @@ list and the admin page shows it, so the two always agree.
 
 The models listed are the defaults; each can be changed on `/admin` (below).
 
-Each run is logged (when, why, what it did, which sites it cited) and shown on `/admin`. Runs
+Each run is logged (when, why, what it did, which sites it cited, the model and what it cost)
+and shown on `/admin`. Runs
 with nothing to do are logged as idle and left off the list; logs older than 30 days are dropped.
 
 #### Changing an agent's model
@@ -112,6 +113,17 @@ returns to the Railway variable (`OPENROUTER_MODEL` or `OPENROUTER_RESEARCH_MODE
 - The race-note writer only rewrites a race when its facts change, so a new notes model shows
   up as races' prices and picks move, not all at once.
 
+#### Trying models in the playground
+
+The playground on `/admin` runs one agent once, on one race you pick, with any OpenRouter model,
+and shows what came back: the prices, picks, runners or note, plus the sites cited, tokens, time
+and the cost OpenRouter reported. **Nothing is saved**: the race page and run history don't
+change. Results stack up side by side (kept in your browser), so you can run the same race on
+two models and compare. For the note writer it also shows the exact facts the model was given.
+
+Each run spends real credit: a note costs a fraction of a cent; an odds or tipster run with web
+search costs a few cents.
+
 #### Adding an agent
 
 1. Write the function that does the work: usually a service in `services/` calling an adapter
@@ -120,7 +132,9 @@ returns to the Railway variable (`OPENROUTER_MODEL` or `OPENROUTER_RESEARCH_MODE
    `WithAgent` or `OnRefresh`), model, prompt, and what it reads and writes.
 3. If it runs on a timer, add its function to `TIMER_JOBS` or `DAILY_JOBS` in `worker/main.py`.
 4. Wrap each run in `record_run(session, "<key>", "<trigger>")` from `services/agent_runs.py`,
-   filling in `races`, `result` and `sites`, so it shows up on the admin page.
+   filling in `races` and `result` and calling `collect(run, adapter)` for the sites, tokens and
+   cost, so it shows up on the admin page.
+5. To try it in the playground, add a branch for it in `services/playground.py`.
 
 ### Where the data comes from
 

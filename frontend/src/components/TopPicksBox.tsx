@@ -27,7 +27,7 @@ function n(v: string | number | null | undefined): number | null {
 // Only http(s) URLs are linkified — anything else stays as text (prevents javascript: injection).
 const MD_LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
 
-function renderRationale(text: string): ReactNode {
+export function renderRationale(text: string): ReactNode {
   const out: ReactNode[] = [];
   let lastIdx = 0;
   let match: RegExpExecArray | null;
