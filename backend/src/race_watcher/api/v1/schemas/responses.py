@@ -127,3 +127,56 @@ class StatusOut(_ApiBase):
 class ErrorOut(_ApiBase):
     error: str
     detail: str | None = None
+
+
+class AgentRunOut(_ApiBase):
+    trigger: str
+    started_at: datetime
+    finished_at: datetime | None
+    status: str
+    races: int
+    result: str | None
+    # Website domain -> how many answers cited it.
+    sites: dict[str, int]
+    error: str | None
+
+
+class AgentOut(_ApiBase):
+    key: str
+    name: str
+    purpose: str
+    how: str
+    # Plain-English, one line per schedule.
+    schedule: list[str]
+    next_run: datetime | None
+    # None for agents that don't use an LLM.
+    model: str | None
+    web_search: bool
+    looks_at: str
+    reads: list[str]
+    writes: list[str]
+    prompt: str | None
+    # Latest run of any kind, including idle checks: shows the worker is alive.
+    last_checked: datetime | None
+    runs: list[AgentRunOut]
+
+
+class WatchOut(_ApiBase):
+    track: str
+    date: date
+    # None = every race at the meeting.
+    races: list[int] | None
+    loaded_races: int
+
+
+class SettingOut(_ApiBase):
+    name: str
+    value: str
+    about: str
+
+
+class AdminOverviewOut(_ApiBase):
+    agents: list[AgentOut]
+    watching: list[WatchOut]
+    card: str | None
+    settings: list[SettingOut]

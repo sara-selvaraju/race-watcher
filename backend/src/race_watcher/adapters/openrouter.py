@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+import threading
+from collections import Counter
 from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
+from urllib.parse import urlparse
 
 from openai import OpenAI
 
@@ -154,6 +157,22 @@ class OpenRouterAdapter:
                 default_headers=default_headers or None,
             )
         self._client = client
+        # Sites cited by web-search answers since take_sites() was last called (for the admin page).
+        self._sites: Counter[str] = Counter()
+        self._sites_lock = threading.Lock()
+
+    def _note_sites(self, urls: list[str]) -> None:
+        domains = {d for d in (_domain(u) for u in urls) if d}
+        if domains:
+            with self._sites_lock:
+                self._sites.update(domains)
+
+    def take_sites(self) -> dict[str, int]:
+        """Domains cited since the last call, with how many answers cited each. Thread-safe."""
+        with self._sites_lock:
+            out = dict(self._sites.most_common())
+            self._sites.clear()
+        return out
 
     @property
     def effective_model(self) -> str:
@@ -213,6 +232,7 @@ class OpenRouterAdapter:
                 log.error("openrouter.tool_call_failed", model=model, error=str(exc))
                 return None, []
             citations = _extract_citations(resp)
+            self._note_sites(citations)
             message = resp.choices[0].message
             for tc in getattr(message, "tool_calls", None) or []:
                 if getattr(tc.function, "name", None) == tool["function"]["name"]:
@@ -246,6 +266,7 @@ class OpenRouterAdapter:
             log.error("openrouter.json_schema_failed", model=model, error=str(exc))
             return None, []
         citations = _extract_citations(resp)
+        self._note_sites(citations)
         content = (resp.choices[0].message.content or "").strip()
         if not content:
             log.warning("openrouter.empty_content", model=model)
@@ -285,6 +306,7 @@ class OpenRouterAdapter:
             log.error("openrouter.request_failed", error=str(exc))
             return []
 
+        self._note_sites(_extract_citations(resp))
         usage = getattr(resp, "usage", None)
         log.info(
             "openrouter.usage",
@@ -809,6 +831,11 @@ def _extract_citations(resp) -> list[str]:
             message_keys=msg_keys,
         )
     return urls
+
+
+def _domain(url: str) -> str | None:
+    host = urlparse(url).hostname
+    return host.removeprefix("www.") if host else None
 
 
 def _linkify_citations(text: str, citations: list[str]) -> str:

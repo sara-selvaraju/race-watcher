@@ -34,7 +34,7 @@
           "meeting"
         ],
         "summary": "Get Today Meeting",
-        "description": "First meeting on the first race day. Kept for older clients \u2014 prefer /meetings.",
+        "description": "First watched meeting. Kept for older clients \u2014 prefer /meetings.",
         "operationId": "get_today_meeting_api_v1_meeting_today_get",
         "responses": {
           "200": {
@@ -98,7 +98,7 @@
           "meeting"
         ],
         "summary": "List Meetings",
-        "description": "Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date.",
+        "description": "Every watched meeting (see watch.json), ordered by date, with only its watched races.",
         "operationId": "list_meetings_api_v1_meetings_get",
         "responses": {
           "200": {
@@ -212,6 +212,56 @@
         }
       }
     },
+    "/api/v1/admin/overview": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Admin Overview",
+        "description": "The agents (schedules, models, prompts, recent runs), what's watched, and key settings.",
+        "operationId": "admin_overview_api_v1_admin_overview_get",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOverviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/ingest": {
       "post": {
         "tags": [
@@ -219,15 +269,43 @@
         ],
         "summary": "Ingest",
         "operationId": "ingest_api_v1_admin_ingest_post",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": true,
                   "type": "object",
+                  "additionalProperties": true,
                   "title": "Response Ingest Api V1 Admin Ingest Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -257,6 +335,22 @@
                 }
               ],
               "title": "Meeting Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
             }
           }
         ],
@@ -310,6 +404,22 @@
               ],
               "title": "Meeting Id"
             }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
           }
         ],
         "responses": {
@@ -361,6 +471,22 @@
                 }
               ],
               "title": "Meeting Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
             }
           }
         ],
@@ -414,6 +540,22 @@
               ],
               "title": "Meeting Id"
             }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
           }
         ],
         "responses": {
@@ -465,6 +607,22 @@
                 }
               ],
               "title": "Meeting Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
             }
           }
         ],
@@ -528,6 +686,22 @@
               "default": false,
               "title": "Force"
             }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
           }
         ],
         "responses": {
@@ -559,6 +733,244 @@
   },
   "components": {
     "schemas": {
+      "AdminOverviewOut": {
+        "properties": {
+          "agents": {
+            "items": {
+              "$ref": "#/components/schemas/AgentOut"
+            },
+            "type": "array",
+            "title": "Agents"
+          },
+          "watching": {
+            "items": {
+              "$ref": "#/components/schemas/WatchOut"
+            },
+            "type": "array",
+            "title": "Watching"
+          },
+          "card": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Card"
+          },
+          "settings": {
+            "items": {
+              "$ref": "#/components/schemas/SettingOut"
+            },
+            "type": "array",
+            "title": "Settings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "agents",
+          "watching",
+          "card",
+          "settings"
+        ],
+        "title": "AdminOverviewOut"
+      },
+      "AgentOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose"
+          },
+          "how": {
+            "type": "string",
+            "title": "How"
+          },
+          "schedule": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Schedule"
+          },
+          "next_run": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Run"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "web_search": {
+            "type": "boolean",
+            "title": "Web Search"
+          },
+          "looks_at": {
+            "type": "string",
+            "title": "Looks At"
+          },
+          "reads": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reads"
+          },
+          "writes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Writes"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "last_checked": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Checked"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/AgentRunOut"
+            },
+            "type": "array",
+            "title": "Runs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "purpose",
+          "how",
+          "schedule",
+          "next_run",
+          "model",
+          "web_search",
+          "looks_at",
+          "reads",
+          "writes",
+          "prompt",
+          "last_checked",
+          "runs"
+        ],
+        "title": "AgentOut"
+      },
+      "AgentRunOut": {
+        "properties": {
+          "trigger": {
+            "type": "string",
+            "title": "Trigger"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "races": {
+            "type": "integer",
+            "title": "Races"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "sites": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Sites"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trigger",
+          "started_at",
+          "finished_at",
+          "status",
+          "races",
+          "result",
+          "sites",
+          "error"
+        ],
+        "title": "AgentRunOut"
+      },
       "FormLineOut": {
         "properties": {
           "line_date": {
@@ -1171,6 +1583,29 @@
         ],
         "title": "RunnerOut"
       },
+      "SettingOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "about": {
+            "type": "string",
+            "title": "About"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "value",
+          "about"
+        ],
+        "title": "SettingOut"
+      },
       "StatusOut": {
         "properties": {
           "race_date": {
@@ -1324,6 +1759,45 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WatchOut": {
+        "properties": {
+          "track": {
+            "type": "string",
+            "title": "Track"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "races": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Races"
+          },
+          "loaded_races": {
+            "type": "integer",
+            "title": "Loaded Races"
+          }
+        },
+        "type": "object",
+        "required": [
+          "track",
+          "date",
+          "races",
+          "loaded_races"
+        ],
+        "title": "WatchOut"
       }
     }
   }

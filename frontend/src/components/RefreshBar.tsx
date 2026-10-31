@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { readToken, saveToken } from "@/lib/adminToken";
 import { api } from "@/lib/api/client";
 import { clsx } from "@/lib/clsx";
 
@@ -59,27 +60,8 @@ type StepState = { status: StepStatus; summary?: string; error?: string };
 
 type Props = { meetingId: number; track: string };
 
-// Admin actions spend LLM credit, so the API wants a shared token (X-Admin-Token). It's kept in
-// this browser only, entered once by whoever runs the dashboard. Viewers never see the Refresh bar:
-// it appears only where a token is saved, or when the page is opened with ?admin to enter one.
-const TOKEN_KEY = "race-watcher.admin-token";
-
-function readToken(): string {
-  try {
-    return localStorage.getItem(TOKEN_KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-
-function saveToken(token: string) {
-  try {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
-    else localStorage.removeItem(TOKEN_KEY);
-  } catch {
-    // Private mode etc.: the token just won't be remembered.
-  }
-}
+// Viewers never see the Refresh bar: it appears only where an admin token is saved, or when the
+// page is opened with ?admin to enter one.
 
 class Unauthorized extends Error {}
 
@@ -233,9 +215,14 @@ export function RefreshBar({ meetingId, track }: Props) {
       )}
 
       {token && !running && (
-        <button type="button" className="ml-auto text-sm text-ink-3 underline" onClick={forgetToken}>
-          Forget token on this browser
-        </button>
+        <span className="ml-auto flex gap-4 text-sm text-ink-3">
+          <a href="/admin" className="underline">
+            Admin page
+          </a>
+          <button type="button" className="underline" onClick={forgetToken}>
+            Forget token on this browser
+          </button>
+        </span>
       )}
     </div>
   );

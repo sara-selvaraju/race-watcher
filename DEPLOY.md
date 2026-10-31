@@ -36,8 +36,9 @@ the `api` and `worker` services.
   set `POLL_INTERVAL_SECONDS` to fetch odds more or less often (default 900).
 
 On start, the worker loads the race card if nothing is loaded for the race days yet. It then runs
-two jobs: odds every 15 minutes for races jumping in the next 2 hours (one request per race),
-and ratings plus notes every 10 minutes.
+the agents' schedules from `backend/src/race_watcher/agents.py`: odds every 15 minutes for races
+jumping in the next 2 hours (one request per race), a full odds check at 9:15am on race days, and
+ratings plus notes every 10 minutes.
 
 ## 4. `web` service
 
@@ -70,6 +71,8 @@ railway up frontend --path-as-root -s web    --detach
 4. The website shows the race days, read-only. To refresh, open it with `?admin` on the end of
    the address, enter the admin token once (the browser remembers it), then press **Refresh**.
    It runs odds, tips, ratings, field and notes for that day.
+5. With the token saved, `/admin` on the website shows each agent's schedule, next run and
+   recent runs. A worker that's running shows a recent "Last checked" time on the odds agent.
 
 ## Loading a new race card
 

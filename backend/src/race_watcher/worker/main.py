@@ -8,14 +8,16 @@ from zoneinfo import ZoneInfo
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from race_watcher.adapters import get_odds_source, get_prediction_engine, get_race_card_source
+from race_watcher.agents import DailyAt, Every, agents
 from race_watcher.core.config import settings
 from race_watcher.core.logging import configure_logging, get_logger
 from race_watcher.core.watchlist import watchlist
 from race_watcher.db.session import SessionLocal
+from race_watcher.services.agent_runs import record_run, take_sites
 from race_watcher.services.ingest import ingest_meetings
-from race_watcher.services.poller import poll_once, poll_race_day
+from race_watcher.services.poller import describe_poll, poll_once, poll_race_day
 from race_watcher.services.predictions import run_predictions_for_race
-from race_watcher.services.race_summary import has_jumped, summarize_all
+from race_watcher.services.race_summary import describe_notes, has_jumped, summarize_all
 from race_watcher.services.watched import watched_meetings, watched_races
 
 configure_logging()
@@ -59,7 +61,11 @@ def _refresh_predictions() -> int:
 def _refresh_summaries() -> None:
     """Re-rate, then rewrite notes for any upcoming race whose picks, prices or field changed.
     Idle once every race on the card has jumped."""
-    if not _refresh_predictions():
+    with SessionLocal() as session, record_run(session, "ratings", "timer") as run:
+        run.races = _refresh_predictions()
+        run.idle = not run.races
+        run.result = f"{run.races} races rated"
+    if not run.races:
         log.info("worker.idle", reason="no races left to run", watching=_watching())
         return
     try:
@@ -67,8 +73,11 @@ def _refresh_summaries() -> None:
     except Exception as exc:  # missing API key etc. — keep the worker alive
         log.warning("worker.summary_adapter_unavailable", error=str(exc))
         return
-    with SessionLocal() as session:
+    with SessionLocal() as session, record_run(session, "notes", "timer") as run:
         result = summarize_all(session, adapter)
+        run.races = result.get("written", 0) + result.get("failed", 0)
+        run.idle = not run.races
+        run.result = describe_notes(result)
     log.info("worker.summaries", **result)
 
 
@@ -84,8 +93,12 @@ def _poll_odds() -> None:
     except Exception as exc:  # missing API key etc. — keep the worker alive
         log.warning("worker.odds_adapter_unavailable", error=str(exc))
         return
-    with SessionLocal() as session:
+    with SessionLocal() as session, record_run(session, "odds", "timer") as run:
         result = poll_once(session, adapter)
+        run.races = result.get("races", 0)
+        run.idle = not run.races
+        run.result = describe_poll(result)
+        run.sites = take_sites(adapter)
     log.info("worker.odds", **result)
 
 
@@ -97,9 +110,20 @@ def _odds_check() -> None:
         log.warning("worker.odds_adapter_unavailable", error=str(exc))
         return
     today = datetime.now(ZoneInfo(settings.tz)).date()
-    with SessionLocal() as session:
+    with SessionLocal() as session, record_run(session, "odds", "morning check") as run:
         result = poll_race_day(session, adapter, today)
+        run.races = result.get("races", 0)
+        run.idle = not run.races
+        run.result = describe_poll(result)
+        run.sites = take_sites(adapter)
     log.info("worker.odds_check", day=str(today), **result)
+
+
+# The function behind each scheduled agent. Ratings run inside the notes job, just before the
+# notes, so the notes always see fresh ratings. Live odds only spend anything inside a race's
+# build-up; notes skip races whose facts haven't changed.
+TIMER_JOBS = {"odds": _poll_odds, "notes": _refresh_summaries}
+DAILY_JOBS = {"odds": _odds_check}
 
 
 def main() -> None:
@@ -116,42 +140,33 @@ def main() -> None:
     _refresh_predictions()
 
     sched = BackgroundScheduler(timezone="UTC")
-    # Re-rates every runner, then rewrites race notes. Cheap when nothing changed: unchanged
-    # races are skipped on an inputs hash, so no LLM call.
-    sched.add_job(
-        _refresh_summaries,
-        "interval",
-        minutes=10,
-        id="summaries",
-        max_instances=1,
-        coalesce=True,
-        next_run_time=datetime.now(UTC),
-    )
-    # Live odds on a timer. Only spends anything inside a meeting's race window.
-    sched.add_job(
-        _poll_odds,
-        "interval",
-        seconds=settings.poll_interval_seconds,
-        id="odds",
-        max_instances=1,
-        coalesce=True,
-        next_run_time=datetime.now(UTC),
-    )
-    # Fixed daily checks, e.g. 09:15 Melbourne time. On days with no watched meeting they find
-    # nothing to price and cost nothing.
-    for hhmm in filter(None, (t.strip() for t in settings.odds_check_times.split(","))):
-        hour, minute = (int(x) for x in hhmm.split(":"))
-        sched.add_job(
-            _odds_check,
-            "cron",
-            hour=hour,
-            minute=minute,
-            timezone=ZoneInfo(settings.tz),
-            id=f"odds_check_{hour:02d}{minute:02d}",
-            max_instances=1,
-            coalesce=True,
-            misfire_grace_time=30 * 60,
-        )
+    # Timings come from the agent list (race_watcher/agents.py), which the admin page also shows.
+    for spec in agents():
+        for when in spec.schedules:
+            if isinstance(when, Every) and spec.key in TIMER_JOBS:
+                sched.add_job(
+                    TIMER_JOBS[spec.key],
+                    "interval",
+                    seconds=when.seconds,
+                    id=spec.key,
+                    max_instances=1,
+                    coalesce=True,
+                    next_run_time=datetime.now(UTC),
+                )
+            elif isinstance(when, DailyAt) and spec.key in DAILY_JOBS:
+                # On days with no watched meeting these find nothing to do and cost nothing.
+                for at in when.times:
+                    sched.add_job(
+                        DAILY_JOBS[spec.key],
+                        "cron",
+                        hour=at.hour,
+                        minute=at.minute,
+                        timezone=ZoneInfo(settings.tz),
+                        id=f"{spec.key}_{at:%H%M}",
+                        max_instances=1,
+                        coalesce=True,
+                        misfire_grace_time=30 * 60,
+                    )
     sched.start()
     log.info("worker.scheduled")
 

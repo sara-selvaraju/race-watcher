@@ -4,6 +4,7 @@ from datetime import date, datetime, time
 from decimal import Decimal
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     Date,
     DateTime,
@@ -188,3 +189,26 @@ class RaceSummary(Base):
     )
 
     __table_args__ = (UniqueConstraint("race_id", name="uq_race_summary_race"),)
+
+
+class AgentRun(Base):
+    """One run of an agent (see race_watcher/agents.py): when, why, what it did, which sites it used."""
+
+    __tablename__ = "agent_run"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, init=False)
+    agent: Mapped[str] = mapped_column(String(40))
+    # What started it: "timer", "morning check", "refresh".
+    trigger: Mapped[str] = mapped_column(String(20))
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    # "ok", "idle" (nothing to do) or "error".
+    status: Mapped[str] = mapped_column(String(20), default="ok")
+    races: Mapped[int] = mapped_column(Integer, default=0)
+    # One plain-English line, e.g. "86 prices, 3 moves".
+    result: Mapped[str | None] = mapped_column(String(300), default=None)
+    # Website domain -> number of times the agent cited it.
+    sites: Mapped[dict | None] = mapped_column(JSON, default=None)
+    error: Mapped[str | None] = mapped_column(String(500), default=None)
+
+    __table_args__ = (Index("ix_agent_run_agent_started", "agent", "started_at"),)

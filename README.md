@@ -36,6 +36,9 @@ Oaks Day and Stakes Day.
   tips, ratings, missing runners, then notes. Viewers get a read-only page; the button only
   appears in a browser that has the admin token. To enter it, open the site with `?admin` on the
   end of the address (e.g. `https://your-site/?admin`).
+- **Admin page (admin only).** `/admin` shows every agent: what it does, when it runs and runs
+  next, its model and system prompt, what it looks at, and its recent runs with the sites it
+  cited. Also what's being watched and the main settings.
 
 ## How it works
 
@@ -74,6 +77,33 @@ There are three services and a database:
   Outside racing hours, and once every race has run, the worker sits idle.
 - **Website** (`frontend/`, Next.js). Reads from the API and refreshes as new data lands.
 - **Postgres** holds everything.
+
+### The agents
+
+Every agent is listed in `backend/src/race_watcher/agents.py`: what it does, its schedule, its
+model, what it looks at, and what it reads and writes. The worker takes its schedules from that
+list and the admin page shows it, so the two always agree.
+
+| Agent | Runs | Model |
+|---|---|---|
+| Odds agent | Every 15 min in each race's build-up, 9:15am on race days, and on Refresh | `OPENROUTER_MODEL` with web search |
+| Ratings (not AI) | Every 10 min, just before the note writer, and on Refresh | None |
+| Race-note writer | Every 10 min, for races whose facts changed, and on Refresh | `OPENROUTER_MODEL`, no web access |
+| Tipster | On Refresh | `OPENROUTER_RESEARCH_MODEL` |
+| Field checker | On Refresh | `OPENROUTER_RESEARCH_MODEL` |
+
+Each run is logged (when, why, what it did, which sites it cited) and shown on `/admin`. Runs
+with nothing to do are logged as idle and left off the list; logs older than 30 days are dropped.
+
+#### Adding an agent
+
+1. Write the function that does the work: usually a service in `services/` calling an adapter
+   method in `adapters/` (see `services/top_picks.py` and `fetch_race_top_picks`).
+2. Add an `Agent` entry to `agents()` in `agents.py`, with its schedule (`Every`, `DailyAt`,
+   `WithAgent` or `OnRefresh`), model, prompt, and what it reads and writes.
+3. If it runs on a timer, add its function to `TIMER_JOBS` or `DAILY_JOBS` in `worker/main.py`.
+4. Wrap each run in `record_run(session, "<key>", "<trigger>")` from `services/agent_runs.py`,
+   filling in `races`, `result` and `sites`, so it shows up on the admin page.
 
 ### Where the data comes from
 
@@ -242,7 +272,8 @@ backend/
     api/            FastAPI app, routers and response schemas
     adapters/       seed file, OpenRouter, heuristic, Betfair, mock odds
     domain/         ports (interfaces) and plain domain models
-    services/       ingest, odds polling, ratings, picks, field expansion, race notes
+    agents.py       every agent: purpose, schedule, model, prompt (drives the worker and /admin)
+    services/       ingest, odds polling, ratings, picks, field expansion, race notes, run log
     repositories/   database queries
     db/             SQLAlchemy models
     worker/         the timed jobs
@@ -251,7 +282,7 @@ backend/
   tests/
 frontend/
   src/
-    app/            the page
+    app/            the race page, and /admin
     components/     race nav, next to jump, picks, field, movement feed, refresh bar
     lib/            API client (generated), time and track helpers
 ```

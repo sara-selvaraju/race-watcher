@@ -30,7 +30,7 @@ export interface paths {
         };
         /**
          * Get Today Meeting
-         * @description First meeting on the first race day. Kept for older clients — prefer /meetings.
+         * @description First watched meeting. Kept for older clients — prefer /meetings.
          */
         get: operations["get_today_meeting_api_v1_meeting_today_get"];
         put?: never;
@@ -67,7 +67,7 @@ export interface paths {
         };
         /**
          * List Meetings
-         * @description Every meeting across the race days (RACE_DATE to RACE_DATE_END), ordered by date.
+         * @description Every watched meeting (see watch.json), ordered by date, with only its watched races.
          */
         get: operations["list_meetings_api_v1_meetings_get"];
         put?: never;
@@ -124,6 +124,26 @@ export interface paths {
         };
         /** Status */
         get: operations["status_api_v1_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Admin Overview
+         * @description The agents (schedules, models, prompts, recent runs), what's watched, and key settings.
+         */
+        get: operations["admin_overview_api_v1_admin_overview_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -285,6 +305,72 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdminOverviewOut */
+        AdminOverviewOut: {
+            /** Agents */
+            agents: components["schemas"]["AgentOut"][];
+            /** Watching */
+            watching: components["schemas"]["WatchOut"][];
+            /** Card */
+            card: string | null;
+            /** Settings */
+            settings: components["schemas"]["SettingOut"][];
+        };
+        /** AgentOut */
+        AgentOut: {
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Purpose */
+            purpose: string;
+            /** How */
+            how: string;
+            /** Schedule */
+            schedule: string[];
+            /** Next Run */
+            next_run: string | null;
+            /** Model */
+            model: string | null;
+            /** Web Search */
+            web_search: boolean;
+            /** Looks At */
+            looks_at: string;
+            /** Reads */
+            reads: string[];
+            /** Writes */
+            writes: string[];
+            /** Prompt */
+            prompt: string | null;
+            /** Last Checked */
+            last_checked: string | null;
+            /** Runs */
+            runs: components["schemas"]["AgentRunOut"][];
+        };
+        /** AgentRunOut */
+        AgentRunOut: {
+            /** Trigger */
+            trigger: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Finished At */
+            finished_at: string | null;
+            /** Status */
+            status: string;
+            /** Races */
+            races: number;
+            /** Result */
+            result: string | null;
+            /** Sites */
+            sites: {
+                [key: string]: number;
+            };
+            /** Error */
+            error: string | null;
+        };
         /** FormLineOut */
         FormLineOut: {
             /** Line Date */
@@ -456,6 +542,15 @@ export interface components {
             price_history: components["schemas"]["PriceOut"][];
             prediction: components["schemas"]["PredictionOut"] | null;
         };
+        /** SettingOut */
+        SettingOut: {
+            /** Name */
+            name: string;
+            /** Value */
+            value: string;
+            /** About */
+            about: string;
+        };
         /** StatusOut */
         StatusOut: {
             /**
@@ -515,6 +610,20 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** WatchOut */
+        WatchOut: {
+            /** Track */
+            track: string;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Races */
+            races: number[] | null;
+            /** Loaded Races */
+            loaded_races: number;
         };
     };
     responses: never;
@@ -689,10 +798,43 @@ export interface operations {
             };
         };
     };
+    admin_overview_api_v1_admin_overview_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOverviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     ingest_api_v1_admin_ingest_post: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -709,6 +851,15 @@ export interface operations {
                     };
                 };
             };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
         };
     };
     predict_api_v1_admin_predict_post: {
@@ -716,7 +867,9 @@ export interface operations {
             query?: {
                 meeting_id?: number | null;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -749,7 +902,9 @@ export interface operations {
             query?: {
                 meeting_id?: number | null;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -782,7 +937,9 @@ export interface operations {
             query?: {
                 meeting_id?: number | null;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -815,7 +972,9 @@ export interface operations {
             query?: {
                 meeting_id?: number | null;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -848,7 +1007,9 @@ export interface operations {
             query?: {
                 meeting_id?: number | null;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };
@@ -882,7 +1043,9 @@ export interface operations {
                 meeting_id?: number | null;
                 force?: boolean;
             };
-            header?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
             path?: never;
             cookie?: never;
         };

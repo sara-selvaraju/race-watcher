@@ -56,9 +56,9 @@ def poll_once(
     meetings = watched_meetings(session, meeting_id)
     if not meetings:
         log.warning("poller.no_meeting", watching=f"{watchlist().start}..{watchlist().end}")
-        return {"snapshots": 0, "alerts": 0, "skipped": "no_meeting"}
+        return {"snapshots": 0, "alerts": 0, "races": 0, "skipped": "no_meeting"}
 
-    snapshots = alerts = 0
+    snapshots = alerts = races = 0
     for meeting in meetings:
         if not force and not in_race_window(meeting, now=now):
             log.info("poller.outside_window", track=meeting.track)
@@ -66,7 +66,8 @@ def poll_once(
         result = _poll_meeting(session, odds, meeting, now=now, force=force)
         snapshots += result["snapshots"]
         alerts += result["alerts"]
-    return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}
+        races += result["races"]
+    return {"snapshots": snapshots, "alerts": alerts, "races": races, "meetings": len(meetings)}
 
 
 def poll_race_day(session: Session, odds: OddsSource, on_date: date, *, now: datetime | None = None) -> dict:
@@ -75,13 +76,14 @@ def poll_race_day(session: Session, odds: OddsSource, on_date: date, *, now: dat
     Used for the fixed morning check: one request per race, like a Refresh.
     """
     now = now or datetime.now(UTC)
-    snapshots = alerts = 0
+    snapshots = alerts = races = 0
     meetings = [mt for mt in watched_meetings(session) if mt.date == on_date]
     for meeting in meetings:
         result = _poll_meeting(session, odds, meeting, now=now, force=True)
         snapshots += result["snapshots"]
         alerts += result["alerts"]
-    return {"snapshots": snapshots, "alerts": alerts, "meetings": len(meetings)}
+        races += result["races"]
+    return {"snapshots": snapshots, "alerts": alerts, "races": races, "meetings": len(meetings)}
 
 
 def _domain_race_meeting(meeting: m.Meeting, race: m.Race) -> DomainMeeting:
@@ -137,7 +139,7 @@ def _poll_meeting(
     now = now or datetime.now(UTC)
     races = races_to_price(meeting, now, force=force)
     if not races:
-        return {"snapshots": 0, "alerts": 0}
+        return {"snapshots": 0, "alerts": 0, "races": 0}
 
     # One request per race: a whole day in one request (~130 runners) came back with only the
     # first race or two priced. Requests run a few at a time; DB writes stay on this thread.
@@ -216,4 +218,10 @@ def _poll_meeting(
 
     session.commit()
     log.info("poller.done", track=meeting.track, snapshots=snapshots_written, alerts=alerts_written)
-    return {"snapshots": snapshots_written, "alerts": alerts_written}
+    return {"snapshots": snapshots_written, "alerts": alerts_written, "races": len(races)}
+
+
+def describe_poll(result: dict) -> str:
+    """One line for the admin page's run log."""
+    prices, moves = result.get("snapshots", 0), result.get("alerts", 0)
+    return f"{prices} {'price' if prices == 1 else 'prices'}, {moves} {'move' if moves == 1 else 'moves'}"

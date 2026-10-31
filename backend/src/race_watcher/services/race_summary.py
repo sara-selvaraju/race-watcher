@@ -165,3 +165,9 @@ def summarize_all(
             written += 1
             log.info("race_summary.written", track=meeting.track, race=race.number)
     return {"written": written, "unchanged": unchanged, "failed": failed}
+
+
+def describe_notes(result: dict) -> str:
+    """One line for the admin page's run log."""
+    line = f"{result.get('written', 0)} written, {result.get('unchanged', 0)} unchanged"
+    return line + (f", {result['failed']} failed" if result.get("failed") else "")

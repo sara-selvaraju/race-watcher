@@ -8,3 +8,6 @@ export type MeetingsOut = paths["/api/v1/meetings"]["get"]["responses"]["200"]["
 export type MeetingOut = MeetingsOut[number];
 export type AlertsOut = paths["/api/v1/alerts"]["get"]["responses"]["200"]["content"]["application/json"];
 export type StatusOut = paths["/api/v1/status"]["get"]["responses"]["200"]["content"]["application/json"];
+export type AdminOverviewOut =
+  paths["/api/v1/admin/overview"]["get"]["responses"]["200"]["content"]["application/json"];
+export type AgentOut = AdminOverviewOut["agents"][number];
